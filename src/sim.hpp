@@ -114,6 +114,7 @@ private:
         Address at;
         std::unique_ptr<Var> var;  // a tag without an address
     };
+    struct DbInfo;
     struct Frame {
         const Block* block = nullptr;
         Var* instance = nullptr;            // FB: its instance
@@ -125,6 +126,8 @@ private:
         int loop = 0;                       // 1 EXIT, 2 CONTINUE
         int depth = 0;
         std::unique_ptr<StlState> stl;      // STL: its registers, made on its first statement
+        std::unique_ptr<DbInfo> lData;  // the local data by address, laid out on first use
+        std::vector<uint8_t> lRaw;          // the local data after the temporaries
     };
     struct TimerState {
         bool running = false;
@@ -158,6 +161,7 @@ private:
         std::vector<Slot> slots;
         std::map<const Var*, int64_t> starts;  // every variable: its first bit
         int64_t bytes = 0;
+        std::vector<uint8_t> image;            // the bytes as last written: padding kept
     };
     struct S5Timer {
         bool running = false, q = false, lastStart = false, lastFr = false, startRlo = false;
@@ -254,12 +258,28 @@ private:
     void absWrite(Frame& f, const Abs& a, uint32_t raw);
     DbInfo* dbOf(Frame& f, char area, int db);
     void layOut(DbInfo& d);
+    void layOutVars(DbInfo& d, Var& root, const Json& members, const char* onlySection);
+    bool localBytes(Frame& f, uint32_t byte, int n, uint8_t* out, const uint8_t* in);
     bool dbRead(DbInfo& d, uint32_t byte, int n, uint8_t* out);
     bool dbWrite(DbInfo& d, uint32_t byte, int n, const uint8_t* in);
     int64_t bitOfVar(const Var* v, int& db);  // a variable of a standard DB: its first bit; -1 if none
-    // S5 timers and counters (stl.cpp)
+    // S5 timers and counters (s5.cpp)
     void s5Update(S5Timer& t);
     int64_t s5Units(S5Timer& t);
+    bool s5TimerStart(int n, char mode, bool rlo, uint16_t tv, const std::string& who);
+    void s5TimerFr(int n, bool rlo);
+    void s5TimerReset(int n);
+    void s5CounterCount(int n, bool up, bool rlo);
+    bool s5CounterSet(int n, bool rlo, uint16_t bcd, const std::string& who);
+    void s5CounterReset(int n);
+    void s5CounterFr(int n, bool rlo);
+    bool s5Ref(Frame& f, const Json& r, char& kind, int& n);
+    bool s5Operand(Frame& f, const Json& e, char want, int& n);
+    bool s5Status(Frame& f, const Json& r, bool& value);
+    bool s5Reset(Frame& f, const Json& r);
+    bool s5Call(Frame& f, const Json& e, const std::string& name);
+    bool s5Bits(Frame& f, const Json& e, uint16_t& bits);
+    DbInfo& localLayout(Frame& f);
     void stlLogic(StlState& st, const std::string& op, bool v);
 };
 

@@ -236,6 +236,7 @@
    "type": "OB",
    "name": "Main",
    "language": "STL",
+   "optimized": false,
    "protection": null,
    "interface": [],
    "code": {
@@ -825,6 +826,7 @@
    "type": "FC",
    "name": "German",
    "language": "STL",
+   "optimized": false,
    "protection": null,
    "interface": [],
    "code": {

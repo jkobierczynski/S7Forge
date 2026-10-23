@@ -211,6 +211,30 @@ bool Simulator::stlAddress(Frame& f, const std::string& text, Abs& a, bool& isAd
         return true;
     };
 
+    // P##temp: an area-crossing pointer to a temporary (a block with standard access)
+    if (s.compare(0, 3, "P##") == 0) {
+        isAddress = true;
+        std::string name = text.substr(text.find("##") + 2);
+        while (!name.empty() && name.back() == ' ') name.pop_back();
+        if ((*f.block->json)["optimized"].type != Json::Bool || (*f.block->json)["optimized"].b) {
+            warn("block " + f.block->name + ": P##" + name + " in a block with optimized access: not done");
+            return false;
+        }
+        Var* v = f.local ? f.local->member(name) : nullptr;
+        if (!v) {
+            warn("block " + f.block->name + ": P##" + name + ": no temporary " + name);
+            return false;
+        }
+        DbInfo& d = localLayout(f);
+        auto it = d.starts.find(v);
+        if (it == d.starts.end()) {
+            warn("block " + f.block->name + ": P##" + name + ": not a temporary");
+            return false;
+        }
+        a.isPointer = true;
+        a.pointer = (0x86u << 24) | static_cast<uint32_t>(it->second & 0x7FFFF);
+        return true;
+    }
     // P#: a pointer as the value
     if (s.compare(0, 2, "P#") == 0) {
         uint32_t bits;
@@ -314,6 +338,14 @@ int64_t alignTo(int64_t bit, int64_t bytes) { return (bit + bytes * 8 - 1) / (by
 
 // the size in bits of a leaf; 0 when not known
 int64_t leafBits(const Var& v, const Json* type) {
+    if (type && (*type)["kind"].str() == "parameter") {
+        // the parameter types a temporary can have: an ANY takes 10 bytes, a
+        // POINTER 6, a block or timer number a word
+        const std::string& n = (*type)["name"].str();
+        if (n == "Any" || n == "ANY") return 80;
+        if (n == "Pointer" || n == "POINTER") return 48;
+        return 16;
+    }
     if (v.type) {
         if (v.type->kind == Kind::String) return (static_cast<int64_t>(v.maxLen) + 2) * 8;
         if (v.type->bits) return v.type->bits;
@@ -337,11 +369,24 @@ void Simulator::layOut(DbInfo& d) {
     d.starts.clear();
     auto dbv = dbs_.find(d.name);
     if (dbv == dbs_.end()) return;
+    layOutVars(d, *dbv->second, (*d.json)["members"], nullptr);
+}
+
+// The members of `root` (described by `members`) from bit 0 on; with
+// `section` only the members of that section (Temp: the local data).
+void Simulator::layOutVars(DbInfo& d, Var& root, const Json& members, const char* onlySection) {
+    d.laidOut = true;
     std::vector<Slot>& slots = d.slots;
     std::map<const Var*, int64_t>& starts = d.starts;
     // a variable at `pos`; returns the bit after it
     std::function<int64_t(Var&, const Json*, int64_t)> place = [&](Var& v, const Json* m, int64_t pos) -> int64_t {
         const Json* type = m ? &(*m)["type"] : nullptr;
+        if (type && (*type)["kind"].str() == "parameter") {
+            // ANY, POINTER, a block number: space, no value S7Forge keeps
+            pos = alignTo(pos, 2);
+            starts[&v] = pos;
+            return pos + leafBits(v, type);
+        }
         if (v.shape == Var::Leaf) {
             const int64_t bits = leafBits(v, type);
             if (bits == 1) {
@@ -383,15 +428,14 @@ void Simulator::layOut(DbInfo& d) {
         }
         return alignTo(pos, 2);
     };
-    Var& root = *dbv->second;
     starts[&root] = 0;
     int64_t pos = 0;
-    const Json& members = (*d.json)["members"];
     std::string section;
     for (auto& mv : root.members) {
         const Json* mj = nullptr;
         for (const auto& x : members.items)
             if (x["name"].str() == mv.first) mj = &x;
+        if (onlySection && (!mj || (*mj)["section"].str() != onlySection)) continue;
         // an instance: each section (Input, Output, InOut, Static) starts on a word
         if (mj && (*mj)["section"].str() != section) {
             if (!section.empty()) pos = alignTo(pos, 2);
@@ -451,7 +495,9 @@ void decode(Var& v, int64_t bits, const std::vector<uint8_t>& buf) {
 bool Simulator::dbRead(DbInfo& d, uint32_t byte, int n, uint8_t* out) {
     if (!d.laidOut) layOut(d);
     if (static_cast<int64_t>(byte) + n > d.bytes) return false;
-    std::fill(out, out + n, 0);
+    // what is not a variable (padding, the bits next to a Bool) is kept as written
+    if (static_cast<int64_t>(d.image.size()) < d.bytes) d.image.resize(static_cast<size_t>(d.bytes), 0);
+    std::copy(d.image.begin() + byte, d.image.begin() + byte + n, out);
     const int64_t from = static_cast<int64_t>(byte) * 8, to = from + n * 8;
     auto it = std::lower_bound(d.slots.begin(), d.slots.end(), from - 8 * 300,
                                [](const Slot& s, int64_t b) { return s.bit < b; });
@@ -461,7 +507,8 @@ bool Simulator::dbRead(DbInfo& d, uint32_t byte, int n, uint8_t* out) {
         encode(*it->var, it->bits, buf);
         if (it->bits == 1) {
             const int64_t b = it->bit / 8 - byte;
-            if (b >= 0 && b < n && (buf[0] & 1)) out[b] = static_cast<uint8_t>(out[b] | (1u << (it->bit % 8)));
+            const uint8_t mask = static_cast<uint8_t>(1u << (it->bit % 8));
+            if (b >= 0 && b < n) out[b] = static_cast<uint8_t>((buf[0] & 1) ? (out[b] | mask) : (out[b] & ~mask));
             continue;
         }
         const int64_t first = it->bit / 8;
@@ -476,6 +523,8 @@ bool Simulator::dbRead(DbInfo& d, uint32_t byte, int n, uint8_t* out) {
 bool Simulator::dbWrite(DbInfo& d, uint32_t byte, int n, const uint8_t* in) {
     if (!d.laidOut) layOut(d);
     if (static_cast<int64_t>(byte) + n > d.bytes) return false;
+    if (static_cast<int64_t>(d.image.size()) < d.bytes) d.image.resize(static_cast<size_t>(d.bytes), 0);
+    std::copy(in, in + n, d.image.begin() + byte);
     const int64_t from = static_cast<int64_t>(byte) * 8, to = from + n * 8;
     auto it = std::lower_bound(d.slots.begin(), d.slots.end(), from - 8 * 300,
                                [](const Slot& s, int64_t b) { return s.bit < b; });
@@ -494,6 +543,46 @@ bool Simulator::dbWrite(DbInfo& d, uint32_t byte, int n, const uint8_t* in) {
             if (b >= 0 && b < n) buf[k] = in[b];
         }
         decode(*it->var, it->bits, buf);
+    }
+    return true;
+}
+
+Simulator::DbInfo& Simulator::localLayout(Frame& f) {
+    if (!f.lData) {
+        f.lData = std::make_unique<DbInfo>();
+        f.lData->name = "the local data of " + f.block->name;
+        f.lData->optimized = false;
+        if (f.local && f.block->interface) layOutVars(*f.lData, *f.local, *f.block->interface, "Temp");
+        std::sort(f.lData->slots.begin(), f.lData->slots.end(), [](const Slot& x, const Slot& y) { return x.bit < y.bit; });
+    }
+    return *f.lData;
+}
+
+// The local data of the block running, by address: its temporaries laid
+// out from L 0 as a data block is; the bytes after them are local data with
+// no name, kept per call. Either `out` (read) or `in` (write).
+bool Simulator::localBytes(Frame& f, uint32_t byte, int n, uint8_t* out, const uint8_t* in) {
+    if ((*f.block->json)["optimized"].type != Json::Bool || (*f.block->json)["optimized"].b) {
+        warn("block " + f.block->name + ": local data by address in a block with optimized access: not done");
+        return false;
+    }
+    if (static_cast<uint64_t>(byte) + static_cast<uint64_t>(n) > 65536) {
+        stop("STL: an address beyond the local data (L " + std::to_string(byte) + ") in block " + f.block->name);
+        return false;
+    }
+    DbInfo& d = localLayout(f);
+    // the declared part, then the rest
+    const int named = static_cast<int>(std::max<int64_t>(0, std::min<int64_t>(d.bytes - byte, n)));
+    if (named > 0) {
+        if (out) dbRead(d, byte, named, out);
+        else dbWrite(d, byte, named, in);
+    }
+    if (named < n) {
+        if (f.lRaw.size() < 65536) f.lRaw.assign(65536, 0);
+        for (int k = named; k < n; ++k) {
+            if (out) out[k] = f.lRaw[byte + static_cast<uint32_t>(k)];
+            else f.lRaw[byte + static_cast<uint32_t>(k)] = in[k];
+        }
     }
     return true;
 }
@@ -569,9 +658,11 @@ uint32_t Simulator::absRead(Frame& f, const Abs& a, bool& ok) {
             break;
         }
         case 'L':
-            warn("block " + f.block->name + ": an absolute access to the local data (L): not simulated");
-            ok = false;
-            return 0;
+            if (!localBytes(f, a.byte, n, b, nullptr)) {
+                ok = false;
+                return 0;
+            }
+            break;
         default:
             ok = false;
             return 0;
@@ -618,7 +709,7 @@ void Simulator::absWrite(Frame& f, const Abs& a, uint32_t raw) {
             return;
         }
         case 'L':
-            warn("block " + f.block->name + ": an absolute access to the local data (L): not simulated");
+            localBytes(f, a.byte, n, nullptr, b);
             return;
         default:
             return;

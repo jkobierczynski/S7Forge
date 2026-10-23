@@ -1,0 +1,3 @@
+{"comment": "local data: padding and the bits next to a Bool keep what was written; an ANY temp takes 10 bytes (x at L 16); P##c is 16#86000020",
+ "program": "../stl/local2.program.json",
+ "steps": [{"scans": 1, "expect": {"%MB0": 171, "%M1.0": true, "%MW2": 42, "%MD4": "16#86000020", "%MW8": 5}}]}

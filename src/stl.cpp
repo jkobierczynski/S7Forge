@@ -239,7 +239,11 @@ uint32_t Simulator::stlLoad(Frame& f, const Json& e, bool& ok) {
             return bitsOf(static_cast<float>(v.r));
         case Kind::Time:
         case Kind::Tod: {
-            if (isS5Time(t) || isS5Time(v.type)) return s5timeBits(v.i);
+            if (isS5Time(t) || isS5Time(v.type)) {
+                uint16_t raw;
+                if (!constant && s5Bits(f, e, raw)) return raw;
+                return s5timeBits(v.i);
+            }
             const int64_t unit = v.type && v.type->unitNs > 1 ? v.type->unitNs : 1000000;
             return static_cast<uint32_t>(v.i / (unit == 1 ? 1000000 : unit));
         }
@@ -572,32 +576,13 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
         const bool rlo = st.rlo();
         if ((op == "R" || op == "S") && (timerOrCounter('T') || timerOrCounter('C'))) {
             if (abs.area == 'T') {
-                S5Timer& t = t5_[static_cast<size_t>(abs.number)];
                 if (op == "S") warn("block " + f.block->name + ": STL S with a timer: not an instruction");
-                else if (rlo && !masked) {
-                    t.running = false;
-                    t.q = false;
-                    t.frozenUnits = 0;
-                    t.base = 0;
-                }
-            } else {
-                S5Counter& k = c5_[static_cast<size_t>(abs.number)];
-                if (op == "R") {
-                    if (rlo && !masked) k.value = 0;
-                } else {
-                    // S C: on a rising edge, the count from ACCU1-L in BCD
-                    if (rlo && !k.lastS && !masked) {
-                        int64_t n = 0;
-                        const uint32_t v = a[0] & 0xFFF;
-                        n = ((v >> 8) & 0xF) * 100 + ((v >> 4) & 0xF) * 10 + (v & 0xF);
-                        if (((v >> 8) & 0xF) > 9 || ((v >> 4) & 0xF) > 9 || (v & 0xF) > 9) {
-                            stop("STL S C: not a BCD count in ACCU1 (block " + f.block->name + ")");
-                            return c.code.size();
-                        }
-                        k.value = static_cast<int>(n);
-                    }
-                    k.lastS = rlo;
-                }
+                else if (rlo && !masked) s5TimerReset(abs.number);
+            } else if (op == "R") {
+                if (rlo && !masked) s5CounterReset(abs.number);
+            } else if (!s5CounterSet(abs.number, rlo && !masked, static_cast<uint16_t>(a[0] & 0xFFFF),
+                                     "STL S C in block " + f.block->name)) {
+                return c.code.size();
             }
         } else if (op == "=") {
             writeBit(masked ? false : rlo);
@@ -1045,13 +1030,8 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
 
     // ---- S5 timers and counters ----
     if (op == "FR" && address() && abs.area == 'C') {
-        // a rising edge of FR on a counter lets CU, CD and S act again
         const bool rlo = st.rlo();
-        if (timerOrCounter('C')) {
-            S5Counter& k = c5_[static_cast<size_t>(abs.number)];
-            if (rlo && !k.lastFr) k.lastCu = k.lastCd = k.lastS = false;
-            k.lastFr = rlo;
-        }
+        if (timerOrCounter('C')) s5CounterFr(abs.number, rlo);
         st.fc = false;
         st.orBit = false;
         st.term = rlo;
@@ -1060,53 +1040,10 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
     if (op == "SP" || op == "SE" || op == "SD" || op == "SS" || op == "SF" || op == "FR") {
         const bool rlo = st.rlo();
         if (timerOrCounter('T')) {
-            S5Timer& t = t5_[static_cast<size_t>(abs.number)];
-            s5Update(t);
-            if (op == "FR") {
-                // a rising edge of FR lets the next start instruction start again
-                if (rlo && !t.lastFr) t.lastStart = false;
-                t.lastFr = rlo;
-            } else {
-                const char mode = op[1];
-                const bool rising = rlo && !t.lastStart, falling = !rlo && t.lastStart;
-                t.lastStart = rlo;
-                t.startRlo = rlo;
-                auto start = [&] {
-                    const uint16_t bits = static_cast<uint16_t>(a[0] & 0xFFFF);
-                    const uint32_t d0 = bits & 0xF, d1 = (bits >> 4) & 0xF, d2 = (bits >> 8) & 0xF;
-                    if (d0 > 9 || d1 > 9 || d2 > 9) {
-                        stop("STL " + op + ": not an S5 time in ACCU1 (block " + f.block->name + ")");
-                        return;
-                    }
-                    t.running = true;
-                    t.mode = mode;
-                    t.start = now_;
-                    t.presetNs = s5timeNs(bits);
-                    t.base = (bits >> 12) & 3;
-                };
-                if (mode == 'F') {
-                    if (rlo) {
-                        t.running = false;
-                        t.q = true;
-                        t.mode = 'F';
-                    } else if (falling) {
-                        start();
-                        t.q = true;
-                    }
-                } else {
-                    if (rising) start();
-                    if (mode == 'P' || mode == 'D') {
-                        if (!rlo && t.running) {
-                            t.frozenUnits = s5Units(t);
-                            t.running = false;
-                        }
-                        if (!rlo) t.q = false;
-                    }
-                    if (mode == 'P') t.q = t.running && rlo;
-                    if (mode == 'E') t.q = t.running;
-                }
-                s5Update(t);
-            }
+            if (op == "FR") s5TimerFr(abs.number, rlo);
+            else if (!s5TimerStart(abs.number, op[1], rlo, static_cast<uint16_t>(a[0] & 0xFFFF),
+                                   "STL " + op + " in block " + f.block->name))
+                return c.code.size();
         } else {
             warn("block " + f.block->name + ": STL " + op + " " + text + ": not a timer");
         }
@@ -1117,14 +1054,8 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
     }
     if (op == "CU" || op == "CD") {
         const bool rlo = st.rlo();
-        if (timerOrCounter('C')) {
-            S5Counter& k = c5_[static_cast<size_t>(abs.number)];
-            bool& last = op == "CU" ? k.lastCu : k.lastCd;
-            if (rlo && !last) k.value = op == "CU" ? std::min(999, k.value + 1) : std::max(0, k.value - 1);
-            last = rlo;
-        } else {
-            warn("block " + f.block->name + ": STL " + op + " " + text + ": not a counter");
-        }
+        if (timerOrCounter('C')) s5CounterCount(abs.number, op == "CU", rlo);
+        else warn("block " + f.block->name + ": STL " + op + " " + text + ": not a counter");
         st.fc = false;
         st.orBit = false;
         st.term = rlo;
@@ -1261,31 +1192,6 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
 
     warn("block " + f.block->name + ": the STL instruction " + s["name"].str() + " is not simulated");
     return next;
-}
-
-// ---- S5 timers ----
-
-// The time runs out: a timer is checked whenever it is used, against the
-// virtual time.
-void Simulator::s5Update(S5Timer& t) {
-    if (!t.running || now_ - t.start < t.presetNs) return;
-    t.running = false;
-    t.frozenUnits = 0;
-    switch (t.mode) {
-        case 'D': t.q = t.startRlo; break;  // on: while the start is on
-        case 'S': t.q = true; break;        // on until reset
-        default: t.q = false; break;        // a pulse, an off delay: over
-    }
-}
-
-// the time value: the units of the time base left
-int64_t Simulator::s5Units(S5Timer& t) {
-    s5Update(t);
-    if (!t.running) return t.frozenUnits;
-    static const int64_t base[4] = {10000000, 100000000, 1000000000, 10000000000LL};
-    const int64_t b = base[t.base & 3];
-    const int64_t left = (t.presetNs - (now_ - t.start) + b - 1) / b;
-    return std::max<int64_t>(0, std::min<int64_t>(999, left));
 }
 
 }  // namespace s7forge

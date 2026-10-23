@@ -54,6 +54,7 @@
    "type": "OB",
    "name": "Main",
    "language": "STL",
+   "optimized": false,
    "protection": null,
    "interface": [],
    "code": {
@@ -155,6 +156,7 @@
    "type": "FC",
    "name": "G",
    "language": "STL",
+   "optimized": false,
    "protection": null,
    "interface": [],
    "code": {

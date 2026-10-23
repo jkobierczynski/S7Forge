@@ -152,6 +152,7 @@ void Simulator::resetMemory(bool retainedToo) {
     std::fill(c5_.begin(), c5_.end(), S5Counter{});
     curDb_ = curDi_ = 0;
     ar1_ = ar2_ = 0;
+    for (auto& d : dbInfo_) d.second.image.clear();
     mcrStack_.clear();
 }
 
@@ -505,6 +506,18 @@ void Simulator::assign(Frame& f, const Json& target, const Json& value) {
         storeWire(f, target["name"].str(), eval(f, value));
         return;
     }
+    if (target["op"].str() == "ref") {
+        // a timer or counter: the reset coil (R) writes FALSE to it
+        const Json* r = ref(f, target);
+        char kind = 0;
+        int n = 0;
+        if (r && s5Ref(f, *r, kind, n)) {
+            if (!truthy(eval(f, value))) s5Reset(f, *r);
+            else warn("block " + f.block->name + ": TRUE written to the " + (kind == 'T' ? "timer " : "counter ") +
+                      (*r)["text"].str() + ": not done");
+            return;
+        }
+    }
     if (target["op"].str() == "builtin") {  // ENO := ...
         f.eno = truthy(eval(f, value));
         return;
@@ -538,6 +551,8 @@ Val Simulator::eval(Frame& f, const Json& e) {
         }
         Val c;
         if (constantOf(*r, c)) return c;
+        bool status;
+        if (s5Status(f, *r, status)) return boolVal(status);  // a contact of a timer or counter
         return load(resolveRef(f, *r));
     }
     if (op == "const") {
@@ -777,6 +792,17 @@ Val Simulator::call(Frame& f, const Json& e) {
     const Json& t = e["target"];
     const std::string& kind = t["kind"].str();
     if (!enabled(f, e)) return Val{};
+    // the boxes and coils of S5 timers and counters (S_ODT, SD, ...)
+    if (kind != "block" && s5Call(f, e, t["name"].str().empty() ? e["name"].str() : t["name"].str())) {
+        for (const auto& a : e["args"].items)
+            if (sameName(a["name"].str(), "ENO") && a["op"].str() == "out" && !a["args"].items.empty()) {
+                const Json& to = a["args"].items[0];
+                if (to["op"].str() == "wire") storeWire(f, to["name"].str(), boolVal(true));
+                else store(placeOf(f, to), boolVal(true));
+            }
+        lastEno_ = true;
+        return Val{};
+    }
     if (kind == "block") return callBlock(f, e, t);
     if (kind == "instruction") return callInstruction(f, e, t);
     if (kind == "builtin" || t.type != Json::Object) {

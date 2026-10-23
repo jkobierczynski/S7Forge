@@ -772,6 +772,121 @@ void testLayout() {
     EQ(sim.bitOffset("\"DB_Optimized\".my_int"), -1);
 }
 
+// LAD/FBD: the box S_ODT, the coil SD, contacts and the R coil on a timer,
+// the box S_CUD with C#7
+void testLadS5() {
+    const std::string tags = tagDecl("S", "Bool", "%I0.0") + "," + tagDecl("R", "Bool", "%I0.1") + "," +
+                             tagDecl("Q", "Bool", "%Q0.0") + "," + tagDecl("BI", "Word", "%MW10") + "," +
+                             tagDecl("BCD", "Word", "%MW12") + "," +
+                             R"({"name":"Tm","data_type":"Timer","type":{"kind":"elementary","name":"Timer","bits":16,"length":null,"dims":[],"element":null},"address":"%T3"})" +
+                             "," + tagDecl("S2", "Bool", "%I0.2") + "," + tagDecl("Q2", "Bool", "%Q0.2") + "," +
+                             tagDecl("R2", "Bool", "%I0.3") + "," + tagDecl("Up", "Bool", "%I1.0") + "," +
+                             tagDecl("Set", "Bool", "%I1.1") + "," + tagDecl("Rst", "Bool", "%I1.2") + "," +
+                             tagDecl("Cq", "Bool", "%Q1.0") + "," + tagDecl("Cv", "Word", "%MW20");
+    std::string refs;
+    const char* names[] = {"S", "R", "Q", "BI", "BCD", "Tm", "S2", "Q2", "R2", "Up", "Set", "Rst", "Cq", "Cv"};
+    for (int k = 0; k < 14; ++k) refs += (k ? "," : "") + tag(k + 1, names[k]);
+    refs += R"(,{"ref_id":20,"kind":"tag","text":"%T4","name":null,"path":[],"modifier":null})";
+    refs += R"(,{"ref_id":21,"kind":"tag","text":"%C2","name":null,"path":[],"modifier":null})";
+    auto s5 = [](long long ms) {
+        return e("const", R"("type":"S5Time","value":{"kind":"duration","ns":)" + std::to_string(ms * 1000000) + "}");
+    };
+    const std::string box = e("call", R"("name":"S_ODT","target":{"kind":"builtin","name":"S_ODT"})",
+                              param("in", "T_NO", r(6)) + "," + param("in", "S", r(1)) + "," + param("in", "TV", s5(1000)) +
+                                  "," + param("in", "R", r(2)) + "," + param("out", "BI", r(4)) + "," +
+                                  param("out", "BCD", r(5)) + "," + param("out", "Q", r(3)));
+    const std::string coil = e("call", R"("name":"SdCoil","target":{"kind":"builtin","name":"SdCoil"})",
+                               param("in", "in", r(7)) + "," + param("in", "operand", r(20)) + "," + param("in", "value", s5(500)));
+    const std::string resetCoil = s("if", "", R"("branches":[{"exprs":[)" + r(9) + R"(],"body":[)" +
+                                                 assign(r(20), e("const", R"("type":"Bool","value":{"kind":"bool","bool":false})")) +
+                                                 R"(]}],"else":null)");
+    const std::string c7 = e("const", R"("name":"C#7","type":"Word","value":{"kind":"int","text":"C#7","int":7})");
+    const std::string cud = e("call", R"("name":"S_CUD","target":{"kind":"builtin","name":"S_CUD"})",
+                              param("in", "C_NO", r(21)) + "," + param("in", "CU", r(10)) + "," + param("in", "S", r(11)) +
+                                  "," + param("in", "PV", c7) + "," + param("in", "R", r(12)) + "," + param("out", "CV", r(14)) +
+                                  "," + param("out", "Q", r(13)));
+    const std::string main = block("Main", "OB", "", refs,
+                                   s("call", box) + "," + s("call", coil) + "," + assign(r(8), r(20)) + "," + resetCoil + "," +
+                                       s("call", cud));
+    Simulator sim(parseJson(program(tags, "", main)));
+    sim.powerOn();
+    set(sim, "S", boolVal(true));
+    set(sim, "S2", boolVal(true));
+    sim.scan();
+    CHECK(sim.warnings().empty());
+    for (const auto& w : sim.warnings()) std::cerr << "  warning: " << w << "\n";
+    CHECK(!get(sim, "Q").b);
+    EQ(get(sim, "BI").i, 100);       // 1 s in 10 ms
+    EQ(get(sim, "BCD").i, 0x0100);
+    sim.runFor(500000000);           // 0.5 s: the coil's 500 ms are up
+    CHECK(get(sim, "Q2").b);
+    CHECK(!get(sim, "Q").b);
+    sim.runFor(500000000);
+    CHECK(get(sim, "Q").b);
+    EQ(get(sim, "BI").i, 0);
+    set(sim, "R2", boolVal(true));   // the R coil on T 4, after the contact in the cycle
+    sim.scan();
+    CHECK(get(sim, "Q2").b);
+    sim.scan();                      // S2 still on: no new edge, T 4 stays off
+    CHECK(!get(sim, "Q2").b);
+    set(sim, "R", boolVal(true));    // R of the box
+    sim.scan();
+    CHECK(!get(sim, "Q").b);
+    // the counter
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Cv").i, 7);
+    CHECK(get(sim, "Cq").b);
+    set(sim, "Up", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Cv").i, 8);
+    set(sim, "Rst", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Cv").i, 0);
+    CHECK(!get(sim, "Cq").b);
+}
+
+// found in a review: an input of a counter box that is not connected keeps
+// its edge memory; a block named like a German S5 box is the block; an
+// S5TIME in M keeps its time base
+void testLadS5Review() {
+    const std::string tags = tagDecl("Set", "Bool", "%I0.0") + "," + tagDecl("Up", "Bool", "%I0.1") + "," +
+                             tagDecl("Cv", "Word", "%MW0") + "," + tagDecl("Q", "Bool", "%Q0.0") + "," +
+                             tagDecl("S", "Bool", "%I0.2") + "," + tagDecl("Bcd", "Word", "%MW2") + "," +
+                             R"({"name":"Tv","data_type":"S5Time","type":{"kind":"elementary","name":"S5Time","bits":16,"length":null,"dims":[],"element":null},"address":"%MW4"})";
+    std::string refs;
+    const char* names[] = {"Set", "Up", "Cv", "Q", "S", "Bcd", "Tv"};
+    for (int k = 0; k < 7; ++k) refs += (k ? "," : "") + tag(k + 1, names[k]);
+    refs += R"(,{"ref_id":20,"kind":"tag","text":"%C1","name":null,"path":[],"modifier":null})";
+    refs += R"(,{"ref_id":21,"kind":"tag","text":"%T1","name":null,"path":[],"modifier":null})";
+    const std::string c5 = e("const", R"("name":"C#5","type":"Word","value":{"kind":"int","text":"C#5","int":5})");
+    const std::string sc = e("call", R"("name":"ScCoil","target":{"kind":"builtin","name":"ScCoil"})",
+                             param("in", "in", r(1)) + "," + param("in", "operand", r(20)) + "," + param("in", "value", c5));
+    const std::string cu = e("call", R"("name":"S_CU","target":{"kind":"builtin","name":"S_CU"})",
+                             param("in", "C_NO", r(20)) + "," + param("in", "CU", r(2)) + "," + param("out", "CV", r(3)));
+    const std::string odt = e("call", R"("name":"S_ODT","target":{"kind":"builtin","name":"S_ODT"})",
+                              param("in", "T_NO", r(21)) + "," + param("in", "S", r(5)) + "," + param("in", "TV", r(7)) + "," +
+                                  param("out", "BCD", r(6)));
+    const std::string user = e("call", R"("name":"Zaehler","target":{"kind":"block","name":"Zaehler","instance":null})", "");
+    const std::string fc = block("Zaehler", "FC", "", tag(1, "Q"),
+                                 assign(r(1), e("const", R"("type":"Bool","value":{"kind":"bool","bool":true})")));
+    const std::string main = block("Main", "OB", "", refs, s("call", sc) + "," + s("call", cu) + "," + s("call", odt) + "," + s("call", user));
+    Simulator sim(parseJson(program(tags, "", main + "," + fc)));
+    sim.powerOn();
+    set(sim, "Set", boolVal(true));
+    set(sim, "%MW4", intVal(0x2010));  // Tv: S5T#10S in the 1 s time base
+    set(sim, "S", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Cv").i, 5);
+    set(sim, "Up", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Cv").i, 6);
+    sim.scan();
+    EQ(get(sim, "Cv").i, 6);  // the SC coil sees no new edge
+    CHECK(get(sim, "Q").b);   // the FC Zaehler ran
+    EQ(get(sim, "Bcd").i, 0x2010);
+}
+
 void testScenarioFiles() {
     std::ostringstream out;
     const ScenarioResult r = runScenario("scenarios/s15_motor.json", out, false);
@@ -795,6 +910,8 @@ int main() {
     testInstructions();
     testStl();
     testLayout();
+    testLadS5();
+    testLadS5Review();
     testScenarioFiles();
     std::cout << checks << " checks, " << failures << " failed\n";
     return failures ? 1 : 0;

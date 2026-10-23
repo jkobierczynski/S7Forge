@@ -1,0 +1,512 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "optimized": false,
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "CALL",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "\"Sub\"",
+          "args": []
+         }
+        ],
+        "text": "\"Sub\"",
+        "target": {
+         "kind": "block",
+         "name": "Sub",
+         "instance": null
+        }
+       },
+       {
+        "op": "stl",
+        "name": "CALL",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "\"Opt\"",
+          "args": []
+         }
+        ],
+        "text": "\"Opt\"",
+        "target": {
+         "kind": "block",
+         "name": "Opt",
+         "instance": null
+        }
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "kind": "local",
+      "text": "#a",
+      "name": null,
+      "path": [
+       {
+        "name": "a",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1001
+     },
+     {
+      "kind": "local",
+      "text": "#b",
+      "name": null,
+      "path": [
+       {
+        "name": "b",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1002
+     },
+     {
+      "kind": "local",
+      "text": "#c",
+      "name": null,
+      "path": [
+       {
+        "name": "c",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1003
+     }
+    ]
+   }
+  },
+  {
+   "type": "FC",
+   "name": "Sub",
+   "language": "STL",
+   "optimized": false,
+   "protection": null,
+   "interface": [
+    {
+     "name": "a",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": "Temp",
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "b",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": "Temp",
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "c",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": "Temp",
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    }
+   ],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "5",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 5
+          },
+          "args": []
+         }
+        ],
+        "text": "5"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1001,
+          "name": "#a",
+          "args": []
+         }
+        ],
+        "text": "#a"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "LW 0"
+       },
+       {
+        "op": "stl",
+        "name": "+",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1
+          },
+          "args": []
+         }
+        ],
+        "text": "1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "LW 4"
+       },
+       {
+        "op": "stl",
+        "name": "SET",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [],
+        "text": "L 2.0"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1002,
+          "name": "#b",
+          "args": []
+         }
+        ],
+        "text": "#b"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [],
+        "text": "%M10.0"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1003,
+          "name": "#c",
+          "args": []
+         }
+        ],
+        "text": "#c"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 2"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "77",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 77
+          },
+          "args": []
+         }
+        ],
+        "text": "77"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "LW 100"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "LW 100"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 4"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "P#L 4.0"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "W [AR1,P#0.0]"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 6"
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "kind": "local",
+      "text": "#a",
+      "name": null,
+      "path": [
+       {
+        "name": "a",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1001
+     },
+     {
+      "kind": "local",
+      "text": "#b",
+      "name": null,
+      "path": [
+       {
+        "name": "b",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1002
+     },
+     {
+      "kind": "local",
+      "text": "#c",
+      "name": null,
+      "path": [
+       {
+        "name": "c",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1003
+     }
+    ]
+   }
+  },
+  {
+   "type": "FC",
+   "name": "Opt",
+   "language": "STL",
+   "optimized": true,
+   "protection": null,
+   "interface": [
+    {
+     "name": "x",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": "Temp",
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    }
+   ],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "3",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 3
+          },
+          "args": []
+         }
+        ],
+        "text": "3"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "LW 0"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "LW 0"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 8"
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "kind": "local",
+      "text": "#a",
+      "name": null,
+      "path": [
+       {
+        "name": "a",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1001
+     },
+     {
+      "kind": "local",
+      "text": "#b",
+      "name": null,
+      "path": [
+       {
+        "name": "b",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1002
+     },
+     {
+      "kind": "local",
+      "text": "#c",
+      "name": null,
+      "path": [
+       {
+        "name": "c",
+        "index": []
+       }
+      ],
+      "modifier": null,
+      "ref_id": 1003
+     }
+    ]
+   }
+  }
+ ]
+}

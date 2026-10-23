@@ -10,13 +10,17 @@
 #   db NAME NUMBER [optimized] a data block, standard access unless optimized,
 #   field NAME TYPE              and its members: Bool, Byte, Int, Word, DInt,
 #                                DWord, Real, Time, S5Time, Char, String[n],
-#                                Array[a..b] of an elementary type
+#                                Array[a..b] of an elementary type; temps
+#                                also Any, Pointer
 #   block NAME FC|FB           the next block (the first one is the OB Main)
+#   temp NAME TYPE             a temporary of the block (types as for field)
+#   optimized                  the block has optimized access (standard otherwise)
 #   ---                        a new network
 #   NAME:                      a label
 #   INSTR [OPERAND]            OPERAND:
 #       a tag name             the tag
 #       "DB".member            a member of a data block
+#       #name                  a temporary of the block
 #       db:NAME                a data block (OPN db:Data)
 #       i:VALUE[:TYPE]         an integer constant (Int unless given)
 #       r:REAL, t:MS, s5:MS    a Real, a Time, an S5Time
@@ -35,7 +39,7 @@ src = open(sys.argv[1]).read().splitlines()
 tags = []
 dbs = []  # [name, number, optimized, [(name, type)]]
 blocks = []  # [name, type, networks]
-cur = ["Main", "OB", [[]]]
+cur = ["Main", "OB", [[]], [], False]  # name, type, networks, temps, optimized
 blocks.append(cur)
 refs = []
 
@@ -63,6 +67,8 @@ def typeOf(dt):
         return {"kind": "array", "name": "Array", "bits": None, "length": None,
                 "dims": [{"low": lo, "low_text": str(lo), "high": hi, "high_text": str(hi)}],
                 "element": elementary(m.group(3))}
+    if dt in ("Any", "Pointer"):
+        return {"kind": "parameter", "name": dt, "bits": None, "length": None, "dims": [], "element": None}
     return elementary(dt)
 
 
@@ -89,8 +95,15 @@ for ln in src:
         continue
     if ln.startswith("block "):
         _, n, t = ln.split()
-        cur = [n, t, [[]]]
+        cur = [n, t, [[]], [], False]
         blocks.append(cur)
+        continue
+    if ln.startswith("temp "):
+        _, n, t = ln.split(None, 2)
+        cur[3].append((n, t))
+        continue
+    if ln == "optimized":
+        cur[4] = True
         continue
     if ln == "---":
         cur[2].append([])
@@ -145,6 +158,9 @@ for ln in src:
             i = ref({"kind": "data block member", "text": o, "name": None,
                      "path": [{"name": d.strip('"'), "index": []}, {"name": m, "index": []}], "modifier": None})
             exprs.append({"op": "ref", "ref_id": i, "name": o, "args": []})
+        elif o.startswith("#"):
+            i = ref({"kind": "local", "text": o, "name": None, "path": [{"name": o[1:], "index": []}], "modifier": None})
+            exprs.append({"op": "ref", "ref_id": i, "name": o, "args": []})
         elif o in names:
             text = '"' + o + '"'
             exprs.append({"op": "ref", "ref_id": names.index(o) + 1, "name": text, "args": []})
@@ -165,9 +181,10 @@ prog = {
                     for n, num, opt, ms in dbs],
     "organization_blocks": [{"name": "Main", "event": "ProgramCycle", "priority": 1, "cycle_us": None}],
     "runtime": {"startup": [], "program_cycle": ["Main"], "interrupts": []},
-    "blocks": [{"type": t, "name": n, "language": "STL", "protection": None, "interface": [],
+    "blocks": [{"type": t, "name": n, "language": "STL", "optimized": opt, "protection": None,
+                "interface": [dict(member(m, ty), section="Temp") for m, ty in temps],
                 "code": {"networks": [{"number": k + 1, "statements": s} for k, s in enumerate(nets)],
                          "references": tagRefs + refs}}
-               for n, t, nets in blocks],
+               for n, t, nets, temps, opt in blocks],
 }
 json.dump(prog, open(sys.argv[2], "w"), indent=1)

@@ -7,7 +7,8 @@ PLCSIM are needed. It runs the program the way the CPU does:
 
 - the startup OBs once, then the program cycle OBs cycle after cycle;
 - the cyclic interrupt OBs at their cycle and phase;
-- LAD, FBD and SCL, from one code tree, and STL (see below);
+- LAD, FBD and SCL, from one code tree, and STL (see below), with S5
+  timers and counters in all of them;
 - FB calls with their instance data blocks and multi-instances, FC calls with
   in-out parameters by reference and a return value;
 - the IEC timers and counters (TON, TOF, TP, TONR, CTU, CTD, CTUD), edges
@@ -85,12 +86,24 @@ MCR: MCRA, MCRD, MCR( and )MCR, 8 deep; with a FALSE on the MCR stack, =
 and T write 0 and S and R do nothing, in the blocks that have MCRA on. The
 stack is passed on to called blocks; each OB starts with an empty one.
 
-Not taken: the local data (L) by address, the status word bits as
-operands other than BR, OV, OS and the conditions (>0, ...). A called block
-starts with its accumulators at 0 and the caller's are kept over the call
-(on an S7-300/400 they pass through; on an S7-1500 they are not defined
-after a call). The S5 timers and counters of LAD and FBD (S_ODT, S_CU, ...)
-are not taken yet.
+Local data by address (`L 0.0`, `LW 2`, `LD 4`, pointers to L) in blocks
+with standard access: the temporaries of the block are laid out from L 0
+as a data block is, and the bytes after them are local data without a
+name, kept for the call.
+
+Not taken: the status word bits as operands other than BR, OV, OS and the
+conditions (>0, ...). A called block starts with its accumulators at 0 and
+the caller's are kept over the call (on an S7-300/400 they pass through; on
+an S7-1500 they are not defined after a call).
+
+## S5 timers and counters in LAD and FBD
+
+The boxes S_PULSE, S_PEXT, S_ODT, S_ODTS, S_OFFDT (in German S_IMPULS,
+S_VIMP, S_EVERZ, S_SEVERZ, S_AVERZ), S_CU, S_CD, S_CUD (Z_VORW, Z_RUECK,
+ZAEHLER), the coils SP, SE, SD, SS, SF, CU, CD and SC, contacts on a timer
+or counter, and the R coil on one, on the same timers and counters as STL.
+A time value is an S5TIME constant or a word with its bits, a count C#n or
+a word in BCD.
 
 What goes into ACCU1: an 8- or 16-bit operand in the low word with the
 high word 0, as `L MW10` does; a constant of a signed type sign-extended;

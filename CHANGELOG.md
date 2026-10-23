@@ -12,6 +12,11 @@ The first version: the core of the simulator, and STL.
   DB5.DBW2, memory- and register-indirect, area-crossing, pointers, the
   address registers); data blocks with standard access laid out in bytes;
   MCR. Needs the `text` of STL statements from tiaconv.
+- STL: local data by address (L, LB, LW, LD, pointers to L).
+- LAD/FBD: the S5 timer and counter boxes (S_PULSE ... S_OFFDT, S_CU,
+  S_CD, S_CUD, also their German names), the coils SP ... SF, CU, CD, SC,
+  contacts and the R coil on timers and counters.
+- DEVELOPMENT.md: the decisions taken in implementing S7Forge.
 - Loads a program file of tiaconv `--program-json` (schema version 2).
 - Runs the startup OBs, the program cycle OBs and the cyclic interrupt OBs in
   virtual time; a warm restart keeps the retentive data, a power-on does not.

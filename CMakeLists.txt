@@ -26,6 +26,7 @@ add_library(s7forgecore STATIC
     src/sim.cpp
     src/stl.cpp
     src/absolute.cpp
+    src/s5.cpp
     src/scenario.cpp)
 target_include_directories(s7forgecore PUBLIC src)
 

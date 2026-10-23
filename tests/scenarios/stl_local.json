@@ -1,0 +1,3 @@
+{"comment": "local data by address in a block with standard access; in Opt (optimized) L LW 0 is not done and loads 0, with a warning", "program": "../stl/local.program.json",
+ "steps": [{"scans": 1,
+            "expect": {"%M10.0": true, "%MW2": 6, "%MW4": 77, "%MW6": 6, "%MW8": 0}}]}

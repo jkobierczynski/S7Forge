@@ -80,6 +80,7 @@
    "type": "OB",
    "name": "Main",
    "language": "STL",
+   "optimized": false,
    "protection": null,
    "interface": [],
    "code": {

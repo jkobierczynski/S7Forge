@@ -1,0 +1,35 @@
+// local data by address: the temporaries of Sub from L 0 (a Int at 0,
+// b Bool at 2.0, c Int at 4), the local data after them, a pointer into L;
+// a block with optimized access has no local data by address
+CALL call:Sub
+CALL call:Opt
+block Sub FC
+temp a Int
+temp b Bool
+temp c Int
+L i:5
+T #a
+L LW 0
++ i:1
+T LW 4
+SET
+= L 2.0
+A #b
+= %M10.0
+L #c
+T MW 2
+L i:77
+T LW 100
+L LW 100
+T MW 4
+L P#L 4.0
+LAR1
+L W [AR1,P#0.0]
+T MW 6
+block Opt FC
+optimized
+temp x Int
+L i:3
+T LW 0
+L LW 0
+T MW 8
