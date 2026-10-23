@@ -1,0 +1,7 @@
+{
+  "comment": "Operands only in the text: C#12 sets the counter to 12, A OV after an overflow, MW [\"Ptr\"] with Ptr = P#40.0",
+  "program": "../stl/text.program.json",
+  "steps": [
+    {"set": {"Set": true, "Src": 1234}, "scans": 2, "expect": {"Cv": 12, "Flag": true, "Dst": 1234}}
+  ]
+}

@@ -13,6 +13,11 @@ The first version: the core of the simulator, and STL.
   address registers); data blocks with standard access laid out in bytes;
   MCR. Needs the `text` of STL statements from tiaconv.
 - STL: local data by address (L, LB, LW, LD, pointers to L).
+- STL: memory-indirect addresses by a tag (`DBW ["Tag_7" ]`), operands only
+  in the text (status bits, `C#5` as BCD), as the s16_stl project gives them.
+- LAD/FBD: the S5 box names the project stores (`Sp`, `Sd`, `Cud`, ...)
+  and the pins `rt`, `rtbcd`.
+- Scenario s16_stl on the program of tiaconv's s16_stl fixture.
 - LAD/FBD: the S5 timer and counter boxes (S_PULSE ... S_OFFDT, S_CU,
   S_CD, S_CUD, also their German names), the coils SP ... SF, CU, CD, SC,
   contacts and the R coil on timers and counters.

@@ -193,7 +193,35 @@ bool Simulator::stlAddress(Frame& f, const std::string& text, Abs& a, bool& isAd
             crossing = true;
             return c.take(']');
         }
-        // memory-indirect: a word (T, C, DB numbers) or a double word (an address)
+        // memory-indirect: a word (T, C, DB numbers) or a double word (an
+        // address), by address ([MD 10]) or by a name (["Ptr"], [#ptr]: TIA
+        // Portal shows the tag of MD 10 there)
+        c.space();
+        if (c.peek() == '"' || c.peek() == '#') {
+            const size_t open = text.find('['), close = text.rfind(']');
+            if (open == std::string::npos || close == std::string::npos || close < open) return false;
+            std::string name = text.substr(open + 1, close - open - 1);
+            name.erase(0, name.find_first_not_of(" \t"));
+            name.erase(name.find_last_not_of(" \t") + 1);
+            Place pl;
+            if (name[0] == '#') {
+                Var* v = f.local ? f.local->member(name.substr(1)) : nullptr;
+                if (!v && f.instance) v = f.instance->member(name.substr(1));
+                if (v) pl.var = v;
+            } else {
+                std::string error;
+                pl = operand(name, error);
+            }
+            if (!pl.var && !pl.area) return false;
+            const Val v = load(pl);
+            const uint32_t raw = static_cast<uint32_t>(asInt(v));
+            bits = word ? (raw & 0xFFFF) : (raw & 0x7FFFF);
+            // past the name
+            const size_t end = c.s.find(']', c.p);
+            if (end == std::string::npos) return false;
+            c.p = end + 1;
+            return true;
+        }
         const std::string w = c.letters();
         char ia, isz;
         uint32_t byte, bit = 0;

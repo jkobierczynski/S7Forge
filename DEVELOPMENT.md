@@ -267,12 +267,22 @@ run; the operand text is then the names of the expressions.
   and DIX ... DID of the open DB and DI, DB5.DBW2, L (local data, see
   below); T 5, C 5 (Z 5); in German E, A, PE, PA.
 - Memory-indirect: `MW [MD 10]` (a double word with the address as
-  byte·8+bit), `T [MW 4]`, `OPN DB [MW 2]` (a word with the number).
+  byte·8+bit), `T [MW 4]`, `OPN DB [MW 2]` (a word with the number). The
+  editor shows the tag of the address when there is one (`DBW ["Tag_7" ]`
+  for `DBW [MD 44]`, s16_stl), so the operand in brackets may also be a tag
+  or a `#local`.
 - Register-indirect: `DBW [AR1,P#2.0]` (the address in AR1 plus the offset,
   within the area named), and area-crossing `W [AR2,P#0.0]` (the area from
   the register's byte 0: 16#80 P, 16#81 I, 16#82 Q, 16#83 M, 16#84 DB,
   16#85 DI, 16#86 L).
-- Pointers: `P#M10.0` (area-crossing), `P#10.0`.
+- Pointers: `P#M10.0` (area-crossing), `P#10.0`, `P##temp`.
+- An operand that is only in the text is a constant (`C#5`, `S5T#2S`) or a
+  status bit (`A OV`, `A >0`): tiaconv puts into `exprs` only what is a
+  reference. A count `C#5` is BCD in the accumulator, whatever its parsed
+  value.
+- tiaconv also gives an access by address as a reference of the kind
+  `address` with its area, bit offset and size; S7Forge reads the text for
+  STL and does not use it yet.
 - Addresses beyond 65535, timer and counter numbers beyond 2047, and
   addresses beyond an area put the CPU in STOP or are refused with a
   warning; nothing indexes outside the memory.
@@ -345,11 +355,13 @@ is not restored.
 
 tiaconv writes a box as a call of its name with its pins; a special coil
 (SD, CU, ...) as a call of the coil's name with `in` (the power flow),
-`operand` and `value`. The names as the project stores them are not known
-from a test project yet, so S7Forge takes the box names in English and
-German (S_ODT, S_EVERZ, ...) and the coil names as `SdCoil`, `CuCoil`,
-`ScCoil`, ..., ignoring case and `_`, and the pins by several names (T_NO,
-TNR, operand; TV, TW, value; BI, DUAL; BCD, DEZ; ...).
+`operand` and `value`. The project s16_stl shows the names stored: the
+boxes `Sp`, `Sd`, `Cud` (S_PULSE, S_ODT, S_CUD; so `Se`, `Ss`, `Sf`, `Cu`,
+`Cd` for the others), the coils `SdCoil`, `CuCoil`, `ScCoil`, the pins
+`timer`, `s`, `tv`, `r`, `q`, `rt` (BI), `rtbcd` (BCD) and `counter`, `cu`,
+`cd`, `s`, `pv`, `r`, `cv`, `q`. S7Forge takes these, and also the names the
+editor shows in English and German (S_ODT, S_EVERZ, ...) and other pin
+names (T_NO, TNR; TW; BI, DUAL; BCD, DEZ; ...), ignoring case and `_`.
 
 - A box runs as its STL: the start with the time value, then R, then BI,
   BCD and Q (a counter: CU, CD, S with PV, R, then CV, CV_BCD, Q). An input
@@ -375,7 +387,9 @@ TNR, operand; TV, TW, value; BI, DUAL; BCD, DEZ; ...).
 
 ### MCR
 
-MCRA and MCRD switch the MCR on and off in the block; MCR( pushes the RLO,
+The S7-1500 refuses MCR ("The instruction is not supported by the current
+CPU", s16_stl); the S7-300/400 has it, and STL migrated from them may use
+it, so S7Forge runs it. MCRA and MCRD switch the MCR on and off in the block; MCR( pushes the RLO,
 )MCR pops it, 8 deep. With MCRA on and a FALSE anywhere on the stack, `=`
 and T write 0, S and R (also on timers and counters) do nothing; CU and CD
 are not MCR-dependent. The stack is passed on to called blocks (with MCRA
@@ -400,7 +414,10 @@ off in them until they switch it on); each OB starts with an empty one.
 - ULInt/LWord beyond 2^63.
 - The instructions of the libraries (communication, PID, motion), the
   hardware (high-speed counters, analog I/O).
-- A test project with real STL using absolute addressing, S5 timers and
-  MCR, and LAD/FBD with the S5 boxes and coils, to check the operand text
-  tiaconv gives and the names of the boxes, coils and pins against what
-  the editor shows.
+- The S7-1500 compiler wants a data block opened in the network that uses
+  DBX ... DBD, also after a fully qualified access; S7Forge does not check
+  that and uses whatever the DB register holds.
+- The project does not store the mnemonic setting: the code is stored
+  without mnemonics, and German is only seen in the text of an older
+  export. Tag addresses keep what was typed (`%A1.0`); tiaconv writes them
+  with the international mnemonics.

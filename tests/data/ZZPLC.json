@@ -1567,33 +1567,33 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 18, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 20, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 23, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 5, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"ZZDATA\"", "data_type": "ZZDATA", "value": null, "data_block": null, "declared_as": null, "name": "ZZDATA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 21, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"ZZDATA\".speed", "data_type": "Int", "value": null, "data_block": "ZZDATA", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "ZZDATA", "index": []}, {"name": "speed", "index": []}], "modifier": null},
-          {"ref_id": 19, "kind": "constant", "kind_stored": "LiteralConstant", "text": "100", "data_type": "Int", "value": {"kind": "int", "text": "100", "bool": null, "int": 100, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "100", "scope": "Constant", "path": [], "modifier": null},
-          {"ref_id": 22, "kind": "constant", "kind_stored": "LiteralConstant", "text": "5", "data_type": "Int", "value": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "5", "scope": "Constant", "path": [], "modifier": null},
-          {"ref_id": 30, "kind": "constant", "kind_stored": "LiteralConstant", "text": "T#5S", "data_type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "T#5S", "scope": "Constant", "path": [], "modifier": null},
-          {"ref_id": 24, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null},
-          {"ref_id": 25, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"IEC_Timer_0_DB\"", "data_type": "IEC_TIMER", "value": null, "data_block": null, "declared_as": null, "name": "IEC_Timer_0_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 35, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZFB_DB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 46, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZOUTER_DB\"", "data_type": "ZZOUTER", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUTER_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 53, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZLAD2_DB\"", "data_type": "ZZLAD2", "value": null, "data_block": null, "declared_as": null, "name": "ZZLAD2_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 56, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZSTD_DB\"", "data_type": "ZZSTD", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTD_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 33, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 44, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZOUTER\"", "data_type": "ZZOUTER", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUTER", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 51, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZLAD2\"", "data_type": "ZZLAD2", "value": null, "data_block": null, "declared_as": null, "name": "ZZLAD2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 54, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZSTD\"", "data_type": "ZZSTD", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTD", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 36, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZFBD\"", "data_type": "ZZFBD", "value": null, "data_block": null, "declared_as": null, "name": "ZZFBD", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 38, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSCL\"", "data_type": "ZZSCL", "value": null, "data_block": null, "declared_as": null, "name": "ZZSCL", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 40, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSTL\"", "data_type": "ZZSTL", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTL", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 47, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSCL2\"", "data_type": "ZZSCL2", "value": null, "data_block": null, "declared_as": null, "name": "ZZSCL2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 49, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSTL2\"", "data_type": "ZZSTL2", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTL2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 59, "kind": "user constant", "kind_stored": "GlobalConstant", "text": "\"ZZK\"", "data_type": "Int", "value": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "ZZK", "scope": "Global", "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 18, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 20, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 23, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 5, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"ZZDATA\"", "data_type": "ZZDATA", "value": null, "data_block": null, "declared_as": null, "name": "ZZDATA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 21, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"ZZDATA\".speed", "data_type": "Int", "value": null, "data_block": "ZZDATA", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "ZZDATA", "index": []}, {"name": "speed", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 19, "kind": "constant", "kind_stored": "LiteralConstant", "text": "100", "data_type": "Int", "value": {"kind": "int", "text": "100", "bool": null, "int": 100, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "100", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 22, "kind": "constant", "kind_stored": "LiteralConstant", "text": "5", "data_type": "Int", "value": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "5", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 30, "kind": "constant", "kind_stored": "LiteralConstant", "text": "T#5S", "data_type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "T#5S", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 24, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 25, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"IEC_Timer_0_DB\"", "data_type": "IEC_TIMER", "value": null, "data_block": null, "declared_as": null, "name": "IEC_Timer_0_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 35, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZFB_DB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 46, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZOUTER_DB\"", "data_type": "ZZOUTER", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUTER_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 53, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZLAD2_DB\"", "data_type": "ZZLAD2", "value": null, "data_block": null, "declared_as": null, "name": "ZZLAD2_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 56, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZSTD_DB\"", "data_type": "ZZSTD", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTD_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 33, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 44, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZOUTER\"", "data_type": "ZZOUTER", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUTER", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 51, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZLAD2\"", "data_type": "ZZLAD2", "value": null, "data_block": null, "declared_as": null, "name": "ZZLAD2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 54, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZSTD\"", "data_type": "ZZSTD", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTD", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 36, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZFBD\"", "data_type": "ZZFBD", "value": null, "data_block": null, "declared_as": null, "name": "ZZFBD", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 38, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSCL\"", "data_type": "ZZSCL", "value": null, "data_block": null, "declared_as": null, "name": "ZZSCL", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 40, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSTL\"", "data_type": "ZZSTL", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTL", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 47, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSCL2\"", "data_type": "ZZSCL2", "value": null, "data_block": null, "declared_as": null, "name": "ZZSCL2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 49, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZSTL2\"", "data_type": "ZZSTL2", "value": null, "data_block": null, "declared_as": null, "name": "ZZSTL2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 59, "kind": "user constant", "kind_stored": "GlobalConstant", "text": "\"ZZK\"", "data_type": "Int", "value": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "ZZK", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -1731,8 +1731,8 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#in1", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "in1", "index": []}], "modifier": null},
-          {"ref_id": 2, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#out1", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "out1", "index": []}], "modifier": null}
+          {"ref_id": 1, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#in1", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "in1", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 2, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#out1", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "out1", "index": []}], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -1908,12 +1908,12 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "multi-instance", "kind_stored": "MultInstAccess", "text": "#inner", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "inner", "scope": "Local", "path": [{"name": "inner", "index": []}], "modifier": null},
-          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": -1, "kind": "block", "kind_stored": null, "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": "inner", "name": "ZZFB", "scope": null, "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "multi-instance", "kind_stored": "MultInstAccess", "text": "#inner", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "inner", "scope": "Local", "path": [{"name": "inner", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": -1, "kind": "block", "kind_stored": null, "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": "inner", "name": "ZZFB", "scope": null, "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -2644,19 +2644,19 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 7, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 9, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 18, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 8, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#edgeP", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "edgeP", "index": []}], "modifier": null},
-          {"ref_id": 10, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#memN", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "memN", "index": []}], "modifier": null},
-          {"ref_id": 16, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#IEC_Counter_0_Instance", "data_type": "CTU_INT", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "IEC_Counter_0_Instance", "index": []}], "modifier": null},
-          {"ref_id": 20, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#IEC_Timer_0_Instance", "data_type": "TON_TIME", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "IEC_Timer_0_Instance", "index": []}], "modifier": null},
-          {"ref_id": 15, "kind": "instruction", "kind_stored": "Instruction", "text": "CTU", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "CTU", "scope": "Instruction", "path": [], "modifier": null},
-          {"ref_id": 19, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null},
-          {"ref_id": 17, "kind": "constant", "kind_stored": "LiteralConstant", "text": "10", "data_type": "Int", "value": {"kind": "int", "text": "10", "bool": null, "int": 10, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "10", "scope": "Constant", "path": [], "modifier": null},
-          {"ref_id": 22, "kind": "constant", "kind_stored": "LiteralConstant", "text": "T#2S", "data_type": "Time", "value": {"kind": "duration", "text": "T#2S", "bool": null, "int": null, "real": null, "ns": 2000000000, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "T#2S", "scope": "Constant", "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 7, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 9, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 18, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 8, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#edgeP", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "edgeP", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 10, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#memN", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "memN", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 16, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#IEC_Counter_0_Instance", "data_type": "CTU_INT", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "IEC_Counter_0_Instance", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 20, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#IEC_Timer_0_Instance", "data_type": "TON_TIME", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "IEC_Timer_0_Instance", "index": []}], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 15, "kind": "instruction", "kind_stored": "Instruction", "text": "CTU", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "CTU", "scope": "Instruction", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 19, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 17, "kind": "constant", "kind_stored": "LiteralConstant", "text": "10", "data_type": "Int", "value": {"kind": "int", "text": "10", "bool": null, "int": 10, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "10", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 22, "kind": "constant", "kind_stored": "LiteralConstant", "text": "T#2S", "data_type": "Time", "value": {"kind": "duration", "text": "T#2S", "bool": null, "int": null, "real": null, "ns": 2000000000, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "T#2S", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -2888,10 +2888,10 @@
           }
         ],
         "references": [
-          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 5, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"ZZDATA\"", "data_type": "ZZDATA", "value": null, "data_block": null, "declared_as": null, "name": "ZZDATA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 6, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"ZZDATA\".run", "data_type": "Bool", "value": null, "data_block": "ZZDATA", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "ZZDATA", "index": []}, {"name": "run", "index": []}], "modifier": null}
+          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 5, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"ZZDATA\"", "data_type": "ZZDATA", "value": null, "data_block": null, "declared_as": null, "name": "ZZDATA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 6, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"ZZDATA\".run", "data_type": "Bool", "value": null, "data_block": "ZZDATA", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "ZZDATA", "index": []}, {"name": "run", "index": []}], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -3040,12 +3040,12 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 8, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 7, "kind": "constant", "kind_stored": "LiteralConstant", "text": "5", "data_type": "Int", "value": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "5", "scope": "Constant", "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 6, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 8, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 7, "kind": "constant", "kind_stored": "LiteralConstant", "text": "5", "data_type": "Int", "value": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "5", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -3274,11 +3274,11 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 2, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 2, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN3\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN3", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZOUT\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZOUT", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 5, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },
@@ -3373,9 +3373,7 @@
               {
                 "op": "stl",
                 "name": "NOP",
-                "exprs": [
-                  {"op": "const", "ref_id": null, "instance_ref_id": null, "name": null, "type": null, "value": {"kind": "int", "text": "0", "bool": null, "int": 0, "real": null, "ns": null, "days": null, "string": null}, "args": [], "target": null}
-                ],
+                "exprs": [],
                 "target": null,
                 "text": "0",
                 "branches": [],
@@ -3504,16 +3502,16 @@
           }
         ],
         "references": [
-          {"ref_id": 2, "kind": "label", "kind_stored": "Label", "text": "M001", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "M001", "scope": "Label", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "constant", "kind_stored": "LiteralConstant", "text": "1", "data_type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "1", "scope": "Constant", "path": [], "modifier": null},
-          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 12, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 13, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 14, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 15, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 7, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZFBD\"", "data_type": "ZZFBD", "value": null, "data_block": null, "declared_as": null, "name": "ZZFBD", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 9, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 10, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZFB_DB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB_DB", "scope": "Global", "path": [], "modifier": null}
+          {"ref_id": 2, "kind": "label", "kind_stored": "Label", "text": "M001", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "M001", "scope": "Label", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "constant", "kind_stored": "LiteralConstant", "text": "1", "data_type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "1", "scope": "Constant", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN1\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 12, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 13, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZC\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZC", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 14, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZN2\"", "data_type": "Int", "value": null, "data_block": null, "declared_as": null, "name": "ZZN2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 15, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"ZZALPHA\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "ZZALPHA", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 7, "kind": "block", "kind_stored": "FCBlock", "text": "\"ZZFBD\"", "data_type": "ZZFBD", "value": null, "data_block": null, "declared_as": null, "name": "ZZFBD", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 9, "kind": "block", "kind_stored": "FBBlock", "text": "\"ZZFB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 10, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"ZZFB_DB\"", "data_type": "ZZFB", "value": null, "data_block": null, "declared_as": null, "name": "ZZFB_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     }

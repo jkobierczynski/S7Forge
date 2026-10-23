@@ -1,0 +1,23 @@
+// operands only in the text, as tiaconv gives them since s16_stl: a count
+// C#12 (BCD in the accumulator, though its parsed value is 12), a status bit
+// (A OV), memory-indirect by a tag (MW ["Ptr"])
+tag Set Bool %I1.2
+tag Cv Word %MW20
+tag Flag Bool %Q1.0
+tag Ptr DWord %MD30
+tag Src Word %MW40
+tag Dst Word %MW42
+A Set
+L c:12
+S C 1
+L C 1
+T Cv
+L i:30000
+L i:30000
++I
+A OV
+= Flag
+L i:320:DInt
+T Ptr
+L MW ["Ptr"]
+T Dst

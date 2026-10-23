@@ -48,6 +48,10 @@ bool s5Kind(const std::string& name, S5Kind& k) {
         {"SPULSE", {'T', 'P', false}},  {"SPEXT", {'T', 'E', false}},  {"SODT", {'T', 'D', false}},
         {"SODTS", {'T', 'S', false}},   {"SOFFDT", {'T', 'F', false}}, {"SCU", {'C', 'U', false}},
         {"SCD", {'C', 'D', false}},     {"SCUD", {'C', 'B', false}},
+        // the names the project stores for the boxes (S_ODT is Sd, S_CUD Cud)
+        {"SP", {'T', 'P', false}},      {"SE", {'T', 'E', false}},     {"SD", {'T', 'D', false}},
+        {"SS", {'T', 'S', false}},      {"SF", {'T', 'F', false}},     {"CU", {'C', 'U', false}},
+        {"CD", {'C', 'D', false}},      {"CUD", {'C', 'B', false}},
         // German
         {"SIMPULS", {'T', 'P', false}}, {"SVIMP", {'T', 'E', false}},  {"SEVERZ", {'T', 'D', false}},
         {"SSEVERZ", {'T', 'S', false}}, {"SAVERZ", {'T', 'F', false}}, {"ZVORW", {'C', 'U', false}},
@@ -360,8 +364,8 @@ bool Simulator::s5Call(Frame& f, const Json& e, const std::string& name) {
         if (!k.coil) {
             S5Timer& t = t5_[static_cast<size_t>(n)];
             const int64_t units = s5Units(t);
-            put({"BI", "DUAL"}, intVal(units, elemType("Word")));
-            put({"BCD", "DEZ"}, intVal((static_cast<int64_t>(t.base) << 12) | bcd3(units), elemType("Word")));
+            put({"BI", "RT", "DUAL"}, intVal(units, elemType("Word")));
+            put({"BCD", "RTBCD", "DEZ"}, intVal((static_cast<int64_t>(t.base) << 12) | bcd3(units), elemType("Word")));
             put({"Q"}, boolVal(t.q));
         }
         return true;

@@ -24,7 +24,9 @@
 #       db:NAME                a data block (OPN db:Data)
 #       i:VALUE[:TYPE]         an integer constant (Int unless given)
 #       r:REAL, t:MS, s5:MS    a Real, a Time, an S5Time
-#       k:WORD                 a keyword (BR, OV, >0, ...)
+#       c:N                    a count C#N, as tiaconv gives it (a Word with the value N)
+#       k:WORD                 a keyword (BR, OV, >0, ...) as an expression;
+#                              written bare it is text only, as tiaconv gives it
 #       @LABEL                 a jump's label
 #       call:BLOCK             the block of a CALL
 #       (                      the bracket of A(, O(, ...
@@ -136,6 +138,10 @@ for ln in src:
             text = "S5T#" + o[3:] + "MS"
             exprs.append({"op": "const", "name": text, "type": "S5Time",
                           "value": {"kind": "duration", "ns": int(o[3:]) * 1000000}, "args": []})
+        elif o.startswith("c:"):
+            text = "C#" + o[2:]
+            exprs.append({"op": "const", "name": text, "type": "Word",
+                          "value": {"kind": "int", "text": text, "int": int(o[2:])}, "args": []})
         elif o.startswith("k:"):
             text = o[2:]
             exprs.append({"op": "const", "name": o[2:], "args": []})

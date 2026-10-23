@@ -345,10 +345,10 @@
           }
         ],
         "references": [
-          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_1\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 4, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_2\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 3, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_1_DB\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1_DB", "scope": "Global", "path": [], "modifier": null},
-          {"ref_id": 6, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_2_DB\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2_DB", "scope": "Global", "path": [], "modifier": null}
+          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_1\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 4, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_2\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 3, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_1_DB\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null},
+          {"ref_id": 6, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_2_DB\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2_DB", "scope": "Global", "path": [], "modifier": null, "address": null, "points_to": null}
         ]
       }
     },

@@ -145,11 +145,14 @@ error and 3 (for `run`) when the CPU went to STOP.
 
 ## Tests
 
-`tests/data` holds the programs of two of tiaconv's test projects, exported
-by tiaconv: `MOTORPLC.json` (s15_motor: a motor start/stop with a 5 s delay,
-in LAD and in SCL) and `ZZPLC.json` (s14_code_rewritten: LAD, FBD, SCL, STL
-and a know-how protected block). The scenarios in `tests/scenarios` check
-them; the values expected in s14 were derived by hand from the code.
+`tests/data` holds programs of tiaconv's test projects, exported by
+tiaconv: `MOTORPLC.json` (s15_motor: a motor start/stop with a 5 s delay,
+in LAD and in SCL), `ZZPLC.json` (s14_code_rewritten: LAD, FBD, SCL, STL
+and a know-how protected block), `ZZBRAVO.json` (s13_hmi) and
+`S16PLC.json` (s16_stl: STL with absolute and indirect addresses, local
+data by address, S5 timers and counters in STL, LAD and FBD). The scenarios
+in `tests/scenarios` check them; the values expected in s14 and s16 were
+derived by hand from the code.
 
 ## Licence
 

@@ -1,0 +1,337 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "Set",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I1.2"
+  },
+  {
+   "name": "Cv",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW20"
+  },
+  {
+   "name": "Flag",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q1.0"
+  },
+  {
+   "name": "Ptr",
+   "data_type": "DWord",
+   "type": {
+    "kind": "elementary",
+    "name": "DWord",
+    "bits": 32,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MD30"
+  },
+  {
+   "name": "Src",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW40"
+  },
+  {
+   "name": "Dst",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW42"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "optimized": false,
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"Set\"",
+          "args": []
+         }
+        ],
+        "text": "\"Set\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "C#12",
+          "type": "Word",
+          "value": {
+           "kind": "int",
+           "text": "C#12",
+           "int": 12
+          },
+          "args": []
+         }
+        ],
+        "text": "C#12"
+       },
+       {
+        "op": "stl",
+        "name": "S",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"Cv\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cv\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "30000",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 30000
+          },
+          "args": []
+         }
+        ],
+        "text": "30000"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "30000",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 30000
+          },
+          "args": []
+         }
+        ],
+        "text": "30000"
+       },
+       {
+        "op": "stl",
+        "name": "+I",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "OV"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "name": "\"Flag\"",
+          "args": []
+         }
+        ],
+        "text": "\"Flag\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "320",
+          "type": "DInt",
+          "value": {
+           "kind": "int",
+           "int": 320
+          },
+          "args": []
+         }
+        ],
+        "text": "320"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "name": "\"Ptr\"",
+          "args": []
+         }
+        ],
+        "text": "\"Ptr\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "MW [\"Ptr\"]"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 6,
+          "name": "\"Dst\"",
+          "args": []
+         }
+        ],
+        "text": "\"Dst\""
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Set\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Cv\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Flag\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"Ptr\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"Src\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 6,
+      "kind": "tag",
+      "text": "\"Dst\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

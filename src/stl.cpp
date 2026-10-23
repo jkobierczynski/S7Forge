@@ -188,20 +188,21 @@ uint32_t Simulator::stlLoad(Frame& f, const Json& e, bool& ok) {
     if (e["op"].str() == "const") {
         constant = true;
         t = elemType(e["type"].str());
+        const std::string text = e["value"].type == Json::Object ? e["value"]["text"].str() : e["name"].str();
+        const std::string u = upper(text);
+        // a count C#5 is BCD in the accumulator, whatever its parsed value
+        if (u.compare(0, 2, "C#") == 0) {
+            const long n = std::strtol(text.c_str() + 2, nullptr, 10);
+            if (n < 0 || n > 999) {
+                warn("block " + f.block->name + ": the count " + text + " is not 0 to 999");
+                ok = false;
+                return 0;
+            }
+            return bcdOf(n);
+        }
         if (e["value"].type == Json::Object) v = fromExport(e["value"], t);
         if (v.kind == Kind::None) {
-            const std::string text = e["value"].type == Json::Object ? e["value"]["text"].str() : e["name"].str();
-            const std::string u = upper(text);
             if (u.compare(0, 4, "S5T#") == 0 && parseLiteral("T#" + text.substr(4), v)) return s5timeBits(v.i);
-            if (u.compare(0, 2, "C#") == 0) {
-                const long n = std::strtol(text.c_str() + 2, nullptr, 10);
-                if (n < 0 || n > 999) {
-                    warn("block " + f.block->name + ": the count " + text + " is not 0 to 999");
-                    ok = false;
-                    return 0;
-                }
-                return bcdOf(n);
-            }
             if (!parseLiteral(text, v)) {
                 warn("block " + f.block->name + ": STL loads " + text + ", which S7Forge does not read");
                 ok = false;
@@ -466,6 +467,19 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
         return true;
     };
     // the value of the operand, as in ACCU1
+    // an operand only in the text, read as a constant: C#5, S5T#2S, the
+    // status bits OV, BR, >0 (tiaconv gives no tree node for them)
+    auto textConst = [&]() {
+        Json e;
+        e.type = Json::Object;
+        Json op1, name;
+        op1.type = name.type = Json::String;
+        op1.s = "const";
+        name.s = text;
+        e.members.emplace_back("op", op1);
+        e.members.emplace_back("name", name);
+        return e;
+    };
     auto operand = [&](bool& ok) -> uint32_t {
         ok = true;
         if (address()) {
@@ -486,15 +500,7 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
                 return 0;
             }
             // a constant only as text (C#5, S5T#2S)
-            Json e;
-            e.type = Json::Object;
-            Json op1, name;
-            op1.type = name.type = Json::String;
-            op1.s = "const";
-            name.s = text;
-            e.members.emplace_back("op", op1);
-            e.members.emplace_back("name", name);
-            return stlLoad(f, e, ok);
+            return stlLoad(f, textConst(), ok);
         }
         return stlLoad(f, *opd, ok);
     };
@@ -519,7 +525,8 @@ size_t Simulator::stlStep(Frame& f, StlState& st, size_t pc) {
             bool ok = true;
             return absRead(f, abs, ok) != 0;
         }
-        return opd ? stlBit(f, st, *opd) : false;
+        if (opd) return stlBit(f, st, *opd);
+        return !text.empty() && stlBit(f, st, textConst());
     };
     auto writeBit = [&](bool v) {
         if (address()) {
