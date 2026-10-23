@@ -1,0 +1,2 @@
+{"comment": "a timer that does not exist puts the CPU in STOP", "program": "../stl/range.program.json",
+ "steps": [{"scans": 1, "expect_fault": true}]}

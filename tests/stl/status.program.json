@@ -1,0 +1,434 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "pos",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.0"
+  },
+  {
+   "name": "ov",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.1"
+  },
+  {
+   "name": "cmp",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.2"
+  },
+  {
+   "name": "os",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.3"
+  },
+  {
+   "name": "rov",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.4"
+  },
+  {
+   "name": "n",
+   "data_type": "DInt",
+   "type": {
+    "kind": "elementary",
+    "name": "DInt",
+    "bits": 32,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MD4"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "65536",
+          "type": "DInt",
+          "value": {
+           "kind": "int",
+           "int": 65536
+          },
+          "args": []
+         }
+        ],
+        "text": "65536"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "32768",
+          "type": "DInt",
+          "value": {
+           "kind": "int",
+           "int": 32768
+          },
+          "args": []
+         }
+        ],
+        "text": "32768"
+       },
+       {
+        "op": "stl",
+        "name": "*D",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "const",
+          "name": ">0",
+          "args": []
+         }
+        ],
+        "text": ">0"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"pos\"",
+          "args": []
+         }
+        ],
+        "text": "\"pos\""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "OV",
+          "args": []
+         }
+        ],
+        "text": "OV"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"ov\"",
+          "args": []
+         }
+        ],
+        "text": "\"ov\""
+       }
+      ]
+     },
+     {
+      "number": 2,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0x7FC00000",
+          "type": "DWord",
+          "value": {
+           "kind": "int",
+           "int": 2143289344
+          },
+          "args": []
+         }
+        ],
+        "text": "0x7FC00000"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1.0",
+          "type": "Real",
+          "value": {
+           "kind": "real",
+           "real": 1.0
+          },
+          "args": []
+         }
+        ],
+        "text": "1.0"
+       },
+       {
+        "op": "stl",
+        "name": "<>R",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "name": "\"cmp\"",
+          "args": []
+         }
+        ],
+        "text": "\"cmp\""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "OS",
+          "args": []
+         }
+        ],
+        "text": "OS"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "name": "\"os\"",
+          "args": []
+         }
+        ],
+        "text": "\"os\""
+       }
+      ]
+     },
+     {
+      "number": 3,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1e20",
+          "type": "Real",
+          "value": {
+           "kind": "real",
+           "real": 1e+20
+          },
+          "args": []
+         }
+        ],
+        "text": "1e20"
+       },
+       {
+        "op": "stl",
+        "name": "RND",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "2.5",
+          "type": "Real",
+          "value": {
+           "kind": "real",
+           "real": 2.5
+          },
+          "args": []
+         }
+        ],
+        "text": "2.5"
+       },
+       {
+        "op": "stl",
+        "name": "RND",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 6,
+          "name": "\"n\"",
+          "args": []
+         }
+        ],
+        "text": "\"n\""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "OV",
+          "args": []
+         }
+        ],
+        "text": "OV"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 5,
+          "name": "\"rov\"",
+          "args": []
+         }
+        ],
+        "text": "\"rov\""
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"pos\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"ov\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"cmp\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"os\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"rov\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 6,
+      "kind": "tag",
+      "text": "\"n\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

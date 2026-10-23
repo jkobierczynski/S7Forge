@@ -1,0 +1,15 @@
+// an area-crossing pointer: 16#80 (the periphery) writes to the outputs, 16#81 the inputs, 16#83 M
+L i:0x80000010:DWord
+LAR1
+L i:5
+T W [AR1,P#0.0]
+L i:0x81000011:DWord
+LAR1
+SET
+= [AR1,P#0.0]
+L i:0x83000000:DWord
+LAR1
+L i:1
+T D [AR1,P#0.0]
+L i:0x84000000:DWord
+LAR1

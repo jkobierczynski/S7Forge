@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: lword start",
+ "program": "programs/lword_start.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".w": "16#FFFFFFFFFFFFFFFF"
+   }
+  }
+ ]
+}

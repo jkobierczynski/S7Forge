@@ -1,0 +1,10 @@
+{
+ "comment": "a FOR loop whose variable is not in the program: not run, with a warning; the CPU stays in RUN",
+ "program": "programs/for_badvar.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1
+  }
+ ]
+}

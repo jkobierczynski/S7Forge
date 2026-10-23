@@ -1,0 +1,10 @@
+{
+  "comment": "STL: JL, word logic, JBI and the status bits (programs from tests/stl, made with tools/stl2json.py)",
+  "program": "../stl/jl.program.json",
+  "steps": [
+    {"set": {"Sel": 0}, "scans": 1, "expect": {"W": 10}},
+    {"set": {"Sel": 1}, "scans": 1, "expect": {"W": 11}},
+    {"comment": "past the end of the list: the label", "set": {"Sel": 2}, "scans": 1, "expect": {"W": 12}},
+    {"set": {"Sel": 200}, "scans": 1, "expect": {"W": 12}}
+  ]
+}

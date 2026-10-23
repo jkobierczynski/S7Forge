@@ -1,0 +1,1425 @@
+{
+  "format": "tiaconv-program",
+  "schema_version": 2,
+  "tool": {"name": "tiaconv", "version": "0.18.0"},
+  "source": {"file": "tests/fixtures/s15_motor/System/PEData.plf", "project": "s15_motor", "save": null},
+  "plc": {
+    "name": "MOTORPLC",
+    "station": "S7-1500/ET200MP station_1",
+    "type": "CPU 1511-1 PN",
+    "order_number": "6ES7 511-1AL03-0AB0",
+    "firmware": "V4.1"
+  },
+  "io": [],
+  "tags": [
+    {"name": "StartPB", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%I0.0", "comment": "start button, normally open"},
+    {"name": "StopPB", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%I0.1", "comment": "stop button, normally closed"},
+    {"name": "Guard", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%I0.2", "comment": "guard closed"},
+    {"name": "MotorLadOut", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%Q0.0", "comment": null},
+    {"name": "MotorSclOut", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%Q0.1", "comment": null}
+  ],
+  "constants": [
+    {"name": "Local~Device", "table": "Default tag table", "data_type": "Hw_Device", "value": "32", "parsed": {"kind": "int", "text": "32", "bool": null, "int": 32, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Configuration", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "33", "parsed": {"kind": "int", "text": "33", "bool": null, "int": 33, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~License_Manager", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "42", "parsed": {"kind": "int", "text": "42", "bool": null, "int": 42, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "49", "parsed": {"kind": "int", "text": "49", "bool": null, "int": 49, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Common", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "50", "parsed": {"kind": "int", "text": "50", "bool": null, "int": 50, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~MC", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "51", "parsed": {"kind": "int", "text": "51", "bool": null, "int": 51, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Exec", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "52", "parsed": {"kind": "int", "text": "52", "bool": null, "int": 52, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Display", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "54", "parsed": {"kind": "int", "text": "54", "bool": null, "int": 54, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "64", "parsed": {"kind": "int", "text": "64", "bool": null, "int": 64, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1~Port_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "65", "parsed": {"kind": "int", "text": "65", "bool": null, "int": 65, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1~Port_2", "table": "Default tag table", "data_type": "Hw_Interface", "value": "66", "parsed": {"kind": "int", "text": "66", "bool": null, "int": 66, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Virtual_communication_interface", "table": "Default tag table", "data_type": "Hw_Interface", "value": "135", "parsed": {"kind": "int", "text": "135", "bool": null, "int": 135, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "OB_Main", "table": "Default tag table", "data_type": "OB_PCYCLE", "value": "1", "parsed": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "kind": "ob", "system": true, "comment": null},
+    {"name": "Automatic update", "table": "Default tag table", "data_type": "Pip", "value": "0", "parsed": {"kind": "int", "text": "0", "bool": null, "int": 0, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 1", "table": "Default tag table", "data_type": "Pip", "value": "1", "parsed": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 2", "table": "Default tag table", "data_type": "Pip", "value": "2", "parsed": {"kind": "int", "text": "2", "bool": null, "int": 2, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 3", "table": "Default tag table", "data_type": "Pip", "value": "3", "parsed": {"kind": "int", "text": "3", "bool": null, "int": 3, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 4", "table": "Default tag table", "data_type": "Pip", "value": "4", "parsed": {"kind": "int", "text": "4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 5", "table": "Default tag table", "data_type": "Pip", "value": "5", "parsed": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 6", "table": "Default tag table", "data_type": "Pip", "value": "6", "parsed": {"kind": "int", "text": "6", "bool": null, "int": 6, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 7", "table": "Default tag table", "data_type": "Pip", "value": "7", "parsed": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 8", "table": "Default tag table", "data_type": "Pip", "value": "8", "parsed": {"kind": "int", "text": "8", "bool": null, "int": 8, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 9", "table": "Default tag table", "data_type": "Pip", "value": "9", "parsed": {"kind": "int", "text": "9", "bool": null, "int": 9, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 10", "table": "Default tag table", "data_type": "Pip", "value": "10", "parsed": {"kind": "int", "text": "10", "bool": null, "int": 10, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 11", "table": "Default tag table", "data_type": "Pip", "value": "11", "parsed": {"kind": "int", "text": "11", "bool": null, "int": 11, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 12", "table": "Default tag table", "data_type": "Pip", "value": "12", "parsed": {"kind": "int", "text": "12", "bool": null, "int": 12, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 13", "table": "Default tag table", "data_type": "Pip", "value": "13", "parsed": {"kind": "int", "text": "13", "bool": null, "int": 13, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 14", "table": "Default tag table", "data_type": "Pip", "value": "14", "parsed": {"kind": "int", "text": "14", "bool": null, "int": 14, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 15", "table": "Default tag table", "data_type": "Pip", "value": "15", "parsed": {"kind": "int", "text": "15", "bool": null, "int": 15, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 16", "table": "Default tag table", "data_type": "Pip", "value": "16", "parsed": {"kind": "int", "text": "16", "bool": null, "int": 16, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 17", "table": "Default tag table", "data_type": "Pip", "value": "17", "parsed": {"kind": "int", "text": "17", "bool": null, "int": 17, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 18", "table": "Default tag table", "data_type": "Pip", "value": "18", "parsed": {"kind": "int", "text": "18", "bool": null, "int": 18, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 19", "table": "Default tag table", "data_type": "Pip", "value": "19", "parsed": {"kind": "int", "text": "19", "bool": null, "int": 19, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 20", "table": "Default tag table", "data_type": "Pip", "value": "20", "parsed": {"kind": "int", "text": "20", "bool": null, "int": 20, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 21", "table": "Default tag table", "data_type": "Pip", "value": "21", "parsed": {"kind": "int", "text": "21", "bool": null, "int": 21, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 22", "table": "Default tag table", "data_type": "Pip", "value": "22", "parsed": {"kind": "int", "text": "22", "bool": null, "int": 22, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 23", "table": "Default tag table", "data_type": "Pip", "value": "23", "parsed": {"kind": "int", "text": "23", "bool": null, "int": 23, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 24", "table": "Default tag table", "data_type": "Pip", "value": "24", "parsed": {"kind": "int", "text": "24", "bool": null, "int": 24, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 25", "table": "Default tag table", "data_type": "Pip", "value": "25", "parsed": {"kind": "int", "text": "25", "bool": null, "int": 25, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 26", "table": "Default tag table", "data_type": "Pip", "value": "26", "parsed": {"kind": "int", "text": "26", "bool": null, "int": 26, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 27", "table": "Default tag table", "data_type": "Pip", "value": "27", "parsed": {"kind": "int", "text": "27", "bool": null, "int": 27, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 28", "table": "Default tag table", "data_type": "Pip", "value": "28", "parsed": {"kind": "int", "text": "28", "bool": null, "int": 28, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 29", "table": "Default tag table", "data_type": "Pip", "value": "29", "parsed": {"kind": "int", "text": "29", "bool": null, "int": 29, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 30", "table": "Default tag table", "data_type": "Pip", "value": "30", "parsed": {"kind": "int", "text": "30", "bool": null, "int": 30, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 31", "table": "Default tag table", "data_type": "Pip", "value": "31", "parsed": {"kind": "int", "text": "31", "bool": null, "int": 31, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP OB Servo", "table": "Default tag table", "data_type": "Pip", "value": "32768", "parsed": {"kind": "int", "text": "32768", "bool": null, "int": 32768, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "None", "table": "Default tag table", "data_type": "Pip", "value": "65535", "parsed": {"kind": "int", "text": "65535", "bool": null, "int": 65535, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null}
+  ],
+  "types": [
+    {
+      "name": "TON_TIME",
+      "kind": "system_type",
+      "members": [
+        {"name": "ST", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "PT", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "ET", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "RU", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "IN", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "Q", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    }
+  ],
+  "data_blocks": [
+    {
+      "name": "MotorData",
+      "number": 1,
+      "kind": "global",
+      "instance_of": null,
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {"name": "starts", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "runTime", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    },
+    {
+      "name": "MotorLAD_DB",
+      "number": 2,
+      "kind": "instance",
+      "instance_of": "MotorLAD",
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {"name": "start", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "stop", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "interlock", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "motor", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "run", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "runEdge", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {
+          "name": "delay",
+          "data_type": "TON_TIME",
+          "type": {"kind": "system_type", "name": "TON_TIME", "bits": null, "length": null, "dims": [], "element": null},
+          "section": "Static",
+          "offset": null,
+          "offset_bits": null,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "ST", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "PT", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "ET", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "RU", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "IN", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "Q", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MotorSCL_DB",
+      "number": 3,
+      "kind": "instance",
+      "instance_of": "MotorSCL",
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {"name": "start", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "stop", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "interlock", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "motor", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "run", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "runOld", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {
+          "name": "delay",
+          "data_type": "TON_TIME",
+          "type": {"kind": "system_type", "name": "TON_TIME", "bits": null, "length": null, "dims": [], "element": null},
+          "section": "Static",
+          "offset": null,
+          "offset_bits": null,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "ST", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "PT", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "ET", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "RU", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "IN", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "Q", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        }
+      ]
+    }
+  ],
+  "organization_blocks": [
+    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null}
+  ],
+  "runtime": {
+    "startup": [],
+    "program_cycle": ["Main"],
+    "interrupts": [],
+    "process_images": []
+  },
+  "blocks": [
+    {
+      "type": "OB",
+      "name": "Main",
+      "number": 1,
+      "language": "LAD",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "Initial_Call", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "Initial call of this OB", "members": []},
+        {"name": "Remanence", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "=True, if remanent data are available", "members": []}
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: \"MotorLAD\", \"MotorLAD_DB\"(",
+              "       start := \"StartPB\",",
+              "       stop := \"StopPB\",",
+              "       interlock := \"Guard\",",
+              "       motor => \"MotorLadOut\")"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "call",
+                "name": "\"MotorLAD\"",
+                "ref_id": 1,
+                "instance": "\"MotorLAD_DB\"",
+                "instance_ref_id": 3,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "en", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "start",
+                    "direction": "in",
+                    "connected": ["\"StartPB\""],
+                    "operands": [
+                      {"text": "\"StartPB\"", "ref_id": 8, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.0", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "stop",
+                    "direction": "in",
+                    "connected": ["\"StopPB\""],
+                    "operands": [
+                      {"text": "\"StopPB\"", "ref_id": 7, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.1", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "interlock",
+                    "direction": "in",
+                    "connected": ["\"Guard\""],
+                    "operands": [
+                      {"text": "\"Guard\"", "ref_id": 9, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.2", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "motor",
+                    "direction": "out",
+                    "connected": ["\"MotorLadOut\""],
+                    "operands": [
+                      {"text": "\"MotorLadOut\"", "ref_id": 10, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%Q0.0", "pin_type": "Bool", "value": null}
+                    ]
+                  }
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {
+                    "op": "call",
+                    "ref_id": 1,
+                    "instance_ref_id": 3,
+                    "name": "\"MotorLAD\"",
+                    "type": null,
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "start",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 8, "instance_ref_id": null, "name": "\"StartPB\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "stop",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 7, "instance_ref_id": null, "name": "\"StopPB\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "interlock",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 9, "instance_ref_id": null, "name": "\"Guard\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "out",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "motor",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 10, "instance_ref_id": null, "name": "\"MotorLadOut\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "target": {
+                      "kind": "block",
+                      "block_type": "FB",
+                      "name": "MotorLAD",
+                      "number": 1,
+                      "version": null,
+                      "instance": {"kind": "data_block", "name": "MotorLAD_DB", "number": 2, "instance_of": "MotorLAD", "data_type": null, "path": []},
+                      "parameters": [
+                        {"name": "start", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "stop", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "interlock", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "motor", "section": "Output", "data_type": "Bool", "given": true}
+                      ]
+                    }
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 2,
+            "network_id": 2,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: \"MotorSCL\", \"MotorSCL_DB\"(",
+              "       start := \"StartPB\",",
+              "       stop := \"StopPB\",",
+              "       interlock := \"Guard\",",
+              "       motor => \"MotorSclOut\")"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "call",
+                "name": "\"MotorSCL\"",
+                "ref_id": 11,
+                "instance": "\"MotorSCL_DB\"",
+                "instance_ref_id": 13,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "en", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "start",
+                    "direction": "in",
+                    "connected": ["\"StartPB\""],
+                    "operands": [
+                      {"text": "\"StartPB\"", "ref_id": 8, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.0", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "stop",
+                    "direction": "in",
+                    "connected": ["\"StopPB\""],
+                    "operands": [
+                      {"text": "\"StopPB\"", "ref_id": 7, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.1", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "interlock",
+                    "direction": "in",
+                    "connected": ["\"Guard\""],
+                    "operands": [
+                      {"text": "\"Guard\"", "ref_id": 9, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%I0.2", "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "motor",
+                    "direction": "out",
+                    "connected": ["\"MotorSclOut\""],
+                    "operands": [
+                      {"text": "\"MotorSclOut\"", "ref_id": 14, "linked": true, "kind": "tag", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": "%Q0.1", "pin_type": "Bool", "value": null}
+                    ]
+                  }
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {
+                    "op": "call",
+                    "ref_id": 11,
+                    "instance_ref_id": 13,
+                    "name": "\"MotorSCL\"",
+                    "type": null,
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "start",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 8, "instance_ref_id": null, "name": "\"StartPB\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "stop",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 7, "instance_ref_id": null, "name": "\"StopPB\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "interlock",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 9, "instance_ref_id": null, "name": "\"Guard\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "out",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "motor",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 14, "instance_ref_id": null, "name": "\"MotorSclOut\"", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "target": {
+                      "kind": "block",
+                      "block_type": "FB",
+                      "name": "MotorSCL",
+                      "number": 2,
+                      "version": null,
+                      "instance": {"kind": "data_block", "name": "MotorSCL_DB", "number": 3, "instance_of": "MotorSCL", "data_type": null, "path": []},
+                      "parameters": [
+                        {"name": "start", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "stop", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "interlock", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "motor", "section": "Output", "data_type": "Bool", "given": true}
+                      ]
+                    }
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 3,
+            "network_id": 3,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "empty",
+            "lines": [],
+            "elements": [],
+            "statements": [],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": [
+          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"MotorLAD\"", "data_type": "MotorLAD", "value": null, "data_block": null, "declared_as": null, "name": "MotorLAD", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 11, "kind": "block", "kind_stored": "FBBlock", "text": "\"MotorSCL\"", "data_type": "MotorSCL", "value": null, "data_block": null, "declared_as": null, "name": "MotorSCL", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 3, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"MotorLAD_DB\"", "data_type": "MotorLAD", "value": null, "data_block": null, "declared_as": null, "name": "MotorLAD_DB", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 13, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"MotorSCL_DB\"", "data_type": "MotorSCL", "value": null, "data_block": null, "declared_as": null, "name": "MotorSCL_DB", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 7, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"StopPB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "StopPB", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 8, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"StartPB\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "StartPB", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 9, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"Guard\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "Guard", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 10, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"MotorLadOut\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "MotorLadOut", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 14, "kind": "tag", "kind_stored": "SimpleAccess", "text": "\"MotorSclOut\"", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": "MotorSclOut", "scope": "Global", "path": [], "modifier": null}
+        ]
+      }
+    },
+    {
+      "type": "FB",
+      "name": "MotorLAD",
+      "number": 1,
+      "language": "LAD",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "start", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "stop", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "interlock", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "motor", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "run", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "runEdge", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {
+          "name": "delay",
+          "data_type": "TON_TIME",
+          "type": {"kind": "system_type", "name": "TON_TIME", "bits": null, "length": null, "dims": [], "element": null},
+          "section": "Static",
+          "offset": null,
+          "offset_bits": null,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "ST", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "PT", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "ET", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "RU", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "IN", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "Q", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        }
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: #run := (#start OR #run) AND #stop AND #interlock"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "gate",
+                "name": "Contact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#start"],
+                    "operands": [
+                      {"text": "#start", "ref_id": 1, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["28.in1"], "operands": []}
+                ]
+              },
+              {
+                "uid": 26,
+                "kind": "gate",
+                "name": "Contact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#run"],
+                    "operands": [
+                      {"text": "#run", "ref_id": 2, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["28.in2"], "operands": []}
+                ]
+              },
+              {
+                "uid": 28,
+                "kind": "gate",
+                "name": "O",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [{"name": "Card", "value": "2"}],
+                "pins": [
+                  {"name": "in1", "direction": "in", "connected": ["23.out"], "operands": []},
+                  {"name": "in2", "direction": "in", "connected": ["26.out"], "operands": []},
+                  {"name": "out", "direction": "out", "connected": ["37.in"], "operands": []}
+                ]
+              },
+              {
+                "uid": 37,
+                "kind": "gate",
+                "name": "Contact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["28.out"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#stop"],
+                    "operands": [
+                      {"text": "#stop", "ref_id": 3, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["42.in"], "operands": []}
+                ]
+              },
+              {
+                "uid": 42,
+                "kind": "gate",
+                "name": "Contact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["37.out"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#interlock"],
+                    "operands": [
+                      {"text": "#interlock", "ref_id": 4, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["46.in"], "operands": []}
+                ]
+              },
+              {
+                "uid": 46,
+                "kind": "gate",
+                "name": "Coil",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["42.out"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#run"],
+                    "operands": [
+                      {"text": "#run", "ref_id": 2, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  }
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "assign",
+                "name": null,
+                "exprs": [
+                  {"op": "ref", "ref_id": 2, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null},
+                  {
+                    "op": "and",
+                    "ref_id": null,
+                    "instance_ref_id": null,
+                    "name": null,
+                    "type": "Bool",
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "and",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": null,
+                        "type": "Bool",
+                        "value": null,
+                        "args": [
+                          {
+                            "op": "or",
+                            "ref_id": null,
+                            "instance_ref_id": null,
+                            "name": null,
+                            "type": "Bool",
+                            "value": null,
+                            "args": [
+                              {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#start", "type": "Bool", "value": null, "args": [], "target": null},
+                              {"op": "ref", "ref_id": 2, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null}
+                            ],
+                            "target": null
+                          },
+                          {"op": "ref", "ref_id": 3, "instance_ref_id": null, "name": "#stop", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {"op": "ref", "ref_id": 4, "instance_ref_id": null, "name": "#interlock", "type": "Bool", "value": null, "args": [], "target": null}
+                    ],
+                    "target": null
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 2,
+            "network_id": 2,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: TON, #delay(IN := #run, PT := T#5S)",
+              "2: #motor := [1].Q"
+            ],
+            "elements": [
+              {
+                "uid": 29,
+                "kind": "gate",
+                "name": "Contact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#run"],
+                    "operands": [
+                      {"text": "#run", "ref_id": 2, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["22.IN"], "operands": []}
+                ]
+              },
+              {
+                "uid": 22,
+                "kind": "instruction",
+                "name": "TON",
+                "ref_id": 5,
+                "instance": "#delay",
+                "instance_ref_id": 6,
+                "data_type": null,
+                "options": [{"name": "EN", "value": "false"}, {"name": "ENO", "value": "false"}],
+                "pins": [
+                  {"name": "IN", "direction": "in", "connected": ["29.out"], "operands": []},
+                  {
+                    "name": "PT",
+                    "direction": "in",
+                    "connected": ["T#5S"],
+                    "operands": [
+                      {"text": "T#5S", "ref_id": 7, "linked": true, "kind": "constant", "data_type": "Time", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}}
+                    ]
+                  },
+                  {"name": "ET", "direction": "out", "connected": [], "operands": []},
+                  {"name": "Q", "direction": "out", "connected": ["34.in"], "operands": []}
+                ]
+              },
+              {
+                "uid": 34,
+                "kind": "gate",
+                "name": "Coil",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "in", "direction": "in", "connected": ["22.Q"], "operands": []},
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#motor"],
+                    "operands": [
+                      {"text": "#motor", "ref_id": 8, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  }
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {
+                    "op": "call",
+                    "ref_id": 5,
+                    "instance_ref_id": 6,
+                    "name": "TON",
+                    "type": null,
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "IN",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 2, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "PT",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "const", "ref_id": 7, "instance_ref_id": null, "name": "T#5S", "type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "out",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "Q",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "wire", "ref_id": null, "instance_ref_id": null, "name": "22.Q", "type": null, "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "target": {
+                      "kind": "instruction",
+                      "block_type": null,
+                      "name": "TON",
+                      "number": null,
+                      "version": "1.0",
+                      "instance": {"kind": "multi_instance", "name": "delay", "number": null, "instance_of": null, "data_type": "TON_TIME", "path": [{"name": "delay", "index": []}]},
+                      "parameters": [
+                        {"name": "IN", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "PT", "section": "Input", "data_type": "Time", "given": true},
+                        {"name": "Q", "section": "Output", "data_type": "Bool", "given": true},
+                        {"name": "ET", "section": "Output", "data_type": "Time", "given": false}
+                      ]
+                    }
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              },
+              {
+                "op": "assign",
+                "name": null,
+                "exprs": [
+                  {"op": "ref", "ref_id": 8, "instance_ref_id": null, "name": "#motor", "type": "Bool", "value": null, "args": [], "target": null},
+                  {"op": "wire", "ref_id": null, "instance_ref_id": null, "name": "22.Q", "type": null, "value": null, "args": [], "target": null}
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 3,
+            "network_id": 3,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: Add[Int](en := P(#run, #runEdge), in1 := \"MotorData\".starts, in2 := 1, out => \"MotorData\".starts)"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "gate",
+                "name": "PContact",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "pre", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {
+                    "name": "bit",
+                    "direction": "in",
+                    "connected": ["#runEdge"],
+                    "operands": [
+                      {"text": "#runEdge", "ref_id": 9, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "operand",
+                    "direction": "in",
+                    "connected": ["#run"],
+                    "operands": [
+                      {"text": "#run", "ref_id": 2, "linked": true, "kind": "local", "data_type": "Bool", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Bool", "value": null}
+                    ]
+                  },
+                  {"name": "out", "direction": "out", "connected": ["28.en"], "operands": []}
+                ]
+              },
+              {
+                "uid": 28,
+                "kind": "gate",
+                "name": "Add",
+                "ref_id": null,
+                "instance": null,
+                "instance_ref_id": null,
+                "data_type": "Int",
+                "options": [{"name": "DisableENO", "value": "true"}, {"name": "Card", "value": "2"}, {"name": "SrcType", "value": "Int"}],
+                "pins": [
+                  {"name": "en", "direction": "in", "connected": ["23.out"], "operands": []},
+                  {
+                    "name": "in1",
+                    "direction": "in",
+                    "connected": ["\"MotorData\".starts"],
+                    "operands": [
+                      {"text": "\"MotorData\".starts", "ref_id": 11, "linked": true, "kind": "data block member", "data_type": "Int", "data_type_from_pin": false, "data_block": "MotorData", "address": null, "pin_type": "Int", "value": null}
+                    ]
+                  },
+                  {
+                    "name": "in2",
+                    "direction": "in",
+                    "connected": ["1"],
+                    "operands": [
+                      {"text": "1", "ref_id": 13, "linked": true, "kind": "constant", "data_type": "Int", "data_type_from_pin": false, "data_block": null, "address": null, "pin_type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}}
+                    ]
+                  },
+                  {
+                    "name": "out",
+                    "direction": "out",
+                    "connected": ["\"MotorData\".starts"],
+                    "operands": [
+                      {"text": "\"MotorData\".starts", "ref_id": 11, "linked": true, "kind": "data block member", "data_type": "Int", "data_type_from_pin": false, "data_block": "MotorData", "address": null, "pin_type": "Int", "value": null}
+                    ]
+                  }
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "if",
+                "name": null,
+                "exprs": [],
+                "target": null,
+                "text": null,
+                "branches": [
+                  {
+                    "exprs": [
+                      {
+                        "op": "edge_pos",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": null,
+                        "type": "Bool",
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 2, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null},
+                          {"op": "ref", "ref_id": 9, "instance_ref_id": null, "name": "#runEdge", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "body": [
+                      {
+                        "op": "assign",
+                        "name": null,
+                        "exprs": [
+                          {"op": "ref", "ref_id": 11, "instance_ref_id": null, "name": "\"MotorData\".starts", "type": "Int", "value": null, "args": [], "target": null},
+                          {
+                            "op": "add",
+                            "ref_id": null,
+                            "instance_ref_id": null,
+                            "name": null,
+                            "type": "Int",
+                            "value": null,
+                            "args": [
+                              {"op": "ref", "ref_id": 11, "instance_ref_id": null, "name": "\"MotorData\".starts", "type": "Int", "value": null, "args": [], "target": null},
+                              {"op": "const", "ref_id": 13, "instance_ref_id": null, "name": "1", "type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "args": [], "target": null}
+                            ],
+                            "target": null
+                          }
+                        ],
+                        "target": null,
+                        "text": null,
+                        "branches": [],
+                        "body": [],
+                        "else": null
+                      }
+                    ]
+                  }
+                ],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 4,
+            "network_id": 4,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "empty",
+            "lines": [],
+            "elements": [],
+            "statements": [],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": [
+          {"ref_id": 1, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#start", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "start", "index": []}], "modifier": null},
+          {"ref_id": 2, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#run", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "run", "index": []}], "modifier": null},
+          {"ref_id": 3, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#stop", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "stop", "index": []}], "modifier": null},
+          {"ref_id": 4, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#interlock", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "interlock", "index": []}], "modifier": null},
+          {"ref_id": 6, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#delay", "data_type": "TON_TIME", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "delay", "index": []}], "modifier": null},
+          {"ref_id": 8, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#motor", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "motor", "index": []}], "modifier": null},
+          {"ref_id": 9, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#runEdge", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "runEdge", "index": []}], "modifier": null},
+          {"ref_id": 5, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null},
+          {"ref_id": 7, "kind": "constant", "kind_stored": "LiteralConstant", "text": "T#5S", "data_type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "T#5S", "scope": "Constant", "path": [], "modifier": null},
+          {"ref_id": 13, "kind": "constant", "kind_stored": "LiteralConstant", "text": "1", "data_type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "data_block": null, "declared_as": null, "name": "1", "scope": "Constant", "path": [], "modifier": null},
+          {"ref_id": 10, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"MotorData\"", "data_type": "MotorData", "value": null, "data_block": null, "declared_as": null, "name": "MotorData", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 11, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"MotorData\".starts", "data_type": "Int", "value": null, "data_block": "MotorData", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "MotorData", "index": []}, {"name": "starts", "index": []}], "modifier": null}
+        ]
+      }
+    },
+    {
+      "type": "FB",
+      "name": "MotorSCL",
+      "number": 2,
+      "language": "SCL",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "start", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "stop", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "interlock", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "motor", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "run", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "runOld", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {
+          "name": "delay",
+          "data_type": "TON_TIME",
+          "type": {"kind": "system_type", "name": "TON_TIME", "bits": null, "length": null, "dims": [], "element": null},
+          "section": "Static",
+          "offset": null,
+          "offset_bits": null,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "ST", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "PT", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "ET", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "RU", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": false, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "IN", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "Q", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": false, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        }
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "SCL",
+            "content": "scl",
+            "lines": [
+              "    // seal-in with interlock",
+              "    #run := (#start OR #run) AND #stop AND #interlock;",
+              "    // start delay",
+              "    #delay(IN := #run,",
+              "           PT := T#5S);",
+              "    #motor := #delay.Q;",
+              "    // count the starts",
+              "    IF #run AND NOT #runOld THEN",
+              "        \"MotorData\".starts := \"MotorData\".starts + 1;",
+              "    END_IF;",
+              "    #runOld := #run;"
+            ],
+            "elements": [],
+            "statements": [
+              {
+                "op": "assign",
+                "name": null,
+                "exprs": [
+                  {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null},
+                  {
+                    "op": "and",
+                    "ref_id": null,
+                    "instance_ref_id": null,
+                    "name": null,
+                    "type": "Bool",
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "and",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": null,
+                        "type": "Bool",
+                        "value": null,
+                        "args": [
+                          {
+                            "op": "or",
+                            "ref_id": null,
+                            "instance_ref_id": null,
+                            "name": null,
+                            "type": "Bool",
+                            "value": null,
+                            "args": [
+                              {"op": "ref", "ref_id": 2, "instance_ref_id": null, "name": "#start", "type": "Bool", "value": null, "args": [], "target": null},
+                              {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null}
+                            ],
+                            "target": null
+                          },
+                          {"op": "ref", "ref_id": 3, "instance_ref_id": null, "name": "#stop", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {"op": "ref", "ref_id": 4, "instance_ref_id": null, "name": "#interlock", "type": "Bool", "value": null, "args": [], "target": null}
+                    ],
+                    "target": null
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              },
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {
+                    "op": "call",
+                    "ref_id": 13,
+                    "instance_ref_id": 5,
+                    "name": "TON",
+                    "type": null,
+                    "value": null,
+                    "args": [
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "IN",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null}
+                        ],
+                        "target": null
+                      },
+                      {
+                        "op": "in",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": "PT",
+                        "type": null,
+                        "value": null,
+                        "args": [
+                          {"op": "const", "ref_id": null, "instance_ref_id": null, "name": null, "type": "Time", "value": {"kind": "duration", "text": "T#5S", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "args": [], "target": null}
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "target": {
+                      "kind": "instruction",
+                      "block_type": null,
+                      "name": "TON",
+                      "number": null,
+                      "version": "1.0",
+                      "instance": {"kind": "multi_instance", "name": "delay", "number": null, "instance_of": null, "data_type": "TON_TIME", "path": [{"name": "delay", "index": []}]},
+                      "parameters": [
+                        {"name": "IN", "section": "Input", "data_type": "Bool", "given": true},
+                        {"name": "PT", "section": "Input", "data_type": "Time", "given": true},
+                        {"name": "Q", "section": "Output", "data_type": "Bool", "given": false},
+                        {"name": "ET", "section": "Output", "data_type": "Time", "given": false}
+                      ]
+                    }
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              },
+              {
+                "op": "assign",
+                "name": null,
+                "exprs": [
+                  {"op": "ref", "ref_id": 7, "instance_ref_id": null, "name": "#motor", "type": "Bool", "value": null, "args": [], "target": null},
+                  {
+                    "op": "member",
+                    "ref_id": 8,
+                    "instance_ref_id": null,
+                    "name": "Q",
+                    "type": "Bool",
+                    "value": null,
+                    "args": [
+                      {"op": "ref", "ref_id": 5, "instance_ref_id": null, "name": "#delay", "type": "IEC_Timer", "value": null, "args": [], "target": null}
+                    ],
+                    "target": null
+                  }
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              },
+              {
+                "op": "if",
+                "name": null,
+                "exprs": [],
+                "target": null,
+                "text": null,
+                "branches": [
+                  {
+                    "exprs": [
+                      {
+                        "op": "and",
+                        "ref_id": null,
+                        "instance_ref_id": null,
+                        "name": null,
+                        "type": "Bool",
+                        "value": null,
+                        "args": [
+                          {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null},
+                          {
+                            "op": "not",
+                            "ref_id": null,
+                            "instance_ref_id": null,
+                            "name": null,
+                            "type": "Bool",
+                            "value": null,
+                            "args": [
+                              {"op": "ref", "ref_id": 9, "instance_ref_id": null, "name": "#runOld", "type": "Bool", "value": null, "args": [], "target": null}
+                            ],
+                            "target": null
+                          }
+                        ],
+                        "target": null
+                      }
+                    ],
+                    "body": [
+                      {
+                        "op": "assign",
+                        "name": null,
+                        "exprs": [
+                          {
+                            "op": "member",
+                            "ref_id": 12,
+                            "instance_ref_id": null,
+                            "name": "starts",
+                            "type": "Int",
+                            "value": null,
+                            "args": [
+                              {"op": "ref", "ref_id": 10, "instance_ref_id": null, "name": "\"MotorData\"", "type": "Block_DB", "value": null, "args": [], "target": null}
+                            ],
+                            "target": null
+                          },
+                          {
+                            "op": "add",
+                            "ref_id": null,
+                            "instance_ref_id": null,
+                            "name": null,
+                            "type": "Int",
+                            "value": null,
+                            "args": [
+                              {
+                                "op": "member",
+                                "ref_id": 12,
+                                "instance_ref_id": null,
+                                "name": "starts",
+                                "type": "Int",
+                                "value": null,
+                                "args": [
+                                  {"op": "ref", "ref_id": 10, "instance_ref_id": null, "name": "\"MotorData\"", "type": "Block_DB", "value": null, "args": [], "target": null}
+                                ],
+                                "target": null
+                              },
+                              {"op": "const", "ref_id": null, "instance_ref_id": null, "name": null, "type": "Int", "value": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "args": [], "target": null}
+                            ],
+                            "target": null
+                          }
+                        ],
+                        "target": null,
+                        "text": null,
+                        "branches": [],
+                        "body": [],
+                        "else": null
+                      }
+                    ]
+                  }
+                ],
+                "body": [],
+                "else": null
+              },
+              {
+                "op": "assign",
+                "name": null,
+                "exprs": [
+                  {"op": "ref", "ref_id": 9, "instance_ref_id": null, "name": "#runOld", "type": "Bool", "value": null, "args": [], "target": null},
+                  {"op": "ref", "ref_id": 1, "instance_ref_id": null, "name": "#run", "type": "Bool", "value": null, "args": [], "target": null}
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": [
+          {"ref_id": 1, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#run", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "run", "index": []}], "modifier": null},
+          {"ref_id": 2, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#start", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "start", "index": []}], "modifier": null},
+          {"ref_id": 3, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#stop", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "stop", "index": []}], "modifier": null},
+          {"ref_id": 4, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#interlock", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "interlock", "index": []}], "modifier": null},
+          {"ref_id": 5, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#delay", "data_type": "TON_TIME", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "delay", "index": []}], "modifier": null},
+          {"ref_id": 7, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#motor", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "motor", "index": []}], "modifier": null},
+          {"ref_id": 8, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#delay.Q", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "delay", "index": []}, {"name": "Q", "index": []}], "modifier": null},
+          {"ref_id": 9, "kind": "local", "kind_stored": "InterfaceAccess", "text": "#runOld", "data_type": "Bool", "value": null, "data_block": null, "declared_as": null, "name": null, "scope": "Local", "path": [{"name": "runOld", "index": []}], "modifier": null},
+          {"ref_id": 10, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"MotorData\"", "data_type": "MotorData", "value": null, "data_block": null, "declared_as": null, "name": "MotorData", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 11, "kind": "data block", "kind_stored": "DepDBBlock", "text": "\"MotorData\"", "data_type": "MotorData", "value": null, "data_block": null, "declared_as": null, "name": "MotorData", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 12, "kind": "data block member", "kind_stored": "GlobalAccess", "text": "\"MotorData\".starts", "data_type": "Int", "value": null, "data_block": "MotorData", "declared_as": null, "name": null, "scope": "Global", "path": [{"name": "MotorData", "index": []}, {"name": "starts", "index": []}], "modifier": null},
+          {"ref_id": 13, "kind": "instruction", "kind_stored": "Instruction", "text": "TON", "data_type": null, "value": null, "data_block": null, "declared_as": null, "name": "TON", "scope": "Instruction", "path": [], "modifier": null}
+        ]
+      }
+    }
+  ],
+  "instructions": [
+    {"name": "TON", "version": "1.0"}
+  ],
+  "call_graph": [
+    {"from": "Main", "from_type": "OB", "network": 1, "kind": "block", "to": "MotorLAD", "to_type": "FB", "instance_kind": "data_block", "instance": "MotorLAD_DB"},
+    {"from": "Main", "from_type": "OB", "network": 2, "kind": "block", "to": "MotorSCL", "to_type": "FB", "instance_kind": "data_block", "instance": "MotorSCL_DB"},
+    {"from": "MotorLAD", "from_type": "FB", "network": 2, "kind": "instruction", "to": "TON", "to_type": null, "instance_kind": "multi_instance", "instance": "#delay"},
+    {"from": "MotorSCL", "from_type": "FB", "network": 1, "kind": "instruction", "to": "TON", "to_type": null, "instance_kind": "multi_instance", "instance": "#delay"}
+  ],
+  "not_simulatable": []
+}

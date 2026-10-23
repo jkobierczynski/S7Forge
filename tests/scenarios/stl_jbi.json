@@ -1,0 +1,3 @@
+{"comment": "STL: JBI ends the logic string, the term before O does not reach A c", "program": "../stl/jbi.program.json",
+ "steps": [{"set": {"a": true}, "scans": 1, "expect": {"q": false}},
+           {"set": {"c": true}, "scans": 1, "expect": {"q": true}}]}

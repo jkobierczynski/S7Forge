@@ -1,0 +1,2 @@
+{"comment": "found in a review of the S5 timers, addressing and MCR: the OR bit after SP, CU and MCR(", "program": "../stl/orbit.program.json",
+ "steps": [{"set": {"I0": true, "I1": false, "I2": false}, "scans": 1, "expect": {"Q0": false, "Q1": false, "Q2": false}}]}

@@ -1,0 +1,29 @@
+// the status after *D with an overflow, an unordered comparison, RND
+tag pos Bool %M0.0
+tag ov Bool %M0.1
+tag cmp Bool %M0.2
+tag os Bool %M0.3
+tag rov Bool %M0.4
+tag n DInt %MD4
+L i:65536:DInt
+L i:32768:DInt
+*D
+A k:>0
+= pos
+A k:OV
+= ov
+---
+L i:0x7FC00000:DWord
+L r:1.0
+<>R
+= cmp
+A k:OS
+= os
+---
+L r:1e20
+RND
+L r:2.5
+RND
+T n
+A k:OV
+= rov

@@ -1,0 +1,10 @@
+{
+ "comment": "found in a review of the semantics: cyc huge int",
+ "program": "programs/cyc_huge_int.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1
+  }
+ ]
+}

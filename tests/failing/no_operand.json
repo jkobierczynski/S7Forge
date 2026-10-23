@@ -1,0 +1,7 @@
+{
+  "comment": "must fail: there is no tag NoSuchTag",
+  "program": "../data/MOTORPLC.json",
+  "steps": [
+    {"run_ms": 10, "expect": {"NoSuchTag": true}}
+  ]
+}

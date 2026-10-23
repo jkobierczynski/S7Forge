@@ -1,0 +1,194 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0x80000010",
+          "type": "DWord",
+          "value": {
+           "kind": "int",
+           "int": 2147483664
+          },
+          "args": []
+         }
+        ],
+        "text": "0x80000010"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "5",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 5
+          },
+          "args": []
+         }
+        ],
+        "text": "5"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "W [AR1,P#0.0]"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0x81000011",
+          "type": "DWord",
+          "value": {
+           "kind": "int",
+           "int": 2164260881
+          },
+          "args": []
+         }
+        ],
+        "text": "0x81000011"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "SET",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [],
+        "text": "[AR1,P#0.0]"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0x83000000",
+          "type": "DWord",
+          "value": {
+           "kind": "int",
+           "int": 2197815296
+          },
+          "args": []
+         }
+        ],
+        "text": "0x83000000"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1
+          },
+          "args": []
+         }
+        ],
+        "text": "1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "D [AR1,P#0.0]"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0x84000000",
+          "type": "DWord",
+          "value": {
+           "kind": "int",
+           "int": 2214592512
+          },
+          "args": []
+         }
+        ],
+        "text": "0x84000000"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       }
+      ]
+     }
+    ],
+    "references": []
+   }
+  }
+ ]
+}

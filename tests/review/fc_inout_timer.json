@@ -1,0 +1,16 @@
+{
+ "comment": "found in a review of the semantics: fc inout timer",
+ "program": "programs/fc_inout_timer.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".in": true
+   },
+   "run_ms": 1500,
+   "expect": {
+    "\"TI\".Q": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+  "comment": "S5 timers with S5T#2S: SP (pulse), SE (extended pulse), SD (on delay), SS (retentive on delay), SF (off delay); T 7 by a tag; T 6 in a block in German (SE: on delay)",
+  "program": "../stl/s5timers.program.json",
+  "scan_ms": 10,
+  "steps": [
+    {"comment": "all started", "set": {"S1": true, "S2": true, "S3": true, "S4": true, "S5": true}, "scans": 1,
+     "expect": {"Q1": true, "Q2": true, "Q3": false, "Q4": false, "Q5": true, "Q6": false, "Q7": false,
+                "V1": 200, "V2": "16#0200"}},
+    {"comment": "S1, S2, S5 off: SP ends, SE goes on, SF starts", "set": {"S1": false, "S2": false, "S5": false}, "run_ms": 500,
+     "expect": {"Q1": false, "Q2": true, "Q3": false, "Q5": true, "V1": 150, "V2": "16#0150"}},
+    {"comment": "after 2 s", "run_ms": 1600,
+     "expect": {"Q1": false, "Q2": false, "Q3": true, "Q4": true, "Q5": false, "Q6": true, "Q7": true, "V1": 0}},
+    {"comment": "S3 off: SD off; SS stays on", "set": {"S3": false, "S4": false}, "scans": 1,
+     "expect": {"Q3": false, "Q4": true, "Q6": false, "Q7": false}},
+    {"comment": "R resets SS", "set": {"Rs": true}, "scans": 1, "expect": {"Q4": false}},
+    {"comment": "SD restarts on a new edge only", "set": {"Rs": false, "S3": true}, "run_ms": 1990,
+     "expect": {"Q3": false}},
+    {"scans": 1, "expect": {"Q3": false}},
+    {"comment": "2 s after the edge", "scans": 1, "expect": {"Q3": true}}
+  ]
+}

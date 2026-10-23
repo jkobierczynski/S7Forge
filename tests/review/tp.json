@@ -1,0 +1,32 @@
+{
+ "comment": "found in a review of the semantics: tp",
+ "program": "programs/tp.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".in": true
+   },
+   "scans": 1,
+   "expect": {
+    "\"TP1\".Q": true
+   }
+  },
+  {
+   "set": {
+    "\"D\".in": false
+   },
+   "run_ms": 300,
+   "expect": {
+    "\"TP1\".Q": true
+   }
+  },
+  {
+   "run_ms": 1000,
+   "expect": {
+    "\"TP1\".Q": false,
+    "\"TP1\".ET": "T#0ms"
+   }
+  }
+ ]
+}

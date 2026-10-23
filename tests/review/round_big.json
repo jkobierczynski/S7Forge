@@ -1,0 +1,10 @@
+{
+ "comment": "found in a review of the semantics: round big",
+ "program": "programs/round_big.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1
+  }
+ ]
+}

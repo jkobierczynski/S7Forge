@@ -1,0 +1,9 @@
+{
+  "comment": "warm restart and power on of s14_code_rewritten: M is not retentive; after a power on the program runs as from the start",
+  "program": "../data/ZZPLC.json",
+  "steps": [
+    {"set": {"ZZALPHA": true}, "scans": 1, "expect": {"ZZN1": 10}},
+    {"restart": "warm", "expect": {"ZZN1": 0}},
+    {"restart": "power", "scans": 3, "expect": {"ZZN2": 8}}
+  ]
+}

@@ -1,0 +1,305 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "Sel",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW0"
+  },
+  {
+   "name": "W",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW2"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"Sel\"",
+          "args": []
+         }
+        ],
+        "text": "\"Sel\""
+       },
+       {
+        "op": "stl",
+        "name": "JL",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "LST",
+          "args": []
+         }
+        ],
+        "text": "LST"
+       },
+       {
+        "op": "stl",
+        "name": "JU",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "S0",
+          "args": []
+         }
+        ],
+        "text": "S0"
+       },
+       {
+        "op": "stl",
+        "name": "JU",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "S1",
+          "args": []
+         }
+        ],
+        "text": "S1"
+       },
+       {
+        "op": "label",
+        "name": "LST",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "JU",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "S2",
+          "args": []
+         }
+        ],
+        "text": "S2"
+       },
+       {
+        "op": "label",
+        "name": "S0",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "10",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 10
+          },
+          "args": []
+         }
+        ],
+        "text": "10"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"W\"",
+          "args": []
+         }
+        ],
+        "text": "\"W\""
+       },
+       {
+        "op": "stl",
+        "name": "JU",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "E",
+          "args": []
+         }
+        ],
+        "text": "E"
+       },
+       {
+        "op": "label",
+        "name": "S1",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "11",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 11
+          },
+          "args": []
+         }
+        ],
+        "text": "11"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"W\"",
+          "args": []
+         }
+        ],
+        "text": "\"W\""
+       },
+       {
+        "op": "stl",
+        "name": "JU",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "E",
+          "args": []
+         }
+        ],
+        "text": "E"
+       },
+       {
+        "op": "label",
+        "name": "S2",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "12",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 12
+          },
+          "args": []
+         }
+        ],
+        "text": "12"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"W\"",
+          "args": []
+         }
+        ],
+        "text": "\"W\""
+       },
+       {
+        "op": "label",
+        "name": "E",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "NOP",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 0
+          },
+          "args": []
+         }
+        ],
+        "text": "0"
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Sel\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"W\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,235 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "En",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I2.0"
+  },
+  {
+   "name": "In",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I2.1"
+  },
+  {
+   "name": "Out",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q2.0"
+  },
+  {
+   "name": "So",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q2.1"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "MCRA",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"En\"",
+          "args": []
+         }
+        ],
+        "text": "\"En\""
+       },
+       {
+        "op": "stl",
+        "name": "MCR(",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"In\"",
+          "args": []
+         }
+        ],
+        "text": "\"In\""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "name": "\"Out\"",
+          "args": []
+         }
+        ],
+        "text": "\"Out\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "77",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 77
+          },
+          "args": []
+         }
+        ],
+        "text": "77"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 60"
+       },
+       {
+        "op": "stl",
+        "name": "SET",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "S",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "name": "\"So\"",
+          "args": []
+         }
+        ],
+        "text": "\"So\""
+       },
+       {
+        "op": "stl",
+        "name": ")MCR",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "MCRD",
+        "exprs": [],
+        "text": ""
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"En\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"In\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Out\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"So\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

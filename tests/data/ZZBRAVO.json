@@ -1,0 +1,469 @@
+{
+  "format": "tiaconv-program",
+  "schema_version": 2,
+  "tool": {"name": "tiaconv", "version": "0.18.0"},
+  "source": {"file": "tests/fixtures/s13_hmi/System/PEData.plf", "project": "s13_hmi", "save": null},
+  "plc": {
+    "name": "ZZBRAVO",
+    "station": "S7-1500/ET200MP station_1",
+    "type": "CPU 1511-1 PN",
+    "order_number": "6ES7 511-1AK00-0AB0",
+    "firmware": "V1.8"
+  },
+  "io": [],
+  "tags": [
+    {"name": "Tag_1", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%I0.1", "comment": null},
+    {"name": "Tag_2", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%Q0.2", "comment": null},
+    {"name": "Tag_3", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%M13.1", "comment": null},
+    {"name": "Tag_4", "table": "Default tag table", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%M12.1", "comment": null},
+    {"name": "Mybool", "table": "Tag MyTagTable", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%I0.0", "comment": "This is a bolean"},
+    {"name": "Mysecondbool", "table": "Tag MyTagTable", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "address": "%Q0.1", "comment": null},
+    {"name": "MyByte", "table": "Tag MyTagTable", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "address": "%MB10", "comment": null},
+    {"name": "MyReal", "table": "Tag MyTagTable", "data_type": "Real", "type": {"kind": "elementary", "name": "Real", "bits": 32, "length": null, "dims": [], "element": null}, "address": "%MD22", "comment": null},
+    {"name": "MyDWord", "table": "Tag MyTagTable", "data_type": "DWord", "type": {"kind": "elementary", "name": "DWord", "bits": 32, "length": null, "dims": [], "element": null}, "address": "%MD26", "comment": null},
+    {"name": "MyTime", "table": "Tag MyTagTable", "data_type": "Time", "type": {"kind": "elementary", "name": "Time", "bits": 32, "length": null, "dims": [], "element": null}, "address": "%MD30", "comment": null},
+    {"name": "MyChar", "table": "Tag MyTagTable", "data_type": "Char", "type": {"kind": "elementary", "name": "Char", "bits": 8, "length": null, "dims": [], "element": null}, "address": "%MB34", "comment": "This is a char"}
+  ],
+  "constants": [
+    {"name": "Local~Device", "table": "Default tag table", "data_type": "Hw_Device", "value": "32", "parsed": {"kind": "int", "text": "32", "bool": null, "int": 32, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Configuration", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "33", "parsed": {"kind": "int", "text": "33", "bool": null, "int": 33, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "49", "parsed": {"kind": "int", "text": "49", "bool": null, "int": 49, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Common", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "50", "parsed": {"kind": "int", "text": "50", "bool": null, "int": 50, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~MC", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "51", "parsed": {"kind": "int", "text": "51", "bool": null, "int": 51, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Exec", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "52", "parsed": {"kind": "int", "text": "52", "bool": null, "int": 52, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~Display", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "54", "parsed": {"kind": "int", "text": "54", "bool": null, "int": 54, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "64", "parsed": {"kind": "int", "text": "64", "bool": null, "int": 64, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1~Port_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "65", "parsed": {"kind": "int", "text": "65", "bool": null, "int": 65, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_interface_1~Port_2", "table": "Default tag table", "data_type": "Hw_Interface", "value": "66", "parsed": {"kind": "int", "text": "66", "bool": null, "int": 66, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "Local~PROFINET_IO-System", "table": "Default tag table", "data_type": "Hw_IoSystem", "value": "257", "parsed": {"kind": "int", "text": "257", "bool": null, "int": 257, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~Head", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "258", "parsed": {"kind": "int", "text": "258", "bool": null, "int": 258, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~PROFINET_interface", "table": "Default tag table", "data_type": "Hw_Interface", "value": "259", "parsed": {"kind": "int", "text": "259", "bool": null, "int": 259, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~PROFINET_interface~Port_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "260", "parsed": {"kind": "int", "text": "260", "bool": null, "int": 260, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~PROFINET_interface~Port_2", "table": "Default tag table", "data_type": "Hw_Interface", "value": "261", "parsed": {"kind": "int", "text": "261", "bool": null, "int": 261, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~IODevice", "table": "Default tag table", "data_type": "Hw_Device", "value": "262", "parsed": {"kind": "int", "text": "262", "bool": null, "int": 262, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_1~Proxy", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "264", "parsed": {"kind": "int", "text": "264", "bool": null, "int": 264, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~IODevice", "table": "Default tag table", "data_type": "Hw_Device", "value": "265", "parsed": {"kind": "int", "text": "265", "bool": null, "int": 265, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~Proxy", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "267", "parsed": {"kind": "int", "text": "267", "bool": null, "int": 267, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~Head", "table": "Default tag table", "data_type": "Hw_SubModule", "value": "268", "parsed": {"kind": "int", "text": "268", "bool": null, "int": 268, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~PROFINET_interface", "table": "Default tag table", "data_type": "Hw_Interface", "value": "269", "parsed": {"kind": "int", "text": "269", "bool": null, "int": 269, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~PROFINET_interface~Port_1", "table": "Default tag table", "data_type": "Hw_Interface", "value": "270", "parsed": {"kind": "int", "text": "270", "bool": null, "int": 270, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "IO_device_2~PROFINET_interface~Port_2", "table": "Default tag table", "data_type": "Hw_Interface", "value": "271", "parsed": {"kind": "int", "text": "271", "bool": null, "int": 271, "real": null, "ns": null, "days": null, "string": null}, "kind": "hardware", "system": true, "comment": null},
+    {"name": "ZZCONST_INT", "table": "Default tag table", "data_type": "Int", "value": "43", "parsed": {"kind": "int", "text": "43", "bool": null, "int": 43, "real": null, "ns": null, "days": null, "string": null}, "kind": "user", "system": false, "comment": "My int constant"},
+    {"name": "ZZCONST_TIME", "table": "Tag MyTagTable", "data_type": "Time", "value": "T#5s", "parsed": {"kind": "duration", "text": "T#5s", "bool": null, "int": null, "real": null, "ns": 5000000000, "days": null, "string": null}, "kind": "user", "system": false, "comment": null},
+    {"name": "ZZCONST_STR", "table": "Tag MyTagTable", "data_type": "String", "value": "'Hello'", "parsed": {"kind": "string", "text": "'Hello'", "bool": null, "int": null, "real": null, "ns": null, "days": null, "string": "Hello"}, "kind": "user", "system": false, "comment": null},
+    {"name": "OB_Main", "table": "Default tag table", "data_type": "OB_PCYCLE", "value": "1", "parsed": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "kind": "ob", "system": true, "comment": null},
+    {"name": "Automatic update", "table": "Default tag table", "data_type": "Pip", "value": "0", "parsed": {"kind": "int", "text": "0", "bool": null, "int": 0, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 1", "table": "Default tag table", "data_type": "Pip", "value": "1", "parsed": {"kind": "int", "text": "1", "bool": null, "int": 1, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 2", "table": "Default tag table", "data_type": "Pip", "value": "2", "parsed": {"kind": "int", "text": "2", "bool": null, "int": 2, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 3", "table": "Default tag table", "data_type": "Pip", "value": "3", "parsed": {"kind": "int", "text": "3", "bool": null, "int": 3, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 4", "table": "Default tag table", "data_type": "Pip", "value": "4", "parsed": {"kind": "int", "text": "4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 5", "table": "Default tag table", "data_type": "Pip", "value": "5", "parsed": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 6", "table": "Default tag table", "data_type": "Pip", "value": "6", "parsed": {"kind": "int", "text": "6", "bool": null, "int": 6, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 7", "table": "Default tag table", "data_type": "Pip", "value": "7", "parsed": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 8", "table": "Default tag table", "data_type": "Pip", "value": "8", "parsed": {"kind": "int", "text": "8", "bool": null, "int": 8, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 9", "table": "Default tag table", "data_type": "Pip", "value": "9", "parsed": {"kind": "int", "text": "9", "bool": null, "int": 9, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 10", "table": "Default tag table", "data_type": "Pip", "value": "10", "parsed": {"kind": "int", "text": "10", "bool": null, "int": 10, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 11", "table": "Default tag table", "data_type": "Pip", "value": "11", "parsed": {"kind": "int", "text": "11", "bool": null, "int": 11, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 12", "table": "Default tag table", "data_type": "Pip", "value": "12", "parsed": {"kind": "int", "text": "12", "bool": null, "int": 12, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 13", "table": "Default tag table", "data_type": "Pip", "value": "13", "parsed": {"kind": "int", "text": "13", "bool": null, "int": 13, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 14", "table": "Default tag table", "data_type": "Pip", "value": "14", "parsed": {"kind": "int", "text": "14", "bool": null, "int": 14, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 15", "table": "Default tag table", "data_type": "Pip", "value": "15", "parsed": {"kind": "int", "text": "15", "bool": null, "int": 15, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 16", "table": "Default tag table", "data_type": "Pip", "value": "16", "parsed": {"kind": "int", "text": "16", "bool": null, "int": 16, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 17", "table": "Default tag table", "data_type": "Pip", "value": "17", "parsed": {"kind": "int", "text": "17", "bool": null, "int": 17, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 18", "table": "Default tag table", "data_type": "Pip", "value": "18", "parsed": {"kind": "int", "text": "18", "bool": null, "int": 18, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 19", "table": "Default tag table", "data_type": "Pip", "value": "19", "parsed": {"kind": "int", "text": "19", "bool": null, "int": 19, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 20", "table": "Default tag table", "data_type": "Pip", "value": "20", "parsed": {"kind": "int", "text": "20", "bool": null, "int": 20, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 21", "table": "Default tag table", "data_type": "Pip", "value": "21", "parsed": {"kind": "int", "text": "21", "bool": null, "int": 21, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 22", "table": "Default tag table", "data_type": "Pip", "value": "22", "parsed": {"kind": "int", "text": "22", "bool": null, "int": 22, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 23", "table": "Default tag table", "data_type": "Pip", "value": "23", "parsed": {"kind": "int", "text": "23", "bool": null, "int": 23, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 24", "table": "Default tag table", "data_type": "Pip", "value": "24", "parsed": {"kind": "int", "text": "24", "bool": null, "int": 24, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 25", "table": "Default tag table", "data_type": "Pip", "value": "25", "parsed": {"kind": "int", "text": "25", "bool": null, "int": 25, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 26", "table": "Default tag table", "data_type": "Pip", "value": "26", "parsed": {"kind": "int", "text": "26", "bool": null, "int": 26, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 27", "table": "Default tag table", "data_type": "Pip", "value": "27", "parsed": {"kind": "int", "text": "27", "bool": null, "int": 27, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 28", "table": "Default tag table", "data_type": "Pip", "value": "28", "parsed": {"kind": "int", "text": "28", "bool": null, "int": 28, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 29", "table": "Default tag table", "data_type": "Pip", "value": "29", "parsed": {"kind": "int", "text": "29", "bool": null, "int": 29, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 30", "table": "Default tag table", "data_type": "Pip", "value": "30", "parsed": {"kind": "int", "text": "30", "bool": null, "int": 30, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP 31", "table": "Default tag table", "data_type": "Pip", "value": "31", "parsed": {"kind": "int", "text": "31", "bool": null, "int": 31, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "PIP OB Servo", "table": "Default tag table", "data_type": "Pip", "value": "32768", "parsed": {"kind": "int", "text": "32768", "bool": null, "int": 32768, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null},
+    {"name": "None", "table": "Default tag table", "data_type": "Pip", "value": "65535", "parsed": {"kind": "int", "text": "65535", "bool": null, "int": 65535, "real": null, "ns": null, "days": null, "string": null}, "kind": "pip", "system": true, "comment": null}
+  ],
+  "types": [
+    {
+      "name": "User_data_type_1",
+      "kind": "plc_type",
+      "members": [
+        {"name": "memberDate", "data_type": "Date", "type": {"kind": "elementary", "name": "Date", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "D#1990-01-31", "start": {"kind": "date", "text": "D#1990-01-31", "bool": null, "int": null, "real": null, "ns": null, "days": 30, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "memberString", "data_type": "String", "type": {"kind": "string", "name": "String", "bits": null, "length": 254, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "'Hello world'", "start": {"kind": "string", "text": "'Hello world'", "bool": null, "int": null, "real": null, "ns": null, "days": null, "string": "Hello world"}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "memberInt", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "7", "start": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "memberBolean", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    }
+  ],
+  "data_blocks": [
+    {
+      "name": "DB_Standard",
+      "number": 1,
+      "kind": "global",
+      "instance_of": null,
+      "optimized": false,
+      "notes": [],
+      "members": [
+        {
+          "name": "my_data_type",
+          "data_type": "\"User_data_type_1\"",
+          "type": {"kind": "plc_type", "name": "User_data_type_1", "bits": null, "length": null, "dims": [], "element": null},
+          "section": null,
+          "offset": "0",
+          "offset_bits": 0,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "memberDate", "data_type": "Date", "type": {"kind": "elementary", "name": "Date", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": "0", "offset_bits": 0, "start_value": "D#1990-01-31", "start": {"kind": "date", "text": "D#1990-01-31", "bool": null, "int": null, "real": null, "ns": null, "days": 30, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberString", "data_type": "String", "type": {"kind": "string", "name": "String", "bits": null, "length": 254, "dims": [], "element": null}, "section": null, "offset": "2", "offset_bits": 16, "start_value": "'Hello world'", "start": {"kind": "string", "text": "'Hello world'", "bool": null, "int": null, "real": null, "ns": null, "days": null, "string": "Hello world"}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberInt", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": "258", "offset_bits": 2064, "start_value": "7", "start": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberBolean", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": "260.0", "offset_bits": 2080, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        },
+        {"name": "my_bool", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": "262.0", "offset_bits": 2096, "start_value": "true", "start": {"kind": "bool", "text": "true", "bool": true, "int": null, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": true, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_byte", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": null, "offset": "263", "offset_bits": 2104, "start_value": "16#4", "start": {"kind": "int", "text": "16#4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_int", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": "264", "offset_bits": 2112, "start_value": "5", "start": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_dint", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": "266", "offset_bits": 2128, "start_value": "6", "start": {"kind": "int", "text": "6", "bool": null, "int": 6, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_real", "data_type": "Real", "type": {"kind": "elementary", "name": "Real", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": "270", "offset_bits": 2160, "start_value": "3.141593", "start": {"kind": "real", "text": "3.141593", "bool": null, "int": null, "real": 3.141593, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_stringof10", "data_type": "Array[0..10] of String", "type": {"kind": "array", "name": "Array", "bits": null, "length": null, "dims": [{"low": 0, "low_text": "0", "high": 10, "high_text": "10"}], "element": {"kind": "string", "name": "String", "bits": null, "length": 254, "dims": [], "element": null}}, "section": null, "offset": "274", "offset_bits": 2192, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_array_of_int", "data_type": "Array[0..3] of Int", "type": {"kind": "array", "name": "Array", "bits": null, "length": null, "dims": [{"low": 0, "low_text": "0", "high": 3, "high_text": "3"}], "element": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}}, "section": null, "offset": "3090", "offset_bits": 24720, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    },
+    {
+      "name": "DB_Optimized",
+      "number": 2,
+      "kind": "global",
+      "instance_of": null,
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {
+          "name": "my_data_type",
+          "data_type": "\"User_data_type_1\"",
+          "type": {"kind": "plc_type", "name": "User_data_type_1", "bits": null, "length": null, "dims": [], "element": null},
+          "section": null,
+          "offset": null,
+          "offset_bits": null,
+          "start_value": null,
+          "start": null,
+          "retain": false,
+          "accessible_from_hmi": true,
+          "writable_from_hmi": true,
+          "setpoint": false,
+          "unresolved": false,
+          "comment": null,
+          "members": [
+            {"name": "memberDate", "data_type": "Date", "type": {"kind": "elementary", "name": "Date", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "D#1990-01-31", "start": {"kind": "date", "text": "D#1990-01-31", "bool": null, "int": null, "real": null, "ns": null, "days": 30, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberString", "data_type": "String", "type": {"kind": "string", "name": "String", "bits": null, "length": 254, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "'Hello world'", "start": {"kind": "string", "text": "'Hello world'", "bool": null, "int": null, "real": null, "ns": null, "days": null, "string": "Hello world"}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberInt", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "7", "start": {"kind": "int", "text": "7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+            {"name": "memberBolean", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+          ]
+        },
+        {"name": "my_bool", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "true", "start": {"kind": "bool", "text": "true", "bool": true, "int": null, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": true, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_byte", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "16#4", "start": {"kind": "int", "text": "16#4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_int", "data_type": "Int", "type": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "5", "start": {"kind": "int", "text": "5", "bool": null, "int": 5, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_dint", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "6", "start": {"kind": "int", "text": "6", "bool": null, "int": 6, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_real", "data_type": "Real", "type": {"kind": "elementary", "name": "Real", "bits": 32, "length": null, "dims": [], "element": null}, "section": null, "offset": null, "offset_bits": null, "start_value": "3.141593", "start": {"kind": "real", "text": "3.141593", "bool": null, "int": null, "real": 3.141593, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_sitringof10", "data_type": "Array[0..10] of String", "type": {"kind": "array", "name": "Array", "bits": null, "length": null, "dims": [{"low": 0, "low_text": "0", "high": 10, "high_text": "10"}], "element": {"kind": "string", "name": "String", "bits": null, "length": 254, "dims": [], "element": null}}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []},
+        {"name": "my_array_of_int", "data_type": "Array[0..3] of Int", "type": {"kind": "array", "name": "Array", "bits": null, "length": null, "dims": [{"low": 0, "low_text": "0", "high": 3, "high_text": "3"}], "element": {"kind": "elementary", "name": "Int", "bits": 16, "length": null, "dims": [], "element": null}}, "section": null, "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    },
+    {
+      "name": "Block_1_DB",
+      "number": 3,
+      "kind": "instance",
+      "instance_of": "Block_1",
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {"name": "M12.1", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Boolian input", "members": []},
+        {"name": "M13.1", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Boolian output", "members": []},
+        {"name": "my_inout", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "InOut", "offset": null, "offset_bits": null, "start_value": "16#7", "start": {"kind": "int", "text": "16#7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My IO Byte", "members": []},
+        {"name": "555", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": "555", "start": {"kind": "int", "text": "555", "bool": null, "int": 555, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ]
+    },
+    {
+      "name": "Block_2_DB",
+      "number": 4,
+      "kind": "instance",
+      "instance_of": "Block_2",
+      "optimized": true,
+      "notes": [],
+      "members": [
+        {"name": "MB12", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": "16#3", "start": {"kind": "int", "text": "16#3", "bool": null, "int": 3, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My input byte", "members": []},
+        {"name": "MB14", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": "16#4", "start": {"kind": "int", "text": "16#4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My output byte", "members": []},
+        {"name": "MB15", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "InOut", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My In/Out byte", "members": []},
+        {"name": "666", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": "666", "start": {"kind": "int", "text": "666", "bool": null, "int": 666, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Static", "members": []}
+      ]
+    },
+    {
+      "name": "ZZDB",
+      "number": 5,
+      "kind": "global",
+      "instance_of": null,
+      "optimized": true,
+      "notes": [],
+      "members": []
+    }
+  ],
+  "organization_blocks": [
+    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null}
+  ],
+  "runtime": {
+    "startup": [],
+    "program_cycle": ["Main"],
+    "interrupts": [],
+    "process_images": []
+  },
+  "blocks": [
+    {
+      "type": "OB",
+      "name": "Main",
+      "number": 1,
+      "language": "LAD",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "Initial_Call", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "Initial call of this OB", "members": []},
+        {"name": "Remanence", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "=True, if remanent data are available", "members": []}
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: \"Block_1\", \"Block_1_DB\"()"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "call",
+                "name": "\"Block_1\"",
+                "ref_id": 1,
+                "instance": "\"Block_1_DB\"",
+                "instance_ref_id": 3,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "en", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {"name": "M12.1", "direction": "in", "connected": [], "operands": []},
+                  {"name": "my_inout", "direction": "in", "connected": [], "operands": []},
+                  {"name": "M13.1", "direction": "out", "connected": [], "operands": []}
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {"op": "call", "ref_id": 1, "instance_ref_id": 3, "name": "\"Block_1\"", "type": null, "value": null, "args": [], "target": {"kind": "block", "block_type": "FB", "name": "Block_1", "number": 1, "version": null, "instance": {"kind": "data_block", "name": "Block_1_DB", "number": 3, "instance_of": "Block_1", "data_type": null, "path": []}, "parameters": [{"name": "M12.1", "section": "Input", "data_type": "Bool", "given": false}, {"name": "M13.1", "section": "Output", "data_type": "Bool", "given": false}, {"name": "my_inout", "section": "InOut", "data_type": "Byte", "given": false}]}}
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 2,
+            "network_id": 2,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "graphic",
+            "lines": [
+              "1: \"Block_2\", \"Block_2_DB\"()"
+            ],
+            "elements": [
+              {
+                "uid": 23,
+                "kind": "call",
+                "name": "\"Block_2\"",
+                "ref_id": 4,
+                "instance": "\"Block_2_DB\"",
+                "instance_ref_id": 6,
+                "data_type": null,
+                "options": [],
+                "pins": [
+                  {"name": "en", "direction": "in", "connected": ["power rail"], "operands": []},
+                  {"name": "MB12", "direction": "in", "connected": [], "operands": []},
+                  {"name": "MB15", "direction": "in", "connected": [], "operands": []},
+                  {"name": "MB14", "direction": "out", "connected": [], "operands": []}
+                ]
+              }
+            ],
+            "statements": [
+              {
+                "op": "call",
+                "name": null,
+                "exprs": [
+                  {"op": "call", "ref_id": 4, "instance_ref_id": 6, "name": "\"Block_2\"", "type": null, "value": null, "args": [], "target": {"kind": "block", "block_type": "FB", "name": "Block_2", "number": 2, "version": null, "instance": {"kind": "data_block", "name": "Block_2_DB", "number": 4, "instance_of": "Block_2", "data_type": null, "path": []}, "parameters": [{"name": "MB12", "section": "Input", "data_type": "Byte", "given": false}, {"name": "MB14", "section": "Output", "data_type": "Byte", "given": false}, {"name": "MB15", "section": "InOut", "data_type": "Byte", "given": false}]}}
+                ],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          },
+          {
+            "number": 3,
+            "network_id": 3,
+            "title": null,
+            "comment": null,
+            "language": "LAD",
+            "content": "empty",
+            "lines": [],
+            "elements": [],
+            "statements": [],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": [
+          {"ref_id": 1, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_1\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 4, "kind": "block", "kind_stored": "FBBlock", "text": "\"Block_2\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 3, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_1_DB\"", "data_type": "Block_1", "value": null, "data_block": null, "declared_as": null, "name": "Block_1_DB", "scope": "Global", "path": [], "modifier": null},
+          {"ref_id": 6, "kind": "instance data block", "kind_stored": "AufDBBlock", "text": "\"Block_2_DB\"", "data_type": "Block_2", "value": null, "data_block": null, "declared_as": null, "name": "Block_2_DB", "scope": "Global", "path": [], "modifier": null}
+        ]
+      }
+    },
+    {
+      "type": "FB",
+      "name": "Block_1",
+      "number": 1,
+      "language": "FBD",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "M12.1", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Boolian input", "members": []},
+        {"name": "M13.1", "data_type": "Bool", "type": {"kind": "elementary", "name": "Bool", "bits": 1, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Boolian output", "members": []},
+        {"name": "my_inout", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "InOut", "offset": null, "offset_bits": null, "start_value": "16#7", "start": {"kind": "int", "text": "16#7", "bool": null, "int": 7, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My IO Byte", "members": []},
+        {"name": "555", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": "555", "start": {"kind": "int", "text": "555", "bool": null, "int": 555, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": null, "members": []}
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 3,
+            "title": null,
+            "comment": null,
+            "language": "FBD",
+            "content": "empty",
+            "lines": [],
+            "elements": [],
+            "statements": [],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": []
+      }
+    },
+    {
+      "type": "FB",
+      "name": "Block_2",
+      "number": 2,
+      "language": "STL",
+      "optimized": true,
+      "protection": null,
+      "simulatable": true,
+      "interface": [
+        {"name": "MB12", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "Input", "offset": null, "offset_bits": null, "start_value": "16#3", "start": {"kind": "int", "text": "16#3", "bool": null, "int": 3, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My input byte", "members": []},
+        {"name": "MB14", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "Output", "offset": null, "offset_bits": null, "start_value": "16#4", "start": {"kind": "int", "text": "16#4", "bool": null, "int": 4, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My output byte", "members": []},
+        {"name": "MB15", "data_type": "Byte", "type": {"kind": "elementary", "name": "Byte", "bits": 8, "length": null, "dims": [], "element": null}, "section": "InOut", "offset": null, "offset_bits": null, "start_value": null, "start": null, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My In/Out byte", "members": []},
+        {"name": "666", "data_type": "DInt", "type": {"kind": "elementary", "name": "DInt", "bits": 32, "length": null, "dims": [], "element": null}, "section": "Static", "offset": null, "offset_bits": null, "start_value": "666", "start": {"kind": "int", "text": "666", "bool": null, "int": 666, "real": null, "ns": null, "days": null, "string": null}, "retain": false, "accessible_from_hmi": true, "writable_from_hmi": true, "setpoint": false, "unresolved": false, "comment": "My Static", "members": []}
+      ],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "STL",
+            "content": "empty",
+            "lines": [],
+            "elements": [],
+            "statements": [],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": []
+      }
+    },
+    {
+      "type": "FB",
+      "name": "ZZFC",
+      "number": 77,
+      "language": "SCL",
+      "optimized": true,
+      "protection": "write",
+      "simulatable": true,
+      "interface": [],
+      "code": {
+        "networks": [
+          {
+            "number": 1,
+            "network_id": 1,
+            "title": null,
+            "comment": null,
+            "language": "SCL",
+            "content": "scl",
+            "lines": [
+              ";"
+            ],
+            "elements": [],
+            "statements": [
+              {
+                "op": "empty",
+                "name": null,
+                "exprs": [],
+                "target": null,
+                "text": null,
+                "branches": [],
+                "body": [],
+                "else": null
+              }
+            ],
+            "tree_notes": [],
+            "notes": []
+          }
+        ],
+        "references": []
+      }
+    }
+  ],
+  "instructions": [],
+  "call_graph": [
+    {"from": "Main", "from_type": "OB", "network": 1, "kind": "block", "to": "Block_1", "to_type": "FB", "instance_kind": "data_block", "instance": "Block_1_DB"},
+    {"from": "Main", "from_type": "OB", "network": 2, "kind": "block", "to": "Block_2", "to_type": "FB", "instance_kind": "data_block", "instance": "Block_2_DB"}
+  ],
+  "not_simulatable": []
+}

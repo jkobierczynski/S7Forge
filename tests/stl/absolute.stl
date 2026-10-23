@@ -1,0 +1,66 @@
+// absolute and indirect addresses: a data block with standard access opened
+// with OPN, DB5.DBW2, AR1 and AR2, memory-indirect, DBNO, DBLG
+tag Go Bool %I3.0
+tag Go2 Bool %I3.1
+db Data 5
+field b0 Bool
+field b1 Bool
+field by Byte
+field w Int
+field d DInt
+field r Real
+field s String[4]
+field arr Array[1..3] of Int
+db Fast 6 optimized
+field x Int
+OPN DB 5
+SET
+= DBX 0.1
+L i:7:Byte
+T DBB 1
+L i:1234
+T DBW 2
+L DB5.DBW 2
++ i:1
+T DB5.DBW 18
+L r:2.5
+T DBD 8
+---
+L P#20.0
+LAR1
+L i:42
+T DBW [AR1,P#2.0]
+L P#M30.0
+LAR2
+L i:99
+T W [AR2,P#0.0]
+L i:16:DInt
+T MD 40
+L DBW [MD 40]
+T MW 44
+L DBNO
+T MW 46
+L DBLG
+T MW 48
+L DBB 12
+T MB 50
+TAR1 MD 52
+---
+A Go
+JCN @END
+OPN db:Data
+L DBW 2
+T MW 56
+OPN DB 6
+L DBW 0
+T MW 58
+END:
+NOP i:0
+---
+A Go2
+JCN @E2
+OPN DB 5
+L i:1
+T DBW 30
+E2:
+NOP i:0

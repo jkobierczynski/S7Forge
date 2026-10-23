@@ -1,0 +1,7 @@
+{
+  "comment": "must fail: the motor does not run without the start button",
+  "program": "../data/MOTORPLC.json",
+  "steps": [
+    {"set": {"StopPB": true, "Guard": true}, "run_ms": 100, "expect": {"MotorLadOut": true}}
+  ]
+}

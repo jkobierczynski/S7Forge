@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: shl",
+ "program": "programs/shl.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".w": 2
+   }
+  }
+ ]
+}

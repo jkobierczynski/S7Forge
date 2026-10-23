@@ -1,0 +1,230 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "Up",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.0"
+  },
+  {
+   "name": "F",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.1"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"Up\"",
+          "args": []
+         }
+        ],
+        "text": "\"Up\""
+       },
+       {
+        "op": "stl",
+        "name": "CU",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"F\"",
+          "args": []
+         }
+        ],
+        "text": "\"F\""
+       },
+       {
+        "op": "stl",
+        "name": "FR",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 0"
+       },
+       {
+        "op": "stl",
+        "name": "CALL",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "\"G\"",
+          "args": []
+         }
+        ],
+        "text": "\"G\"",
+        "target": {
+         "kind": "block",
+         "name": "G",
+         "instance": null
+        }
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Up\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"F\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  },
+  {
+   "type": "FC",
+   "name": "G",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "O",
+        "exprs": [],
+        "text": "E 0.2"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SE",
+        "exprs": [],
+        "text": "T 6"
+       },
+       {
+        "op": "stl",
+        "name": "O",
+        "exprs": [],
+        "text": "T 6"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [],
+        "text": "A 4.0"
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Up\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"F\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

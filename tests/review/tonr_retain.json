@@ -1,0 +1,37 @@
+{
+ "comment": "found in a review of the semantics: tonr retain",
+ "program": "programs/tonr_retain.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".in": true
+   },
+   "run_ms": 600
+  },
+  {
+   "set": {
+    "\"D\".in": false
+   },
+   "scans": 1,
+   "expect": {
+    "\"TR\".ET": "T#600ms"
+   }
+  },
+  {
+   "restart": "warm",
+   "expect": {
+    "\"TR\".ET": "T#600ms"
+   }
+  },
+  {
+   "set": {
+    "\"D\".in": true
+   },
+   "run_ms": 500,
+   "expect": {
+    "\"TR\".Q": true
+   }
+  }
+ ]
+}

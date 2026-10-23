@@ -1,0 +1,24 @@
+{
+ "comment": "found in a review of the semantics: tonr reset",
+ "program": "programs/tonr_reset.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".in": true,
+    "\"D\".r": true
+   },
+   "run_ms": 3000
+  },
+  {
+   "set": {
+    "\"D\".r": false
+   },
+   "scans": 1,
+   "expect": {
+    "\"TR\".Q": false,
+    "\"TR\".ET": "T#0ms"
+   }
+  }
+ ]
+}

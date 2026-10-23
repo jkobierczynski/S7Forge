@@ -1,0 +1,66 @@
+// S5 timers: SP, SE, SD, SS, SF with S5T#2S; L and LC of the SD timer; a
+// timer by a tag of the type Timer; a block in German (SE is the on delay)
+tag S1 Bool %I0.0
+tag S2 Bool %I0.1
+tag S3 Bool %I0.2
+tag S4 Bool %I0.3
+tag S5 Bool %I0.4
+tag Rs Bool %I0.5
+tag Q1 Bool %Q0.0
+tag Q2 Bool %Q0.1
+tag Q3 Bool %Q0.2
+tag Q4 Bool %Q0.3
+tag Q5 Bool %Q0.4
+tag Q6 Bool %Q0.5
+tag Q7 Bool %Q0.6
+tag V1 Word %MW10
+tag V2 Word %MW12
+tag Tm Timer %T7
+A S1
+L s5:2000
+SP T 1
+A T 1
+= Q1
+---
+A S2
+L s5:2000
+SE T 2
+A T 2
+= Q2
+---
+A S3
+L s5:2000
+SD T 3
+A T 3
+= Q3
+L T 3
+T V1
+LC T 3
+T V2
+---
+A S4
+L s5:2000
+SS T 4
+A Rs
+R T 4
+A T 4
+= Q4
+---
+A S5
+L s5:2000
+SF T 5
+A T 5
+= Q5
+---
+A S3
+L s5:2000
+SD Tm
+A Tm
+= Q7
+CALL call:German
+block German FC
+U S3
+L s5:2000
+SE T 6
+U T 6
+= Q6

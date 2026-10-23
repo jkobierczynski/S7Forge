@@ -1,0 +1,16 @@
+{
+ "comment": "found in a review of the semantics: idx garbage",
+ "program": "../review/programs/idx_garbage.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".arr[abc]": 5
+   },
+   "scans": 1,
+   "expect": {
+    "\"D\".arr[0]": 5
+   }
+  }
+ ]
+}

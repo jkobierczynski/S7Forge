@@ -1,0 +1,16 @@
+{
+  "comment": "S5 counter C 1: CU, CD on rising edges, S C#5, R",
+  "program": "../stl/counters.program.json",
+  "steps": [
+    {"set": {"Up": true}, "scans": 3, "expect": {"Cv": 1, "Cq": true, "Cb": "16#1"}},
+    {"set": {"Up": false}, "scans": 1},
+    {"set": {"Up": true}, "scans": 1},
+    {"set": {"Up": false}, "scans": 1},
+    {"set": {"Up": true}, "scans": 1, "expect": {"Cv": 3}},
+    {"set": {"Up": false, "Dn": true}, "scans": 1, "expect": {"Cv": 2}},
+    {"set": {"Dn": false, "Set": true}, "scans": 2, "expect": {"Cv": 5, "Cb": "16#5"}},
+    {"set": {"Set": false, "Rst": true}, "scans": 1, "expect": {"Cv": 0, "Cq": false}},
+    {"comment": "down from 0 stays 0", "set": {"Rst": false, "Dn": false}, "scans": 1},
+    {"set": {"Dn": true}, "scans": 1, "expect": {"Cv": 0}}
+  ]
+}

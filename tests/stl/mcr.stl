@@ -1,0 +1,16 @@
+// MCR: with En off, = and T write 0 and S does nothing
+tag En Bool %I2.0
+tag In Bool %I2.1
+tag Out Bool %Q2.0
+tag So Bool %Q2.1
+MCRA
+A En
+MCR(
+A In
+= Out
+L i:77
+T MW 60
+SET
+S So
+)MCR
+MCRD

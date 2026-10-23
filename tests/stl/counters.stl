@@ -1,0 +1,23 @@
+// S5 counters: CU, CD, S (BCD from ACCU1), R; A, L and LC of the counter
+tag Up Bool %I1.0
+tag Dn Bool %I1.1
+tag Set Bool %I1.2
+tag Rst Bool %I1.3
+tag Cq Bool %Q1.0
+tag Cv Word %MW20
+tag Cb Word %MW22
+A Up
+CU C 1
+A Dn
+CD C 1
+A Set
+L C#5
+S C 1
+A Rst
+R C 1
+A C 1
+= Cq
+L C 1
+T Cv
+LC C 1
+T Cb

@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: time to dint",
+ "program": "programs/time_to_dint.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".d": 5000
+   }
+  }
+ ]
+}

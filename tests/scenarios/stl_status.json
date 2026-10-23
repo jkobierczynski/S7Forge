@@ -1,0 +1,2 @@
+{"comment": "STL: *D overflow keeps the true sign; an unordered compare sets OS; RND clears OV", "program": "../stl/status.program.json",
+ "steps": [{"scans": 1, "expect": {"pos": true, "ov": true, "os": true, "rov": false, "n": 2}}]}

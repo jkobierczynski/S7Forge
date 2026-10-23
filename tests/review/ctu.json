@@ -1,0 +1,38 @@
+{
+ "comment": "found in a review of the semantics: ctu",
+ "program": "programs/ctu.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "set": {
+    "\"D\".cu": true
+   },
+   "scans": 1,
+   "expect": {
+    "\"C\".CV": 1
+   }
+  },
+  {
+   "scans": 3,
+   "expect": {
+    "\"C\".CV": 1
+   }
+  },
+  {
+   "set": {
+    "\"D\".cu": false
+   },
+   "scans": 1
+  },
+  {
+   "set": {
+    "\"D\".cu": true
+   },
+   "scans": 1,
+   "expect": {
+    "\"C\".CV": 2,
+    "\"C\".QU": true
+   }
+  }
+ ]
+}

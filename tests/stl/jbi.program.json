@@ -1,0 +1,205 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "a",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.0"
+  },
+  {
+   "name": "b",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.1"
+  },
+  {
+   "name": "c",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M0.2"
+  },
+  {
+   "name": "q",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%M1.0"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"a\"",
+          "args": []
+         }
+        ],
+        "text": "\"a\""
+       },
+       {
+        "op": "stl",
+        "name": "O",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"b\"",
+          "args": []
+         }
+        ],
+        "text": "\"b\""
+       },
+       {
+        "op": "stl",
+        "name": "JBI",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "X",
+          "args": []
+         }
+        ],
+        "text": "X"
+       },
+       {
+        "op": "label",
+        "name": "X",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "name": "\"c\"",
+          "args": []
+         }
+        ],
+        "text": "\"c\""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "name": "\"q\"",
+          "args": []
+         }
+        ],
+        "text": "\"q\""
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"a\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"b\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"c\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"q\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+// FR on a counter: CU counts again with Up still on; a block that is German
+// only by its operands (E, A): SE is the on delay there
+tag Up Bool %I0.0
+tag F Bool %I0.1
+A Up
+CU C 1
+A F
+FR C 1
+L C 1
+T MW 0
+CALL call:G
+block G FC
+O E 0.2
+L s5:1000
+SE T 6
+O T 6
+= A 4.0

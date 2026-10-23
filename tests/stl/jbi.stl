@@ -1,0 +1,12 @@
+// JBI ends the logic string: the OR term before it does not go on
+tag a Bool %M0.0
+tag b Bool %M0.1
+tag c Bool %M0.2
+tag q Bool %M1.0
+A a
+O
+A b
+JBI @X
+X:
+A c
+= q

@@ -1,0 +1,22 @@
+// JL: ACCU1-LL picks the n-th JU of the list; past its end the label
+tag Sel Int %MW0
+tag W Int %MW2
+L Sel
+JL @LST
+JU @S0
+JU @S1
+LST:
+JU @S2
+S0:
+L i:10
+T W
+JU @E
+S1:
+L i:11
+T W
+JU @E
+S2:
+L i:12
+T W
+E:
+NOP i:0

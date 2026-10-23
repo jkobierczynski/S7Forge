@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: local arr struct",
+ "program": "programs/local_arr_struct.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".out": 7
+   }
+  }
+ ]
+}

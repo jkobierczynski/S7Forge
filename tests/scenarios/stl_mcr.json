@@ -1,0 +1,9 @@
+{
+  "comment": "MCR: with En off, = and T write 0, S does nothing",
+  "program": "../stl/mcr.program.json",
+  "steps": [
+    {"set": {"En": true, "In": true}, "scans": 1, "expect": {"Out": true, "%MW60": 77, "So": true}},
+    {"set": {"En": false}, "scans": 1, "expect": {"Out": false, "%MW60": 0, "So": true}},
+    {"set": {"En": true, "In": false}, "scans": 1, "expect": {"Out": false, "%MW60": 77}}
+  ]
+}

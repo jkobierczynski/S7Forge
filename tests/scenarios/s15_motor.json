@@ -1,0 +1,60 @@
+{
+  "comment": "The motor of the fixture s15_motor: the same logic in LAD (MotorLAD) and SCL (MotorSCL), both called in Main. StopPB is normally closed: FALSE is pressed.",
+  "program": "../data/MOTORPLC.json",
+  "scan_ms": 10,
+  "steps": [
+    {"comment": "A: power on, stop and guard closed",
+     "set": {"StopPB": true, "Guard": true}, "run_ms": 100,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorData\".starts": 0,
+                "\"MotorLAD_DB\".run": false, "\"MotorSCL_DB\".run": false}},
+
+    {"comment": "B: start pressed", "set": {"StartPB": true}, "run_ms": 50},
+    {"comment": "B: start released: both run, the outputs wait, both count a start",
+     "set": {"StartPB": false}, "run_ms": 50,
+     "expect": {"\"MotorLAD_DB\".run": true, "\"MotorSCL_DB\".run": true,
+                "MotorLadOut": false, "MotorSclOut": false, "\"MotorData\".starts": 2}},
+
+    {"comment": "C: 4.8 s after the start the outputs still wait", "run_ms": 4700,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorLAD_DB\".delay.Q": false}},
+    {"comment": "C: 5 s after the start the outputs are on", "run_ms": 300,
+     "expect": {"MotorLadOut": true, "MotorSclOut": true, "\"MotorLAD_DB\".delay.ET": "T#5s",
+                "\"MotorSCL_DB\".delay.ET": "T#5s", "\"MotorData\".starts": 2}},
+
+    {"comment": "D: stop pressed", "set": {"StopPB": false}, "run_ms": 50,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorLAD_DB\".run": false,
+                "\"MotorSCL_DB\".run": false, "\"MotorSCL_DB\".delay.ET": "T#0s"}},
+    {"comment": "D: stop released: stays off, no start counted", "set": {"StopPB": true}, "run_ms": 50,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorData\".starts": 2}},
+
+    {"comment": "E: guard open, start pressed", "set": {"Guard": false, "StartPB": true}, "run_ms": 50},
+    {"comment": "E: no start without the guard", "set": {"StartPB": false}, "run_ms": 50,
+     "expect": {"\"MotorLAD_DB\".run": false, "\"MotorSCL_DB\".run": false, "\"MotorData\".starts": 2}},
+
+    {"comment": "F: guard closed, start", "set": {"Guard": true, "StartPB": true}, "run_ms": 50},
+    {"set": {"StartPB": false}, "run_ms": 1950,
+     "expect": {"\"MotorLAD_DB\".run": true, "\"MotorData\".starts": 4}},
+    {"comment": "F: guard opened after 2 s: the outputs never come on", "set": {"Guard": false}, "run_ms": 4000,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorLAD_DB\".run": false,
+                "\"MotorSCL_DB\".run": false, "\"MotorData\".starts": 4}},
+
+    {"comment": "G: guard closed, start", "set": {"Guard": true, "StartPB": true}, "run_ms": 50},
+    {"set": {"StartPB": false}, "run_ms": 950},
+    {"comment": "G: stop after 1 s", "set": {"StopPB": false}, "run_ms": 50},
+    {"set": {"StopPB": true}, "run_ms": 5000,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorLAD_DB\".delay.ET": "T#0s",
+                "\"MotorSCL_DB\".delay.ET": "T#0s", "\"MotorData\".starts": 6}},
+
+    {"comment": "H: start and stop together: stop wins", "set": {"StartPB": true, "StopPB": false}, "run_ms": 100,
+     "expect": {"\"MotorLAD_DB\".run": false, "\"MotorSCL_DB\".run": false, "\"MotorData\".starts": 6}},
+    {"set": {"StartPB": false, "StopPB": true}, "run_ms": 100,
+     "expect": {"\"MotorLAD_DB\".run": false, "MotorLadOut": false, "\"MotorData\".starts": 6}},
+
+    {"comment": "I: start and run", "set": {"StartPB": true}, "run_ms": 50},
+    {"set": {"StartPB": false}, "run_ms": 6000,
+     "expect": {"MotorLadOut": true, "MotorSclOut": true, "\"MotorData\".starts": 8}},
+    {"comment": "I: STOP to RUN: nothing is retentive, the motor is off and the count is 0",
+     "restart": "warm", "run_ms": 100,
+     "expect": {"MotorLadOut": false, "MotorSclOut": false, "\"MotorLAD_DB\".run": false,
+                "\"MotorSCL_DB\".run": false, "\"MotorData\".starts": 0}}
+  ]
+}

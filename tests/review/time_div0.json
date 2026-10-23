@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: time div0",
+ "program": "programs/time_div0.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".o": "T#0ms"
+   }
+  }
+ ]
+}

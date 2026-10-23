@@ -1,0 +1,2 @@
+{"comment": "STL: AW without an operand keeps ACCU2", "program": "../stl/words.program.json",
+ "steps": [{"scans": 1, "expect": {"W1": "16#30", "W2": "16#F0"}}]}

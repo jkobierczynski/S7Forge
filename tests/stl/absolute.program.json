@@ -1,0 +1,733 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "Go",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I3.0"
+  },
+  {
+   "name": "Go2",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I3.1"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [
+  {
+   "name": "Data",
+   "number": 5,
+   "kind": "global",
+   "optimized": false,
+   "members": [
+    {
+     "name": "b0",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "b1",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "by",
+     "data_type": "Byte",
+     "type": {
+      "kind": "elementary",
+      "name": "Byte",
+      "bits": 8,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "w",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "d",
+     "data_type": "DInt",
+     "type": {
+      "kind": "elementary",
+      "name": "DInt",
+      "bits": 32,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "r",
+     "data_type": "Real",
+     "type": {
+      "kind": "elementary",
+      "name": "Real",
+      "bits": 32,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "s",
+     "data_type": "String[4]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 4,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "arr",
+     "data_type": "Array[1..3] of Int",
+     "type": {
+      "kind": "array",
+      "name": "Array",
+      "bits": null,
+      "length": null,
+      "dims": [
+       {
+        "low": 1,
+        "low_text": "1",
+        "high": 3,
+        "high_text": "3"
+       }
+      ],
+      "element": {
+       "kind": "elementary",
+       "name": "Int",
+       "bits": 16,
+       "length": null,
+       "dims": [],
+       "element": null
+      }
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    }
+   ]
+  },
+  {
+   "name": "Fast",
+   "number": 6,
+   "kind": "global",
+   "optimized": true,
+   "members": [
+    {
+     "name": "x",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "offset": null,
+     "offset_bits": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    }
+   ]
+  }
+ ],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "OPN",
+        "exprs": [],
+        "text": "DB 5"
+       },
+       {
+        "op": "stl",
+        "name": "SET",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [],
+        "text": "DBX 0.1"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "7",
+          "type": "Byte",
+          "value": {
+           "kind": "int",
+           "int": 7
+          },
+          "args": []
+         }
+        ],
+        "text": "7"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DBB 1"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1234",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1234
+          },
+          "args": []
+         }
+        ],
+        "text": "1234"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DBW 2"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DB5.DBW 2"
+       },
+       {
+        "op": "stl",
+        "name": "+",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1
+          },
+          "args": []
+         }
+        ],
+        "text": "1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DB5.DBW 18"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "2.5",
+          "type": "Real",
+          "value": {
+           "kind": "real",
+           "real": 2.5
+          },
+          "args": []
+         }
+        ],
+        "text": "2.5"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DBD 8"
+       }
+      ]
+     },
+     {
+      "number": 2,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "P#20.0"
+       },
+       {
+        "op": "stl",
+        "name": "LAR1",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "42",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 42
+          },
+          "args": []
+         }
+        ],
+        "text": "42"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DBW [AR1,P#2.0]"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "P#M30.0"
+       },
+       {
+        "op": "stl",
+        "name": "LAR2",
+        "exprs": [],
+        "text": ""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "99",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 99
+          },
+          "args": []
+         }
+        ],
+        "text": "99"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "W [AR2,P#0.0]"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "16",
+          "type": "DInt",
+          "value": {
+           "kind": "int",
+           "int": 16
+          },
+          "args": []
+         }
+        ],
+        "text": "16"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MD 40"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBW [MD 40]"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 44"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBNO"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 46"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBLG"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 48"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBB 12"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MB 50"
+       },
+       {
+        "op": "stl",
+        "name": "TAR1",
+        "exprs": [],
+        "text": "MD 52"
+       }
+      ]
+     },
+     {
+      "number": 3,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"Go\"",
+          "args": []
+         }
+        ],
+        "text": "\"Go\""
+       },
+       {
+        "op": "stl",
+        "name": "JCN",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "END",
+          "args": []
+         }
+        ],
+        "text": "END"
+       },
+       {
+        "op": "stl",
+        "name": "OPN",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1001,
+          "name": "\"Data\"",
+          "args": []
+         }
+        ],
+        "text": "\"Data\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBW 2"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 56"
+       },
+       {
+        "op": "stl",
+        "name": "OPN",
+        "exprs": [],
+        "text": "DB 6"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "DBW 0"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "MW 58"
+       },
+       {
+        "op": "label",
+        "name": "END",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "NOP",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 0
+          },
+          "args": []
+         }
+        ],
+        "text": "0"
+       }
+      ]
+     },
+     {
+      "number": 4,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"Go2\"",
+          "args": []
+         }
+        ],
+        "text": "\"Go2\""
+       },
+       {
+        "op": "stl",
+        "name": "JCN",
+        "exprs": [
+         {
+          "op": "ref",
+          "name": "E2",
+          "args": []
+         }
+        ],
+        "text": "E2"
+       },
+       {
+        "op": "stl",
+        "name": "OPN",
+        "exprs": [],
+        "text": "DB 5"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "1",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1
+          },
+          "args": []
+         }
+        ],
+        "text": "1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [],
+        "text": "DBW 30"
+       },
+       {
+        "op": "label",
+        "name": "E2",
+        "exprs": []
+       },
+       {
+        "op": "stl",
+        "name": "NOP",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "0",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 0
+          },
+          "args": []
+         }
+        ],
+        "text": "0"
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Go\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Go2\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "kind": "data block",
+      "text": "\"Data\"",
+      "name": "Data",
+      "path": [],
+      "modifier": null,
+      "ref_id": 1001
+     }
+    ]
+   }
+  }
+ ]
+}

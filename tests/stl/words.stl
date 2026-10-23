@@ -1,0 +1,9 @@
+// word logic without an operand leaves ACCU2 as it is
+tag W1 Word %MW0
+tag W2 Word %MW2
+L i:0xF0:Word
+L i:0x3C:Word
+AW
+T W1
+TAK
+T W2

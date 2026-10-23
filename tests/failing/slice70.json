@@ -1,0 +1,13 @@
+{
+ "comment": "found in a review of the semantics: slice70",
+ "program": "../review/programs/slice70.json",
+ "scan_ms": 10,
+ "steps": [
+  {
+   "scans": 1,
+   "expect": {
+    "\"D\".w.%X70": false
+   }
+  }
+ ]
+}

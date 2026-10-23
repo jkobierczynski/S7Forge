@@ -1,0 +1,2 @@
+{"comment": "area-crossing pointers: 16#80 writes the outputs, 16#81 the inputs, 16#83 M", "program": "../stl/pq.program.json",
+ "steps": [{"scans": 1, "expect": {"%QW2": 5, "%MD0": 1, "%I2.1": true}}]}
