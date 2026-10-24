@@ -1,0 +1,1100 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "T"
+ },
+ "tags": [
+  {
+   "name": "Se",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.0"
+  },
+  {
+   "name": "Ss",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.1"
+  },
+  {
+   "name": "Sf",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.2"
+  },
+  {
+   "name": "Sp",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.3"
+  },
+  {
+   "name": "Sd",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.4"
+  },
+  {
+   "name": "Fr",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.5"
+  },
+  {
+   "name": "Rs",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I0.6"
+  },
+  {
+   "name": "Cu",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I1.0"
+  },
+  {
+   "name": "Cs",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I1.1"
+  },
+  {
+   "name": "Cr",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%I1.2"
+  },
+  {
+   "name": "Qe",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q0.0"
+  },
+  {
+   "name": "Qs",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q0.1"
+  },
+  {
+   "name": "Qf",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q0.2"
+  },
+  {
+   "name": "Qp",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q0.3"
+  },
+  {
+   "name": "Qd",
+   "data_type": "Bool",
+   "type": {
+    "kind": "elementary",
+    "name": "Bool",
+    "bits": 1,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%Q0.4"
+  },
+  {
+   "name": "Vp",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW10"
+  },
+  {
+   "name": "Vd",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW12"
+  },
+  {
+   "name": "Cv",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW14"
+  },
+  {
+   "name": "Tv1",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW16"
+  },
+  {
+   "name": "Tv2",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW18"
+  },
+  {
+   "name": "Cv2",
+   "data_type": "Word",
+   "type": {
+    "kind": "elementary",
+    "name": "Word",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW20"
+  }
+ ],
+ "constants": [],
+ "data_blocks": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "STL",
+   "optimized": false,
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "name": "\"Se\"",
+          "args": []
+         }
+        ],
+        "text": "\"Se\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SE",
+        "exprs": [],
+        "text": "T 1"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "T 1"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 11,
+          "name": "\"Qe\"",
+          "args": []
+         }
+        ],
+        "text": "\"Qe\""
+       }
+      ]
+     },
+     {
+      "number": 2,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "name": "\"Ss\"",
+          "args": []
+         }
+        ],
+        "text": "\"Ss\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SS",
+        "exprs": [],
+        "text": "T 2"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 7,
+          "name": "\"Rs\"",
+          "args": []
+         }
+        ],
+        "text": "\"Rs\""
+       },
+       {
+        "op": "stl",
+        "name": "R",
+        "exprs": [],
+        "text": "T 2"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "T 2"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 12,
+          "name": "\"Qs\"",
+          "args": []
+         }
+        ],
+        "text": "\"Qs\""
+       }
+      ]
+     },
+     {
+      "number": 3,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "name": "\"Sf\"",
+          "args": []
+         }
+        ],
+        "text": "\"Sf\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SF",
+        "exprs": [],
+        "text": "T 3"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "T 3"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 13,
+          "name": "\"Qf\"",
+          "args": []
+         }
+        ],
+        "text": "\"Qf\""
+       }
+      ]
+     },
+     {
+      "number": 4,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "name": "\"Sp\"",
+          "args": []
+         }
+        ],
+        "text": "\"Sp\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SP",
+        "exprs": [],
+        "text": "T 4"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "T 4"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 14,
+          "name": "\"Qp\"",
+          "args": []
+         }
+        ],
+        "text": "\"Qp\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "T 4"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 16,
+          "name": "\"Vp\"",
+          "args": []
+         }
+        ],
+        "text": "\"Vp\""
+       }
+      ]
+     },
+     {
+      "number": 5,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 5,
+          "name": "\"Sd\"",
+          "args": []
+         }
+        ],
+        "text": "\"Sd\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "S5T#1000MS",
+          "type": "S5Time",
+          "value": {
+           "kind": "duration",
+           "ns": 1000000000
+          },
+          "args": []
+         }
+        ],
+        "text": "S5T#1000MS"
+       },
+       {
+        "op": "stl",
+        "name": "SD",
+        "exprs": [],
+        "text": "T 5"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 6,
+          "name": "\"Fr\"",
+          "args": []
+         }
+        ],
+        "text": "\"Fr\""
+       },
+       {
+        "op": "stl",
+        "name": "FR",
+        "exprs": [],
+        "text": "T 5"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 7,
+          "name": "\"Rs\"",
+          "args": []
+         }
+        ],
+        "text": "\"Rs\""
+       },
+       {
+        "op": "stl",
+        "name": "R",
+        "exprs": [],
+        "text": "T 5"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [],
+        "text": "T 5"
+       },
+       {
+        "op": "stl",
+        "name": "=",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 15,
+          "name": "\"Qd\"",
+          "args": []
+         }
+        ],
+        "text": "\"Qd\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "T 5"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 17,
+          "name": "\"Vd\"",
+          "args": []
+         }
+        ],
+        "text": "\"Vd\""
+       }
+      ]
+     },
+     {
+      "number": 6,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "S5T#2S15MS"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 19,
+          "name": "\"Tv1\"",
+          "args": []
+         }
+        ],
+        "text": "\"Tv1\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "S5T#2H46M30S"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 20,
+          "name": "\"Tv2\"",
+          "args": []
+         }
+        ],
+        "text": "\"Tv2\""
+       }
+      ]
+     },
+     {
+      "number": 7,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 8,
+          "name": "\"Cu\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cu\""
+       },
+       {
+        "op": "stl",
+        "name": "CU",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 9,
+          "name": "\"Cs\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cs\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "C#5",
+          "type": "Word",
+          "value": {
+           "kind": "int",
+           "text": "C#5",
+           "int": 5
+          },
+          "args": []
+         }
+        ],
+        "text": "C#5"
+       },
+       {
+        "op": "stl",
+        "name": "S",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 10,
+          "name": "\"Cr\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cr\""
+       },
+       {
+        "op": "stl",
+        "name": "R",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "C 1"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 18,
+          "name": "\"Cv\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cv\""
+       }
+      ]
+     },
+     {
+      "number": 8,
+      "statements": [
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 9,
+          "name": "\"Cs\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cs\""
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [
+         {
+          "op": "const",
+          "name": "C#999",
+          "type": "Word",
+          "value": {
+           "kind": "int",
+           "text": "C#999",
+           "int": 999
+          },
+          "args": []
+         }
+        ],
+        "text": "C#999"
+       },
+       {
+        "op": "stl",
+        "name": "S",
+        "exprs": [],
+        "text": "C 2"
+       },
+       {
+        "op": "stl",
+        "name": "A",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 8,
+          "name": "\"Cu\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cu\""
+       },
+       {
+        "op": "stl",
+        "name": "CU",
+        "exprs": [],
+        "text": "C 2"
+       },
+       {
+        "op": "stl",
+        "name": "L",
+        "exprs": [],
+        "text": "C 2"
+       },
+       {
+        "op": "stl",
+        "name": "T",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 21,
+          "name": "\"Cv2\"",
+          "args": []
+         }
+        ],
+        "text": "\"Cv2\""
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Se\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Ss\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Sf\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"Sp\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"Sd\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 6,
+      "kind": "tag",
+      "text": "\"Fr\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 7,
+      "kind": "tag",
+      "text": "\"Rs\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 8,
+      "kind": "tag",
+      "text": "\"Cu\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 9,
+      "kind": "tag",
+      "text": "\"Cs\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 10,
+      "kind": "tag",
+      "text": "\"Cr\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 11,
+      "kind": "tag",
+      "text": "\"Qe\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 12,
+      "kind": "tag",
+      "text": "\"Qs\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 13,
+      "kind": "tag",
+      "text": "\"Qf\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 14,
+      "kind": "tag",
+      "text": "\"Qp\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 15,
+      "kind": "tag",
+      "text": "\"Qd\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 16,
+      "kind": "tag",
+      "text": "\"Vp\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 17,
+      "kind": "tag",
+      "text": "\"Vd\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 18,
+      "kind": "tag",
+      "text": "\"Cv\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 19,
+      "kind": "tag",
+      "text": "\"Tv1\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 20,
+      "kind": "tag",
+      "text": "\"Tv2\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 21,
+      "kind": "tag",
+      "text": "\"Cv2\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

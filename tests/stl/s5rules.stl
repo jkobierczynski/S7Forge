@@ -1,0 +1,89 @@
+// The S5 timer and counter rules of Siemens' STL and LAD manuals for the
+// S7-300/400, one network each: SE and SS restart on a new edge while
+// running, SS runs on when the start goes off, SF stops on a new start,
+// SP and SD keep their time value when stopped, FR restarts a timer, a
+// time value is truncated to its time base, and a counter set while CU is
+// on counts in the next cycle; R of a counter works statically
+tag Se Bool %I0.0
+tag Ss Bool %I0.1
+tag Sf Bool %I0.2
+tag Sp Bool %I0.3
+tag Sd Bool %I0.4
+tag Fr Bool %I0.5
+tag Rs Bool %I0.6
+tag Cu Bool %I1.0
+tag Cs Bool %I1.1
+tag Cr Bool %I1.2
+tag Qe Bool %Q0.0
+tag Qs Bool %Q0.1
+tag Qf Bool %Q0.2
+tag Qp Bool %Q0.3
+tag Qd Bool %Q0.4
+tag Vp Word %MW10
+tag Vd Word %MW12
+tag Cv Word %MW14
+tag Tv1 Word %MW16
+tag Tv2 Word %MW18
+tag Cv2 Word %MW20
+A Se
+L s5:1000
+SE T 1
+A T 1
+= Qe
+---
+A Ss
+L s5:1000
+SS T 2
+A Rs
+R T 2
+A T 2
+= Qs
+---
+A Sf
+L s5:1000
+SF T 3
+A T 3
+= Qf
+---
+A Sp
+L s5:1000
+SP T 4
+A T 4
+= Qp
+L T 4
+T Vp
+---
+A Sd
+L s5:1000
+SD T 5
+A Fr
+FR T 5
+A Rs
+R T 5
+A T 5
+= Qd
+L T 5
+T Vd
+---
+L S5T#2S15MS
+T Tv1
+L S5T#2H46M30S
+T Tv2
+---
+A Cu
+CU C 1
+A Cs
+L c:5
+S C 1
+A Cr
+R C 1
+L C 1
+T Cv
+---
+A Cs
+L c:999
+S C 2
+A Cu
+CU C 2
+L C 2
+T Cv2

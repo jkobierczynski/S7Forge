@@ -1,0 +1,2 @@
+{"comment": "beyond the clock's range (2261)", "program": "../programs/interrupts.program.json",
+ "clock": "2300-01-01 00:00:00", "steps": [{"scans": 1}]}

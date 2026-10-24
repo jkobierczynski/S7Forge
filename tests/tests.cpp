@@ -535,6 +535,344 @@ void testCyclic() {
     EQ(get(sim, "K").i, 34);  // 1000 / 30, rounded up
 }
 
+// ---- interrupts ----
+
+std::string obInfo(const std::string& name, int number, const std::string& event, int prio, long long cycleUs = 0,
+                   int maxQueued = 1) {
+    return R"(,{"name":")" + name + R"(","number":)" + std::to_string(number) + R"(,"event":")" + event +
+           R"(","priority":)" + std::to_string(prio) + R"(,"cycle_us":)" + (cycleUs ? std::to_string(cycleUs) : "null") +
+           R"(,"phase_shift_us":0,"max_buffered_events":)" + std::to_string(maxQueued) + "}";
+}
+std::string inst(const std::string& name, const std::string& params) {
+    return e("call", R"("name":")" + name + R"(","type":"Int","target":{"kind":"instruction","name":")" + name + "\"}",
+             params);
+}
+std::string inc(int id) { return assign(r(id), op2("add", r(id), ci(1), "Int")); }
+std::string cdtl(long long ns) {
+    return e("const", R"("type":"DTL","value":{"kind":"date_and_time","ns":)" + std::to_string(ns) + "}");
+}
+std::string dtlMember(const std::string& name) {
+    std::string ms;
+    for (const char* m : {"YEAR:UInt", "MONTH:USInt", "DAY:USInt", "WEEKDAY:USInt", "HOUR:USInt", "MINUTE:USInt",
+                          "SECOND:USInt", "NANOSECOND:UDInt"}) {
+        const std::string x = m;
+        if (!ms.empty()) ms += ",";
+        ms += member(x.substr(0, x.find(':')), x.substr(x.find(':') + 1), "");
+    }
+    return R"({"name":")" + name + R"(","data_type":"DTL","type":{"kind":"system_type","name":"DTL","bits":null,"length":null,"dims":[],"element":null},"section":null,"start":null,"retain":false,"members":[)" +
+           ms + "]}";
+}
+constexpr long long kSec = 1000000000LL;
+long long clockAt(int y, int mo, int d, int h, int mi, int sec) {
+    long long yy = y - (mo <= 2);
+    const long long era = yy / 400, yoe = yy - era * 400;
+    const long long doy = (153 * (mo + (mo > 2 ? -3 : 9)) + 2) / 5 + d - 1;
+    const long long days = era * 146097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719468;
+    return days * 86400 * kSec + ((h * 60LL + mi) * 60 + sec) * kSec;
+}
+
+// With an instruction time an interrupt runs between two statements of OB 1;
+// a higher priority interrupts a lower; without one it waits for OB 1's end
+void testPriorities() {
+    const std::string tags = tagDecl("First", "Int", "%MW0") + "," + tagDecl("Last", "Int", "%MW2") + "," +
+                             tagDecl("Count", "Int", "%MW4") + "," + tagDecl("X", "Int", "%MW6") + "," +
+                             tagDecl("LoRun", "Int", "%MW8") + "," + tagDecl("HiSaw", "Int", "%MW10") + "," +
+                             tagDecl("HiN", "Int", "%MW12");
+    const std::string refs = tag(1, "First") + "," + tag(2, "Last") + "," + tag(3, "Count") + "," + tag(4, "X") + "," +
+                             tag(5, "LoRun") + "," + tag(6, "HiSaw") + "," + tag(7, "HiN");
+    std::string filler;
+    for (int k = 0; k < 8; ++k) filler += "," + inc(4);
+    const std::string main = block("Main", "OB", "", refs, assign(r(1), r(3)) + filler + "," + assign(r(2), r(3)));
+    // Lo: 6 statements, LoRun 1 meanwhile; Hi counts how often it found Lo running
+    const std::string lo = block("Lo", "OB", "", refs,
+                                 inc(3) + "," + assign(r(5), ci(1)) + "," + inc(4) + "," + inc(4) + "," + inc(4) + "," +
+                                     assign(r(5), ci(0)));
+    const std::string hi = block("Hi", "OB", "", refs, assign(r(6), op2("add", r(6), r(5), "Int")) + "," + inc(7) + "," + inc(3));
+    const std::string obs = obInfo("Lo", 30, "CyclicInterrupt", 8, 20000) + obInfo("Hi", 31, "CyclicInterrupt", 20, 7000);
+    for (int timed = 0; timed < 2; ++timed) {
+        Simulator sim(parseJson(program(tags, "", main + "," + lo + "," + hi, obs, R"("Hi","Lo")")));
+        sim.setScanTime(20000000);
+        if (timed) sim.setInstructionTime(1000000);
+        sim.powerOn();
+        sim.scan();
+        if (timed) {
+            // OB 1 runs from 0 to 10 ms and more: Hi comes at 7 ms within it
+            EQ(get(sim, "First").i, 0);
+            CHECK(get(sim, "Last").i >= 1);
+        } else {
+            EQ(get(sim, "Last").i, 0);  // OB 1 takes no time: nothing comes within it
+        }
+        sim.runFor(200000000);
+        if (timed) CHECK(get(sim, "HiSaw").i > 0);  // Hi came while Lo ran
+        else EQ(get(sim, "HiSaw").i, 0);           // Lo takes no time
+        CHECK(get(sim, "HiN").i >= 30);
+        CHECK(sim.running());
+    }
+}
+
+// SRT_DINT, CAN_DINT, QRY_DINT and the time-delay OB with its Sign
+void testTimeDelay() {
+    const std::string tags = tagDecl("Go", "Bool", "%M0.0") + "," + tagDecl("Cancel", "Bool", "%M0.1") + "," +
+                             tagDecl("Ret", "Int", "%MW2") + "," + tagDecl("St", "Word", "%MW4") + "," +
+                             tagDecl("Fired", "Int", "%MW6") + "," + tagDecl("Got", "Word", "%MW8") + "," +
+                             tagDecl("Dt", "Time", "%MD10") + "," + tagDecl("Nr", "Int", "%MW14");
+    const std::string refs = tag(1, "Go") + "," + tag(2, "Cancel") + "," + tag(3, "Ret") + "," + tag(4, "St") + "," +
+                             tag(5, "Fired") + "," + tag(6, "Got") + "," + tag(7, "Dt") + "," + tag(8, "Nr") + "," +
+                             local(9, "Sign", "Word");
+    const std::string start = s("if", "", R"("branches":[{"exprs":[)" + r(1) + R"(],"body":[)" +
+                                              assign(r(3), inst("SRT_DINT", param("in", "OB_NR", r(8)) + "," +
+                                                                                param("in", "DTIME", r(7)) + "," +
+                                                                                param("in", "SIGN", ci(7, "Word")))) +
+                                              "," + assign(r(1), e("const", R"("type":"Bool","value":{"kind":"bool","bool":false})")) +
+                                              R"(]}],"else":null)");
+    const std::string cancel = s("if", "", R"("branches":[{"exprs":[)" + r(2) + R"(],"body":[)" +
+                                               assign(r(3), inst("CAN_DINT", param("in", "OB_NR", r(8)))) + "," +
+                                               assign(r(2), e("const", R"("type":"Bool","value":{"kind":"bool","bool":false})")) +
+                                               R"(]}],"else":null)");
+    const std::string query = s("call", inst("QRY_DINT", param("in", "OB_NR", ci(20)) + "," + param("out", "STATUS", r(4))));
+    const std::string main = block("Main", "OB", "", refs, start + "," + cancel + "," + query);
+    const std::string delay = block("Delay", "OB", member("Sign", "Word", "Input"), refs, inc(5) + "," + assign(r(6), r(9)));
+    const std::string cyc = block("Cyc", "OB", "", refs, "");
+    Simulator sim(parseJson(program(tags, "", main + "," + delay + "," + cyc,
+                                    obInfo("Delay", 20, "TimeDelayInterrupt", 3) + obInfo("Cyc", 30, "CyclicInterrupt", 8, 100000),
+                                    R"("Cyc","Delay")")));
+    sim.powerOn();
+    set(sim, "Nr", intVal(20));
+    set(sim, "Dt", timeVal(100000000, elemType("Time")));
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, 0);
+    sim.scan();
+    EQ(get(sim, "St").i & 4, 4);  // started
+    sim.runFor(70000000);         // to 90 ms
+    EQ(get(sim, "Fired").i, 0);
+    sim.runFor(20000000);
+    EQ(get(sim, "Fired").i, 1);
+    EQ(get(sim, "Got").i, 7);
+    sim.scan();
+    EQ(get(sim, "St").i & 4, 0);
+    // started and cancelled: it does not come
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    set(sim, "Cancel", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, 0);
+    sim.runFor(300000000);
+    EQ(get(sim, "Fired").i, 1);
+    // cancelled when not started; a delay of 0; an OB that is not a time delay
+    set(sim, "Cancel", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, static_cast<int16_t>(0x80A0));
+    set(sim, "Dt", timeVal(0, elemType("Time")));
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, static_cast<int16_t>(0x8091));
+    set(sim, "Dt", timeVal(50000000, elemType("Time")));
+    set(sim, "Nr", intVal(30));
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, static_cast<int16_t>(0x8090));
+    // started anew while it runs: from the second start
+    set(sim, "Nr", intVal(20));
+    set(sim, "Dt", timeVal(100000000, elemType("Time")));
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    sim.runFor(60000000);
+    set(sim, "Go", boolVal(true));
+    sim.scan();
+    sim.runFor(60000000);
+    EQ(get(sim, "Fired").i, 1);
+    sim.runFor(60000000);
+    EQ(get(sim, "Fired").i, 2);
+}
+
+// SET_TINTL, ACT_TINT, CAN_TINT, QRY_TINT, the clock, RD_SYS_T
+void testTimeOfDay() {
+    const std::string tags = tagDecl("Set", "Bool", "%M0.0") + "," + tagDecl("Ret", "Int", "%MW2") + "," +
+                             tagDecl("St", "Word", "%MW4") + "," + tagDecl("Runs", "Int", "%MW6") + "," +
+                             tagDecl("Per", "Word", "%MW8") + "," + tagDecl("Act", "Bool", "%M0.1") + "," +
+                             tagDecl("Can", "Bool", "%M0.2") + "," + tagDecl("SetC", "Bool", "%M0.3");
+    const std::string refs = tag(1, "Set") + "," + tag(2, "Ret") + "," + tag(3, "St") + "," + tag(4, "Runs") + "," +
+                             tag(5, "Per") + "," + dbm(6, "D", "start") + "," + dbm(7, "D", "now") + "," +
+                             tag(8, "Act") + "," + tag(9, "Can") + "," + tag(10, "SetC");
+    auto when = [&](int id, const std::string& body) {
+        return s("if", "", R"("branches":[{"exprs":[)" + r(id) + R"(],"body":[)" + body + "," +
+                               assign(r(id), e("const", R"("type":"Bool","value":{"kind":"bool","bool":false})")) +
+                               R"(]}],"else":null)");
+    };
+    const std::string main = block(
+        "Main", "OB", "", refs,
+        when(1, assign(r(2), inst("SET_TINTL", param("in", "OB_NR", ci(10)) + "," + param("in", "SDT", r(6)) + "," +
+                                                   param("in", "LOCAL", e("const", R"("type":"Bool","value":{"kind":"bool","bool":true})")) +
+                                                   "," + param("in", "PERIOD", r(5)) + "," +
+                                                   param("in", "ACTIVATE", e("const", R"("type":"Bool","value":{"kind":"bool","bool":true})"))))) +
+            "," +
+            when(10, assign(r(2), inst("SET_TINTL", param("in", "OB_NR", ci(10)) + "," +
+                                                        param("in", "SDT", cdtl(clockAt(2026, 6, 1, 0, 0, 0))) + "," +
+                                                        param("in", "PERIOD", ci(0, "Word")) + "," +
+                                                        param("in", "ACTIVATE", e("const", R"("type":"Bool","value":{"kind":"bool","bool":true})"))))) +
+            "," + when(8, assign(r(2), inst("ACT_TINT", param("in", "OB_NR", ci(10))))) + "," +
+            when(9, assign(r(2), inst("CAN_TINT", param("in", "OB_NR", ci(10))))) + "," +
+            s("call", inst("QRY_TINT", param("in", "OB_NR", ci(10)) + "," + param("out", "STATUS", r(3)))) + "," +
+            s("call", inst("RD_SYS_T", param("out", "OUT", r(7)))));
+    const std::string tod = block("Tod", "OB", "", refs, inc(4));
+    Simulator sim(parseJson(program(tags, db("D", dtlMember("start") + "," + dtlMember("now")), main + "," + tod,
+                                    obInfo("Tod", 10, "TimeOfDay", 2), R"("Tod")")));
+    sim.setScanTime(100000000);
+    sim.setClock(clockAt(2026, 10, 24, 7, 59, 0));
+    sim.powerOn();
+    auto setStart = [&](int y, int mo, int d, int h, int mi, int sec) {
+        set(sim, "\"D\".start.YEAR", intVal(y));
+        set(sim, "\"D\".start.MONTH", intVal(mo));
+        set(sim, "\"D\".start.DAY", intVal(d));
+        set(sim, "\"D\".start.HOUR", intVal(h));
+        set(sim, "\"D\".start.MINUTE", intVal(mi));
+        set(sim, "\"D\".start.SECOND", intVal(sec));
+    };
+    // every minute from 08:00:00
+    setStart(2026, 10, 24, 8, 0, 0);
+    set(sim, "Per", intVal(0x0201));
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, 0);
+    EQ(get(sim, "St").i & 4, 4);
+    EQ(get(sim, "\"D\".now.HOUR").i, 7);
+    EQ(get(sim, "\"D\".now.MINUTE").i, 59);
+    EQ(get(sim, "\"D\".now.WEEKDAY").i, 7);  // a Saturday
+    sim.runFor(59000000000LL);
+    EQ(get(sim, "Runs").i, 0);
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 1);
+    sim.runFor(60000000000LL);
+    EQ(get(sim, "Runs").i, 2);
+    EQ(get(sim, "\"D\".now.HOUR").i, 8);
+    EQ(get(sim, "\"D\".now.MINUTE").i, 1);
+    // cancelled
+    set(sim, "Can", boolVal(true));
+    sim.scan();
+    sim.runFor(120000000000LL);
+    EQ(get(sim, "Runs").i, 2);
+    EQ(get(sim, "St").i & 4, 0);
+    // once, in the past: refused
+    setStart(2026, 10, 24, 8, 0, 0);
+    set(sim, "Per", intVal(0));
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, static_cast<int16_t>(0x80A1));
+    // a period that does not exist
+    set(sim, "Per", intVal(0x0301));
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, static_cast<int16_t>(0x8092));
+    // at the end of the month, 10:00, from January
+    setStart(2026, 1, 15, 10, 0, 0);
+    set(sim, "Per", intVal(0x2001));
+    sim.setClock(clockAt(2026, 1, 20, 0, 0, 0));
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, 0);
+    sim.setClock(clockAt(2026, 1, 31, 9, 59, 59));
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 3);
+    sim.setClock(clockAt(2026, 2, 28, 9, 59, 59));
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 4);
+    EQ(get(sim, "\"D\".now.MONTH").i, 2);
+    // monthly on the 31st: February and April left out
+    setStart(2026, 1, 31, 12, 0, 0);
+    set(sim, "Per", intVal(0x1401));
+    sim.setClock(clockAt(2026, 1, 1, 0, 0, 0));
+    set(sim, "Set", boolVal(true));
+    sim.scan();
+    sim.setClock(clockAt(2026, 2, 28, 11, 59, 59));
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 4);  // the clock went past 31 January: not run
+    sim.setClock(clockAt(2026, 3, 31, 11, 59, 59));
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 5);
+    // a warm restart forgets it (and Runs, in M, starts at 0)
+    sim.warmRestart();
+    sim.setClock(clockAt(2026, 5, 31, 11, 59, 59));
+    sim.runFor(2000000000LL);
+    EQ(get(sim, "Runs").i, 0);
+    // once, at a DTL# constant: midnight
+    set(sim, "SetC", boolVal(true));
+    sim.scan();
+    EQ(get(sim, "Ret").i, 0);
+    sim.setClock(clockAt(2026, 5, 31, 23, 59, 58));
+    sim.runFor(3000000000LL);
+    EQ(get(sim, "Runs").i, 1);
+    sim.runFor(86400000000000LL / 1000);  // 86.4 s more: once only
+    EQ(get(sim, "Runs").i, 1);
+}
+
+// A hardware interrupt raised; events beyond those that may wait are lost;
+// the time error OB at the maximum cycle time, STOP at twice that
+void testHardwareAndTimeError() {
+    const std::string tags = tagDecl("Hw", "Int", "%MW0") + "," + tagDecl("Te", "Int", "%MW2") + "," +
+                             tagDecl("I", "Int", "%MW4") + "," + tagDecl("X", "Int", "%MW6") + "," +
+                             tagDecl("N", "Int", "%MW8");
+    const std::string refs = tag(1, "Hw") + "," + tag(2, "Te") + "," + tag(3, "I") + "," + tag(4, "X") + "," + tag(5, "N");
+    const std::string loop = s("for", r(3) + "," + ci(1) + "," + r(5), R"("body":[)" + inc(4) + "]");
+    const std::string main = block("Main", "OB", "", refs, loop);
+    const std::string hw = block("Hw", "OB", "", refs, inc(1));
+    const std::string te = block("Te", "OB", "", refs, inc(2));
+    Simulator sim(parseJson(program(tags, "", main + "," + hw + "," + te,
+                                    obInfo("Hw", 40, "HardwareInterrupt", 16, 0, 1) + obInfo("Te", 80, "TimeError", 22),
+                                    R"("Te","Hw")")));
+    sim.setInstructionTime(1000000);
+    sim.powerOn();
+    std::string err;
+    CHECK(sim.raise("Hw", err));
+    sim.scan();
+    EQ(get(sim, "Hw").i, 1);
+    CHECK(sim.raise("40", err));
+    CHECK(sim.raise("Hw", err));
+    CHECK(sim.raise("Hw", err));  // one may wait: two lost
+    sim.scan();
+    EQ(get(sim, "Hw").i, 2);
+    CHECK(!sim.raise("Nothing", err));
+    // a cycle of 200 ms (a turn of the loop and its statement, 2 ms): one time error
+    set(sim, "N", intVal(100));
+    sim.scan();
+    EQ(get(sim, "Te").i, 1);
+    CHECK(sim.running());
+    // a cycle of 400 ms: STOP
+    set(sim, "N", intVal(200));
+    sim.scan();
+    CHECK(!sim.running());
+}
+
+// From the review: an interrupt OB longer than its cycle overloads the CPU
+// (time error, then STOP), not an endless scan; an empty loop takes time,
+// so an interrupt can end it
+void testOverload() {
+    const std::string tags = tagDecl("A", "Int", "%MW0") + "," + tagDecl("X", "Int", "%MW2");
+    const std::string refs = tag(1, "A") + "," + tag(2, "X");
+    {
+        const std::string main = block("Main", "OB", "", refs, inc(2));
+        const std::string cyc = block("Cyc", "OB", "", refs, inc(1) + "," + inc(1) + "," + inc(1) + "," + inc(1) + "," + inc(1));
+        Simulator sim(parseJson(program(tags, "", main + "," + cyc, obInfo("Cyc", 30, "CyclicInterrupt", 8, 2000), R"("Cyc")")));
+        sim.setInstructionTime(1000000);
+        sim.powerOn();
+        sim.scan();
+        CHECK(!sim.running());
+        CHECK(sim.now() < 1000000000LL);
+    }
+    {
+        const std::string wait = s("while", op2("lt", r(1), ci(1)), R"("body":[])");
+        const std::string main = block("Main", "OB", "", refs, wait + "," + inc(2));
+        const std::string cyc = block("Cyc", "OB", "", refs, assign(r(1), ci(1)));
+        Simulator sim(parseJson(program(tags, "", main + "," + cyc, obInfo("Cyc", 30, "CyclicInterrupt", 8, 5000), R"("Cyc")")));
+        sim.setInstructionTime(1000000);
+        sim.powerOn();
+        sim.scan();
+        CHECK(sim.running());
+        EQ(get(sim, "A").i, 1);
+        EQ(get(sim, "X").i, 1);
+    }
+}
+
 // SHL, ROL, SWAP, MUX; R_TRIG; a call with EN FALSE
 void testInstructions() {
     const std::string tags = tagDecl("W", "Word", "%MW0") + "," + tagDecl("A", "Int", "%MW2") + "," +
@@ -907,6 +1245,11 @@ int main() {
     testScl();
     testFaults();
     testCyclic();
+    testPriorities();
+    testTimeDelay();
+    testTimeOfDay();
+    testHardwareAndTimeError();
+    testOverload();
     testInstructions();
     testStl();
     testLayout();

@@ -27,7 +27,8 @@ add_library(s7forgecore STATIC
     src/stl.cpp
     src/absolute.cpp
     src/s5.cpp
-    src/scenario.cpp)
+    src/scenario.cpp
+    src/interrupts.cpp)
 target_include_directories(s7forgecore PUBLIC src)
 
 add_executable(s7forge src/main.cpp)
@@ -55,7 +56,7 @@ if(BUILD_TESTING)
     endforeach()
     # scenarios that must fail: a wrong value, an operand that is not there,
     # an index or a bit that is not one
-    foreach(n wrong_value no_operand idx_garbage slice70)
+    foreach(n wrong_value no_operand idx_garbage slice70 clock_feb29 clock_junk clock_2300)
         add_test(NAME failing_${n} COMMAND s7forge test ${CMAKE_CURRENT_SOURCE_DIR}/tests/failing/${n}.json)
         set_tests_properties(failing_${n} PROPERTIES WILL_FAIL TRUE)
     endforeach()

@@ -90,25 +90,99 @@ it finds kept as regression scenarios (`tests/review`, `tests/scenarios/stl_*`).
 ### Time and the cycle
 
 - Time is virtual, in nanoseconds. A cycle (`scan()`) runs the program
-  cycle OBs at time `t`, then the cyclic interrupts that come due up to
-  `t + scan time` in time order (at the same time the higher priority
-  first), then time is `t + scan time`. The default scan time is 10 ms.
-- A cyclic interrupt does not interrupt OB 1: it runs after the cycle in
-  which it came due. This is the main known difference from the CPU; it was
-  chosen for determinism and simplicity. Its `phase_shift_us` is honoured;
-  cycles and phases are limited to a day. When more interrupts come due in
-  one cycle than the simulation runs (100 000), the rest are dropped with a
-  warning, as an overload.
-- The maximum cycle time is a count of statements per OB run (2 000 000),
-  not a time: a cycle that does not end puts the CPU in STOP. FOR, WHILE,
-  REPEAT and STL jumps all count.
+  cycle OBs from the time `t`; then, up to the end of the cycle, the
+  interrupt OBs as their events come; then time is the end of the cycle:
+  `t + scan time`, or later when the OBs took longer. The scan time is a
+  minimum cycle time; its default is 10 ms.
+- By default a statement takes no time (`instruction_us` 0). Then an
+  interrupt cannot come within OB 1: one due at the start of the cycle runs
+  before OB 1, the others after it, at their time. This is the old behaviour
+  and keeps the scenarios written for it valid.
+- With an instruction time every statement (SCL, LAD/FBD, one STL line,
+  each turn of a loop) advances the time by it, so the program takes time
+  as on the CPU. Between two statements the interrupts due of a higher
+  priority than the OB running run first: a cyclic interrupt interrupts OB
+  1, a higher priority interrupts a lower one, one of the same or a lower
+  priority waits. The registers DB, DI, AR1, AR2, the MCR stack and the
+  status of the last call are kept for the interrupted OB, as the CPU keeps
+  them. The instruction time is the same for all statements: a mean, not
+  the execution times of the CPU's instructions.
+- The maximum cycle time is 150 ms (TIA Portal's default; the export does
+  not have the setting). With an instruction time, a cycle beyond it calls
+  the time error OB (OB 80) when there is one, and goes on without one (the
+  S7-1500 ignores the error without OB 80); beyond twice the maximum the CPU
+  goes to STOP. The interrupts that run after OB 1 in the same cycle count
+  in its time as well, so an interrupt OB that takes longer than its own
+  cycle overloads the CPU as on the real one. Without an instruction time it is a count of statements per
+  OB run (2 000 000): a cycle that does not end puts the CPU in STOP. FOR,
+  WHILE, REPEAT and STL jumps all count.
 - In STOP, time still passes (`runFor`), the program does not run.
   `warmRestart()` (STOP to RUN) resets the non-retentive data and runs the
   startup OBs; `powerOn()` resets everything first. Inputs (%I) keep their
   values over a restart: they are what the field gives. Outputs, bit memory,
   S5 timers and counters are reset: no retentive range of M, T or C is known
-  from the export.
-- `Initial_Call` of an OB is TRUE in the first cycle after a restart.
+  from the export. No interrupt runs during the startup OBs; its events wait
+  for the first cycle.
+- `Initial_Call` of an OB is TRUE in the first cycle after a restart, and
+  for an interrupt OB at its first run after a restart.
+
+### Interrupts
+
+`interrupts.cpp`. Every OB that is not a startup or program cycle OB is an
+interrupt OB with the priority of the export (2 to 26) and the number of
+its events that may wait (`max_buffered_events`, 1 to 12). Its kind comes
+from the event's name (`CyclicInterrupt`, `TimeDelayInterrupt`,
+`TimeOfDay`, `HardwareInterrupt`, `TimeError`), else the event class (30,
+20, 10, 40), else the OB number (30–38, 20–23, 10–17, 40–47, 80). The
+names and classes of the time delay, time of day, hardware and time error
+OBs are not seen in a test project yet (s17 will show them).
+
+- Of the OBs due, the highest priority runs first; of the same priority
+  the event that came first.
+- Cyclic: every `cycle_us`, shifted by `phase_shift_us`, from a restart.
+  Events that come while it waits are kept up to the number that may wait;
+  the rest are lost, with a warning, and `Event_Count` of the OB's start
+  information says how many were lost.
+- Time delay (OB 20–23): `SRT_DINT(OB_NR, DTIME, SIGN)` starts it, the OB
+  runs once `DTIME` after the call (1 to 60000 ms), with `SIGN` in its
+  start information `Sign`. A start while it runs starts it anew from the
+  new call (not documented for the S7-1500; S7Forge's choice). `CAN_DINT`
+  cancels it (16#80A0 when it was not started), `QRY_DINT` gives STATUS
+  with bit 2 started and bit 4 the OB there. The start happens when the
+  instruction runs, i.e. with EN TRUE; a page of Siemens China describes a
+  start on the falling edge of EN, which is not modelled (to check on a
+  CPU).
+- Time of day (OB 10–17): the clock of the CPU runs with the virtual time,
+  from 1970-01-01 00:00 or the scenario's `clock`, in ns in 64 bits: up to
+  the end of 2261 (a DTL goes to 2262-04-11). `SET_TINTL(OB_NR, SDT,
+  LOCAL, PERIOD, ACTIVATE)` sets the start (to the second) and the period
+  (16#0000 once, 16#0201 every minute, 16#0401 hourly, 16#1001 daily,
+  16#1201 weekly, 16#1401 monthly, 16#1801 yearly, 16#2001 at the end of
+  the month; another is 16#8092); `ACT_TINT` activates, `CAN_TINT`
+  cancels, `QRY_TINT` gives STATUS (bit 2 active, bit 4 the OB there).
+  Activated with a start in the past, a periodic one runs at its next time
+  from now, a single one is refused (16#80A1). Monthly on a day a month does
+  not have (the 31st) leaves that month out; yearly on 29 February only in
+  leap years. A change of the clock (`WR_SYS_T`, the scenario) moves the
+  next time; one passed by the change is not run (the CPU would run it once,
+  `CaughtUp`). There is no time zone: LOCAL and RD_LOC_T are the system
+  time. The time-of-day interrupts configured in the OB's properties (not
+  by SET_TINTL) are not in the export yet: s17 will show where they are.
+- Hardware (OB 40–47): the program file does not say which input edge
+  raises it (the hardware configuration is not exported yet), so a scenario
+  raises it (`raise`), or the command line (`--raise`). It runs as soon as
+  the priorities let it: before the next statement, or before OB 1.
+- Time error (OB 80): at the maximum cycle time, above. Lost events of other
+  OBs do not call it yet.
+- Not done: the start information other than `Initial_Call`, `Event_Count`
+  and `Sign` (LADDR, IChannel, EventType of a hardware interrupt, CaughtUp);
+  DIS_IRT, EN_IRT, DIS_AIRT, EN_AIRT; ATTACH and DETACH; diagnostic and
+  error OBs (OB 82, 83, 86, 121, 122); the S7-1500's other reactions to
+  overload.
+- The return codes are those of the S7 instructions (16#8090 a wrong OB
+  number or an OB of another kind, 16#8091 a wrong value, 16#8092 a wrong
+  period, 16#80A0 not started or no start time, 16#80A1 in the past); with
+  one, RET_VAL is negative as an Int, ENO is FALSE and a warning says so.
 
 ### Memory
 
@@ -349,7 +423,22 @@ is not restored.
   that holds them, as TIA Portal encodes them (S5T#10S is 16#1100).
 - Counters 0 to 999: CU and CD on rising edges, S loads ACCU1-L in BCD
   (one that is not BCD stops the CPU), R, FR clears the edge memories. A C
-  is TRUE when the count is not 0.
+  is TRUE when the count is not 0. S also clears the edge memories of CU
+  and CD: "if the counter is set and the RLO at CU is 1, the counter counts
+  in the next scan cycle, even without a change of edge" (the LAD manual,
+  S_CUD).
+- Checked against Siemens' documentation for the S7-300/400 (the STL and
+  LAD reference manuals, and the SCE training appendix on the programming
+  instructions): the start on an edge and the restart of SE and SS on a new
+  edge while running, SS running on without its start, SF stopped by a new
+  start, SP and SD keeping their time value when stopped, FR, R of a counter
+  working statically, the four time bases with a time truncated to its base
+  (S5T#2S15MS is 16#0201) and the largest time S5T#2H46M30S (16#3999),
+  counting stopping at 999 and 0. Each rule is a step of the scenario
+  `stl_s5rules`. Not documented there, so taken from the model: the time
+  value while running is the units left rounded up (the CPU counts it down
+  every time base on its own clock, so a reading between two ticks may be
+  one unit less).
 
 ### S5 timers and counters in LAD and FBD
 
@@ -408,8 +497,6 @@ off in them until they switch it on); each OB starts with an empty one.
 ## Open
 
 - A compile step from the tree to a compact form, for speed.
-- Interrupts other than cyclic ones (hardware, time-of-day, delay), and an
-  OB 1 that a cyclic interrupt interrupts.
 - ENO FALSE on an overflow; IEC timers that update when read (S7-1500).
 - ULInt/LWord beyond 2^63.
 - The instructions of the libraries (communication, PID, motion), the

@@ -1,0 +1,13 @@
+{
+  "comment": "Hardware interrupts raised by the scenario, a cyclic interrupt, with every statement taking 1 ms: OB 1 runs 7 ms of its 10 ms cycle, and an event raised at the end of a cycle runs at once, before OB 1 of the next one; two may wait, the third is lost",
+  "program": "../programs/interrupts.program.json",
+  "scan_ms": 10,
+  "instruction_us": 1000,
+  "clock": "2026-10-24 08:00:00",
+  "steps": [
+    {"run_ms": 100, "expect": {"Hw": 0, "Ticks": 1, "Busy": 0}},
+    {"comment": "raised: it runs before the next OB 1", "raise": "HwIn", "scans": 1, "expect": {"Hw": 1, "Seen": 0, "Ticks": 1}},
+    {"comment": "three raised, two may wait", "raise": ["HwIn", 40, "HwIn"], "scans": 1, "expect": {"Hw": 3}},
+    {"run_ms": 1000, "expect": {"Ticks": 11, "Hw": 3}}
+  ]
+}

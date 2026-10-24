@@ -168,6 +168,8 @@ size_t Simulator::runStl(Frame& f, size_t net, size_t pc) {
     size_t cur = net;
     while (pc < c.code.size() && running_ && !f.returned) {
         if (c.net[pc] != cur) return cur + 1;  // the end of the network
+        tick();
+        if (!running_) break;
         const size_t next = stlStep(f, *f.stl, pc);
         if (next != pc + 1 && next < c.code.size()) cur = c.net[next];  // a jump
         pc = next;

@@ -1,0 +1,567 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "IRQ"
+ },
+ "tags": [
+  {
+   "name": "Hw",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW0"
+  },
+  {
+   "name": "Seen",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW2"
+  },
+  {
+   "name": "Busy",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW4"
+  },
+  {
+   "name": "X",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW6"
+  },
+  {
+   "name": "Ticks",
+   "data_type": "Int",
+   "type": {
+    "kind": "elementary",
+    "name": "Int",
+    "bits": 16,
+    "length": null,
+    "dims": [],
+    "element": null
+   },
+   "address": "%MW8"
+  }
+ ],
+ "data_blocks": [],
+ "constants": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "number": 1,
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null,
+   "event_class": 1,
+   "max_buffered_events": 1
+  },
+  {
+   "name": "HwIn",
+   "number": 40,
+   "event": "HardwareInterrupt",
+   "priority": 16,
+   "cycle_us": null,
+   "event_class": 40,
+   "max_buffered_events": 2
+  },
+  {
+   "name": "Tick",
+   "number": 30,
+   "event": "CyclicInterrupt",
+   "priority": 8,
+   "cycle_us": 100000,
+   "phase_shift_us": 0,
+   "event_class": 30,
+   "max_buffered_events": 1
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": [
+   "HwIn",
+   "Tick"
+  ],
+  "process_images": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "language": "SCL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "args": []
+         },
+         {
+          "op": "const",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 1
+          },
+          "args": []
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 4,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 4,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 4,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 4,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 4,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 4,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 3,
+          "args": []
+         },
+         {
+          "op": "const",
+          "type": "Int",
+          "value": {
+           "kind": "int",
+           "int": 0
+          },
+          "args": []
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Hw\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Seen\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Busy\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"X\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"Ticks\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  },
+  {
+   "type": "OB",
+   "name": "HwIn",
+   "language": "SCL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 1,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 1,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 2,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 2,
+            "args": []
+           },
+           {
+            "op": "ref",
+            "ref_id": 3,
+            "args": []
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Hw\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Seen\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Busy\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"X\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"Ticks\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  },
+  {
+   "type": "OB",
+   "name": "Tick",
+   "language": "SCL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 5,
+          "args": []
+         },
+         {
+          "op": "add",
+          "type": "Int",
+          "args": [
+           {
+            "op": "ref",
+            "ref_id": 5,
+            "args": []
+           },
+           {
+            "op": "const",
+            "type": "Int",
+            "value": {
+             "kind": "int",
+             "int": 1
+            },
+            "args": []
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "tag",
+      "text": "\"Hw\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "tag",
+      "text": "\"Seen\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "tag",
+      "text": "\"Busy\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "tag",
+      "text": "\"X\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "tag",
+      "text": "\"Ticks\"",
+      "name": null,
+      "path": [],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

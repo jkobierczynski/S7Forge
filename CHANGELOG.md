@@ -18,6 +18,21 @@ The first version: the core of the simulator, and STL.
 - LAD/FBD: the S5 box names the project stores (`Sp`, `Sd`, `Cud`, ...)
   and the pins `rt`, `rtbcd`.
 - Scenario s16_stl on the program of tiaconv's s16_stl fixture.
+- Interrupts: time-delay (SRT_DINT, CAN_DINT, QRY_DINT), time-of-day
+  (SET_TINTL, ACT_TINT, CAN_TINT, QRY_TINT, with the periods once to
+  yearly and the end of the month), hardware interrupts raised by a
+  scenario (`raise`) or `--raise`, the time error OB at the maximum cycle
+  time and STOP at twice it; priorities, events that may wait and lost
+  events (`Event_Count`), `Sign` of a time delay.
+- An instruction time (`instruction_us`, `--instruction-us`): the program
+  takes time, and an interrupt of a higher priority runs between two
+  statements of the OB it interrupts.
+- The CPU's clock (`clock` in a scenario), RD_SYS_T, RD_LOC_T, WR_SYS_T.
+- The system constants of the export (OB numbers, hardware identifiers)
+  are known to the code that names them.
+- S5 counters: S clears the edge memories of CU and CD, so a counter set
+  while CU is on counts in the next cycle, as Siemens documents it. The S5
+  rules of the manuals are each a step of the scenario stl_s5rules.
 - LAD/FBD: the S5 timer and counter boxes (S_PULSE ... S_OFFDT, S_CU,
   S_CD, S_CUD, also their German names), the coils SP ... SF, CU, CD, SC,
   contacts and the R coil on timers and counters.

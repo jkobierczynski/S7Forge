@@ -1,0 +1,41 @@
+{
+  "comment": "The rules of the S5 timers and counters from Siemens' STL and LAD manuals for the S7-300/400 (DEVELOPMENT.md, S5 timers and counters); every timer runs 1 s",
+  "program": "../stl/s5rules.program.json",
+  "scan_ms": 10,
+  "steps": [
+    {"comment": "all timers started", "set": {"Se": true, "Ss": true, "Sf": true, "Sp": true, "Sd": true}, "run_ms": 50,
+     "expect": {"Qe": true, "Qs": false, "Qf": true, "Qp": true, "Qd": false, "Tv1": "16#0201", "Tv2": "16#3999"}},
+    {"comment": "starts off: SE and SS run on, SP and SD stop and keep their time value",
+     "set": {"Se": false, "Ss": false, "Sp": false, "Sd": false}, "run_ms": 450,
+     "expect": {"Qe": true, "Qs": false, "Qf": true, "Qp": false, "Qd": false, "Vp": 95, "Vd": 95}},
+    {"comment": "a new edge restarts SE and SS (1 s from 0.5 s)", "set": {"Se": true, "Ss": true}, "run_ms": 600,
+     "expect": {"Qe": true, "Qs": false, "Vp": 95}},
+    {"comment": "SE over at 1.5 s, SS on and stays on; SF starts", "set": {"Se": false, "Ss": false, "Sf": false}, "run_ms": 500,
+     "expect": {"Qe": false, "Qs": true, "Qf": true}},
+    {"comment": "SF: a new start while it runs stops it", "set": {"Sf": true}, "scans": 1, "expect": {"Qf": true}},
+    {"set": {"Sf": false}, "run_ms": 900, "expect": {"Qf": true, "Qs": true}},
+    {"run_ms": 200, "expect": {"Qf": false, "Vp": 95, "Vd": 95}},
+
+    {"comment": "SD on, then reset; it starts again only on an edge or with FR",
+     "set": {"Sd": true}, "run_ms": 1100, "expect": {"Qd": true, "Vd": 0}},
+    {"set": {"Rs": true}, "scans": 2, "expect": {"Qd": false, "Qs": false}},
+    {"set": {"Rs": false}, "run_ms": 1500, "expect": {"Qd": false}},
+    {"comment": "FR: the next SD with the start on starts it", "set": {"Fr": true}, "scans": 2, "expect": {"Qd": false}},
+    {"set": {"Fr": false}, "run_ms": 1000, "expect": {"Qd": true}},
+
+    {"comment": "counter: CU counts on the edge", "set": {"Cu": true}, "scans": 1, "expect": {"Cv": 1}},
+    {"scans": 3, "expect": {"Cv": 1}},
+    {"comment": "set to 5 while CU stays on: it counts in the next cycle", "set": {"Cs": true}, "scans": 1, "expect": {"Cv": 5}},
+    {"scans": 1, "expect": {"Cv": 6}},
+    {"scans": 3, "expect": {"Cv": 6}},
+    {"comment": "R works statically: while it is on, the counter cannot be set or counted",
+     "set": {"Cs": false}, "scans": 1},
+    {"set": {"Cs": true, "Cr": true}, "scans": 3, "expect": {"Cv": 0}},
+    {"set": {"Cs": false, "Cu": false}, "scans": 1},
+    {"set": {"Cu": true}, "scans": 1, "expect": {"Cv": 0}},
+    {"set": {"Cr": false, "Cu": false}, "scans": 1},
+    {"set": {"Cu": true}, "scans": 1, "expect": {"Cv": 1, "Cv2": 999}},
+    {"comment": "CU stops at 999", "set": {"Cu": false}, "scans": 1},
+    {"set": {"Cu": true}, "scans": 1, "expect": {"Cv2": 999}}
+  ]
+}

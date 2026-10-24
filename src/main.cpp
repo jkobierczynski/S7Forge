@@ -19,7 +19,8 @@ using namespace s7forge;
 namespace {
 
 void usage(std::ostream& o) {
-    o << "usage: s7forge run PROGRAM.json [--scan-ms N] [--for MS] [--set OPERAND=VALUE]... [--show OPERAND]...\n"
+    o << "usage: s7forge run PROGRAM.json [--scan-ms N] [--instruction-us N] [--for MS] [--set OPERAND=VALUE]...\n"
+         "                   [--raise OB]... [--show OPERAND]...\n"
          "       s7forge test [-v] SCENARIO.json...\n"
          "       s7forge info PROGRAM.json\n"
          "       s7forge --version | --help\n"
@@ -39,7 +40,8 @@ Json loadProgram(const std::string& path) {
 
 int cmdRun(const std::vector<std::string>& a) {
     std::string file;
-    double scanMs = -1, forMs = 1000;
+    double scanMs = -1, forMs = 1000, instrUs = 0;
+    std::vector<std::string> raises;
     std::vector<std::pair<std::string, std::string>> sets;
     std::vector<std::string> shows;
     for (size_t k = 0; k < a.size(); ++k) {
@@ -50,6 +52,8 @@ int cmdRun(const std::vector<std::string>& a) {
         if (a[k] == "--scan-ms") scanMs = std::atof(next().c_str());
         else if (a[k] == "--for") forMs = std::atof(next().c_str());
         else if (a[k] == "--show") shows.push_back(next());
+        else if (a[k] == "--instruction-us") instrUs = std::atof(next().c_str());
+        else if (a[k] == "--raise") raises.push_back(next());
         else if (a[k] == "--set") {
             const std::string s = next();
             const size_t eq = s.rfind('=');
@@ -62,7 +66,9 @@ int cmdRun(const std::vector<std::string>& a) {
     if (file.empty()) throw std::runtime_error("no program given");
     if (!(forMs >= 0) || forMs > 1e10) throw std::runtime_error("--for: milliseconds, up to 1e10");
     if (scanMs != -1 && !(scanMs >= 0.001 && scanMs <= 60000)) throw std::runtime_error("--scan-ms: from 0.001 to 60000");
+    if (!(instrUs >= 0) || instrUs > 1e6) throw std::runtime_error("--instruction-us: from 0 to 1000000");
     Simulator sim(loadProgram(file));
+    sim.setInstructionTime(static_cast<int64_t>(instrUs * 1e3 + 0.5));
     if (scanMs > 0) sim.setScanTime(static_cast<int64_t>(scanMs * 1e6));
     if (forMs * 1e6 / static_cast<double>(sim.scanTime()) > 1e8) throw std::runtime_error("--for: more than 1e8 cycles");
     sim.powerOn();
@@ -71,6 +77,10 @@ int cmdRun(const std::vector<std::string>& a) {
         std::string err;
         if (!parseLiteral(s.second, v)) throw std::runtime_error("not a value: " + s.second);
         if (!sim.write(s.first, v, err)) throw std::runtime_error(err);
+    }
+    for (const auto& r : raises) {
+        std::string err;
+        if (!sim.raise(r, err)) throw std::runtime_error(err);
     }
     sim.runFor(static_cast<int64_t>(forMs * 1e6));
     std::cout << "t = " << sim.now() / 1000000 << " ms" << (sim.running() ? "" : ", STOP: " + sim.fault()) << "\n";

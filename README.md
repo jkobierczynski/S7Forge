@@ -21,22 +21,29 @@ PLCSIM are needed. It runs the program the way the CPU does:
 - start values and retentive data: a warm restart (STOP to RUN) keeps the
   retentive values, a power-on resets everything;
 - a cycle that does not end (an endless loop) and an array index out of
-  bounds put the CPU in STOP, as in the CPU.
+  bounds put the CPU in STOP, as in the CPU;
+- the interrupt OBs: cyclic, time delay (SRT_DINT, CAN_DINT, QRY_DINT),
+  time of day (SET_TINTL, ACT_TINT, CAN_TINT, QRY_TINT), hardware interrupts
+  raised by a scenario, the time error OB, with their priorities; the
+  clock of the CPU (RD_SYS_T, WR_SYS_T).
 
 Time is virtual: every cycle takes the scan time (10 ms unless set), so a
 run gives the same result every time, and 10 minutes of the program run in a
-fraction of a second.
+fraction of a second. With an instruction time (`instruction_us` in a
+scenario, `--instruction-us`) the program itself takes time, and an
+interrupt of a higher priority runs between two statements of the OB it
+interrupts, as on the CPU.
 
 What it does not do (yet), and says so once in its warnings: blocks that
 are know-how protected (their code is not in the export), the instructions
 of the Siemens libraries other than the timers and counters (communication,
-PID, motion), the hardware (I/O modules, high-speed counters), and interrupts
-other than the cyclic ones.
+PID, motion), the hardware (I/O modules, high-speed counters, the input
+that raises a hardware interrupt), the diagnostic and error OBs.
 
 Where it differs from the CPU, as far as known:
 
-- a cyclic interrupt does not interrupt OB 1: it runs after the cycle in
-  which it came due;
+- without an instruction time an interrupt does not interrupt OB 1: it runs
+  before or after it; with one, every statement takes the same time;
 - an overflow does not set ENO to FALSE; the result wraps as in the CPU;
 - the outputs Q and ET of an IEC timer change when it is called, also on an
   S7-1500 (which updates them when they are read too);

@@ -4,9 +4,12 @@
 //
 // The simulated CPU: it loads the program of one PLC as tiaconv writes it
 // (--program-json, schema version 2) and runs it the way the CPU does: the
-// startup OBs once, then the program cycle OBs again and again, the cyclic
-// interrupt OBs when their time comes. Time is virtual: it advances by the
-// scan time with every cycle, so a run is the same every time.
+// startup OBs once, then the program cycle OBs again and again, the
+// interrupt OBs when their event comes (cyclic, time delay, time of day,
+// hardware), an OB of a higher priority interrupting one of a lower. Time is
+// virtual: it advances by the scan time with every cycle and, when an
+// instruction time is set, with every statement, so a run is the same every
+// time.
 #pragma once
 
 #include <cstdint>
@@ -37,6 +40,19 @@ public:
     void scan();
     // Cycles until `ns` of virtual time have passed.
     void runFor(int64_t ns);
+
+    // The time every statement takes (0, the default: the program takes no
+    // time, and an interrupt waits for the end of the OB it comes in). With
+    // a time, an interrupt of a higher priority runs between two statements
+    // of the OB it interrupts, and the maximum cycle time (150 ms) counts.
+    void setInstructionTime(int64_t ns) { instrNs_ = ns > 0 ? ns : 0; }
+    // The event of an interrupt OB, now: a hardware interrupt (the OB by its
+    // name or number). False with `error` when there is no such OB.
+    bool raise(const std::string& ob, std::string& error);
+    // The clock of the CPU (RD_SYS_T, the time-of-day interrupts): ns since
+    // 1970-01-01 00:00 UTC. It starts at 1970-01-01 and runs with the virtual time.
+    int64_t clock() const { return clockBase_ + now_; }
+    void setClock(int64_t ns);
 
     int64_t now() const { return now_; }
     int64_t scanTime() const { return scanNs_; }
@@ -174,9 +190,22 @@ private:
         int value = 0;
         bool lastCu = false, lastCd = false, lastS = false, lastFr = false;
     };
-    struct Cyclic {
+    // An interrupt OB and the state of its event
+    static constexpr int64_t kNever = INT64_MAX;
+    struct IntOb {
         const Block* ob = nullptr;
-        int64_t cycle = 0, phase = 0, priority = 0, next = 0;
+        int number = 0, priority = 0, maxQueued = 1;
+        char kind = 0;          // C cyclic, D time delay, T time of day, H hardware, E time error, O other
+        int64_t cycle = 0, phase = 0;
+        int64_t next = kNever;  // when its event comes (virtual ns)
+        int queued = 0;         // events raised and not yet run (hardware, time error)
+        int lost = 0;           // events lost since its last run (Event_Count)
+        uint16_t sign = 0;      // time delay: SIGN of SRT_DINT
+        bool ran = false;       // Initial_Call
+        // time of day: the start (clock ns) and PERIOD of SET_TINTL
+        bool todSet = false, todActive = false;
+        int64_t todStart = 0;
+        uint16_t period = 0;
     };
 
     Json prog_;
@@ -196,7 +225,13 @@ private:
     Area i_{'I'}, q_{'Q'}, m_{'M'};
     std::map<const Var*, TimerState> timers_;
     std::vector<const Block*> startup_, cycle_;
-    std::vector<Cyclic> cyclics_;
+    std::vector<IntOb> iobs_;
+    int curPriority_ = 0;           // the priority of the OB running; 0: none
+    int64_t instrNs_ = 0;           // the time of a statement
+    int64_t maxCycleNs_ = 150000000;  // TIA Portal's default maximum cycle time
+    int64_t cycleStart_ = -1;       // the start of the program cycle running; -1: none
+    int overruns_ = 0;              // how often this cycle went beyond the maximum
+    int64_t clockBase_ = 0;         // the clock at virtual time 0
     std::vector<std::string> warnings_;
     std::set<std::string> warned_;
     int64_t now_ = 0, scanNs_ = 10000000;
@@ -208,7 +243,16 @@ private:
     void warn(const std::string& w);
     void stop(const std::string& why);
     void resetMemory(bool retainedToo);
-    void runOb(const Block& ob);
+    void runOb(const Block& ob, bool initialCall, const IntOb* info = nullptr);
+    // interrupts.cpp: a statement's time, and the interrupts due run
+    void tick();
+    void service(int above);
+    void runInterrupt(IntOb& o);
+    IntOb* intOb(int number);
+    int64_t nextTod(const IntOb& o, int64_t after) const;
+    bool interruptCall(Frame& f, const Json& e, const std::string& name, Val& ret);
+    bool readDtl(Frame& f, const Json& e, int64_t& ns);
+    void writeDtl(const Place& p, int64_t ns);
     void runBlock(Frame& f);
 
     std::unique_ptr<Var> frameLocals(const Block& b, const std::vector<std::string>& sections);

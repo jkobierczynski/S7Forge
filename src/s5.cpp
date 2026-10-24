@@ -175,6 +175,10 @@ bool Simulator::s5CounterSet(int n, bool rlo, uint16_t bcd, const std::string& w
         return false;
     }
     k.value = static_cast<int>(((v >> 8) & 0xF) * 100 + ((v >> 4) & 0xF) * 10 + (v & 0xF));
+    // "If the counter is set and the RLO at CU is 1, the counter counts in
+    // the next scan cycle, even without a change of edge" (Siemens, LAD for
+    // S7-300/400, S_CUD): setting clears the edge memory of CU and CD
+    k.lastCu = k.lastCd = false;
     return true;
 }
 

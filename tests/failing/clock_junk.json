@@ -1,0 +1,2 @@
+{"comment": "text after the time", "program": "../programs/interrupts.program.json",
+ "clock": "2026-10-24 08:00:00garbage", "steps": [{"scans": 1}]}

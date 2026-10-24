@@ -68,8 +68,10 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
         }
         tags_[tag.name] = std::move(tag);
     }
+    // the user constants, and the system constants (OB numbers, hardware
+    // identifiers) where the code names them
     for (const auto& c : prog_["constants"].items)
-        if (c["kind"].str() == "user" && c["parsed"].type == Json::Object)
+        if (c["parsed"].type == Json::Object)
             constants_[c["name"].str()] = fromExport(c["parsed"], elemType(c["data_type"].str()));
     for (const auto& d : prog_["data_blocks"].items) {
         dbs_[d["name"].str()] = buildStruct(d["members"], budget);
@@ -108,18 +110,39 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
         const Json* info = nullptr;
         for (const auto& o : prog_["organization_blocks"].items)
             if (o["name"].str() == n.str()) info = &o;
-        if (b && info && (*info)["cycle_us"].type == Json::Number && (*info)["cycle_us"].asInt() > 0) {
-            Cyclic c;
-            c.ob = b;
-            // at most a day; the CPU allows up to a minute
-            c.cycle = std::min<int64_t>((*info)["cycle_us"].asInt(), 86400000000LL) * 1000;
-            c.phase = std::min<int64_t>(std::max<int64_t>(0, (*info)["phase_shift_us"].asInt()), 86400000000LL) * 1000;
-            c.priority = (*info)["priority"].asInt();
-            cyclics_.push_back(c);
-        } else {
-            warn("OB " + n.str() + " (" + (info ? (*info)["event"].str() : std::string("?")) +
-                 ") handles an event the simulation does not raise");
+        if (!b || !info) {
+            warn("OB " + n.str() + ": not in the program, its events do nothing");
+            continue;
         }
+        IntOb o;
+        o.ob = b;
+        o.number = static_cast<int>((*info)["number"].type == Json::Number ? (*info)["number"].asInt()
+                                                                            : (*b->json)["number"].asInt());
+        o.priority = static_cast<int>(std::max<int64_t>(2, std::min<int64_t>(26, (*info)["priority"].asInt())));
+        o.maxQueued = static_cast<int>(std::max<int64_t>(1, std::min<int64_t>(12, (*info)["max_buffered_events"].asInt())));
+        // the kind of event: by its name, its event class, else its number
+        const std::string ev = (*info)["event"].str();
+        const int64_t cls = (*info)["event_class"].asInt();
+        auto has = [&](const char* w) { return ev.find(w) != std::string::npos; };
+        const int nr = o.number;
+        if (has("Cyclic") || cls == 30 || (cls == 0 && nr >= 30 && nr <= 38)) o.kind = 'C';
+        else if (has("Delay") || cls == 20 || (cls == 0 && nr >= 20 && nr <= 23)) o.kind = 'D';
+        else if (has("TimeOfDay") || cls == 10 || (cls == 0 && nr >= 10 && nr <= 17)) o.kind = 'T';
+        else if (has("Hardware") || cls == 40 || (cls == 0 && nr >= 40 && nr <= 47)) o.kind = 'H';
+        else if (has("TimeError") || nr == 80) o.kind = 'E';
+        else o.kind = 'O';
+        if (o.kind == 'C') {
+            if ((*info)["cycle_us"].type != Json::Number || (*info)["cycle_us"].asInt() <= 0) {
+                warn("OB " + n.str() + ": a cyclic interrupt without a cycle: it does not run");
+                continue;
+            }
+            // at most a day; the CPU allows up to a minute
+            o.cycle = std::min<int64_t>((*info)["cycle_us"].asInt(), 86400000000LL) * 1000;
+            o.phase = std::min<int64_t>(std::max<int64_t>(0, (*info)["phase_shift_us"].asInt()), 86400000000LL) * 1000;
+        } else if (o.kind == 'O') {
+            warn("OB " + n.str() + " (" + ev + ") handles an event the simulation does not raise; a scenario can raise it");
+        }
+        iobs_.push_back(o);
     }
     if (cycle_.empty()) warn("no program cycle OB");
 }
@@ -167,38 +190,53 @@ void Simulator::warmRestart() {
     fault_.clear();
     firstScan_ = true;
     steps_ = 0;
-    for (const Block* b : startup_) runOb(*b);
-    for (auto& c : cyclics_) c.next = now_ + c.phase + c.cycle;
+    // the events of the interrupts start anew: time delays and time-of-day
+    // interrupts set by the program are gone, the cyclic ones start their cycle
+    for (auto& o : iobs_) {
+        o.next = o.kind == 'C' ? now_ + o.phase + o.cycle : kNever;
+        o.queued = o.lost = 0;
+        o.ran = false;
+        o.todSet = o.todActive = false;
+    }
+    cycleStart_ = -1;
+    // nothing interrupts the startup OBs: the events wait for the first cycle
+    curPriority_ = 100;
+    for (const Block* b : startup_) runOb(*b, true);
+    curPriority_ = 0;
 }
 
 void Simulator::scan() {
     if (!running_) return;
+    const int64_t start = now_;
     steps_ = 0;
+    cycleStart_ = start;
+    overruns_ = 0;
+    curPriority_ = 1;
+    service(1);  // an event already there comes before the cycle
     for (const Block* b : cycle_) {
-        runOb(*b);
-        if (!running_) return;
+        runOb(*b, firstScan_);
+        if (!running_) break;
+    }
+    curPriority_ = 0;
+    if (!running_) {
+        cycleStart_ = -1;
+        return;
     }
     firstScan_ = false;
-    const int64_t until = now_ + scanNs_;
-    // the cyclic interrupts due up to the end of this cycle, in time order;
-    // at the same time the higher priority first
-    for (int guard = 0; guard < 100000 && running_; ++guard) {
-        Cyclic* due = nullptr;
-        for (auto& c : cyclics_)
-            if (c.next <= until && (!due || c.next < due->next || (c.next == due->next && c.priority > due->priority)))
-                due = &c;
-        if (!due) break;
-        now_ = std::max(now_, due->next);
-        steps_ = 0;
-        runOb(*due->ob);
-        due->next += due->cycle;
+    // up to the end of the cycle (the scan time, or longer when the program
+    // took longer) the interrupts as their events come
+    const int64_t until = std::max(start + scanNs_, now_);
+    for (int guard = 0; guard < 1000000 && running_; ++guard) {
+        int64_t at = kNever;
+        for (const auto& o : iobs_) at = std::min(at, o.queued > 0 ? now_ : o.next);
+        if (at > until) break;
+        now_ = std::max(now_, at);
+        // the interrupts after OB 1 count in the cycle time as well: an
+        // overload calls the time error OB and at twice the maximum stops the CPU
+        service(0);
     }
-    for (auto& c : cyclics_)
-        if (c.next <= until) {
-            warn("OB " + c.ob->name + ": cyclic interrupts lost (more than the simulation runs in one cycle)");
-            while (c.next <= until) c.next += c.cycle;
-        }
-    now_ = until;
+    cycleStart_ = -1;
+    now_ = std::max(now_, until);
 }
 
 void Simulator::runFor(int64_t ns) {
@@ -217,7 +255,7 @@ std::unique_ptr<Var> Simulator::frameLocals(const Block& b, const std::vector<st
     return buildStruct(*b.interface, budget, sections);
 }
 
-void Simulator::runOb(const Block& ob) {
+void Simulator::runOb(const Block& ob, bool initialCall, const IntOb* info) {
     // an OB starts with an empty MCR stack; an interrupted one gets its own back
     std::vector<bool> mcr;
     mcr.swap(mcrStack_);
@@ -229,7 +267,12 @@ void Simulator::runOb(const Block& ob) {
     Frame f;
     f.block = &ob;
     f.local = frameLocals(ob, {"Input", "Temp", "Constant"});
-    if (Var* ic = f.local->member("Initial_Call")) store(varPlace(ic), boolVal(firstScan_));
+    // the start information the OB has
+    if (Var* ic = f.local->member("Initial_Call")) store(varPlace(ic), boolVal(initialCall));
+    if (info) {
+        if (Var* v = f.local->member("Event_Count")) store(varPlace(v), intVal(info->lost));
+        if (Var* v = f.local->member("Sign")) store(varPlace(v), intVal(info->sign));
+    }
     runBlock(f);
 }
 
@@ -684,6 +727,8 @@ void Simulator::stmt(Frame& f, const Json& s) {
         stop("the cycle did not end (an endless loop?): maximum cycle time exceeded");
         return;
     }
+    tick();
+    if (!running_) return;
     const std::string& op = s["op"].str();
     const auto& x = s["exprs"].items;
     if (op == "assign") {
@@ -742,6 +787,8 @@ void Simulator::stmt(Frame& f, const Json& s) {
                 stop("the cycle did not end (an endless loop?): maximum cycle time exceeded");
                 break;
             }
+            tick();  // a turn of the loop takes its time, also with an empty body
+            if (!running_) break;
             // past the end of the type the loop variable wraps: the loop goes on, as in the CPU
             const int64_t before = asInt(load(var));
             store(var, intVal(static_cast<int64_t>(static_cast<uint64_t>(before) + static_cast<uint64_t>(by))));
@@ -756,6 +803,7 @@ void Simulator::stmt(Frame& f, const Json& s) {
             f.loop = 0;
             if (f.returned) break;
             if (++steps_ > kMaxStepsPerCycle) stop("the cycle did not end (an endless loop?): maximum cycle time exceeded");
+            else tick();
         }
     } else if (op == "repeat") {
         do {
@@ -767,6 +815,7 @@ void Simulator::stmt(Frame& f, const Json& s) {
             f.loop = 0;
             if (f.returned) break;
             if (++steps_ > kMaxStepsPerCycle) stop("the cycle did not end (an endless loop?): maximum cycle time exceeded");
+            else tick();
         } while (running_ && !truthy(eval(f, x.at(0))));
     } else if (op == "return") {
         f.returned = true;
@@ -802,6 +851,10 @@ Val Simulator::call(Frame& f, const Json& e) {
             }
         lastEno_ = true;
         return Val{};
+    }
+    if (kind != "block") {
+        Val ret;
+        if (interruptCall(f, e, upper(t["name"].str().empty() ? e["name"].str() : t["name"].str()), ret)) return ret;
     }
     if (kind == "block") return callBlock(f, e, t);
     if (kind == "instruction") return callInstruction(f, e, t);

@@ -1,0 +1,2 @@
+{"comment": "2026 is not a leap year: no 29 February", "program": "../programs/interrupts.program.json",
+ "clock": "2026-02-29 12:00:00", "steps": [{"scans": 1}]}
