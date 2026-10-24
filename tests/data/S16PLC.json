@@ -2,7 +2,7 @@
   "format": "tiaconv-program",
   "schema_version": 2,
   "tool": {"name": "tiaconv", "version": "0.18.0"},
-  "source": {"file": "../tests/fixtures/s16_stl/System/PEData.plf", "project": "s16_stl", "save": null},
+  "source": {"file": "tests/fixtures/s16_stl/System/PEData.plf", "project": "s16_stl", "save": null},
   "plc": {
     "name": "S16PLC",
     "station": "S7-1500/ET200MP station_1",
@@ -144,8 +144,9 @@
     }
   ],
   "organization_blocks": [
-    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null}
+    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null, "time_of_day": null}
   ],
+  "hardware_interrupts": [],
   "runtime": {
     "startup": [],
     "program_cycle": ["Main"],

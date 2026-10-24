@@ -176,8 +176,9 @@
     }
   ],
   "organization_blocks": [
-    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null}
+    {"name": "Main", "number": 1, "event": "ProgramCycle", "priority": 1, "cycle_us": null, "phase_shift_us": null, "event_class": 1, "max_buffered_events": 1, "process_image": null, "time_of_day": null}
   ],
+  "hardware_interrupts": [],
   "runtime": {
     "startup": [],
     "program_cycle": ["Main"],

@@ -9,6 +9,7 @@
 // CPU (RD_SYS_T, RD_LOC_T, WR_SYS_T).
 #include <algorithm>
 #include <cctype>
+#include <cstdio>
 #include <map>
 #include <set>
 
@@ -84,9 +85,12 @@ Simulator::IntOb* Simulator::intOb(int number) {
 bool Simulator::raise(const std::string& ob, std::string& error) {
     IntOb* o = nullptr;
     const bool digits = !ob.empty() && std::all_of(ob.begin(), ob.end(), [](char c) { return std::isdigit(static_cast<unsigned char>(c)); });
-    for (auto& x : iobs_)
+    for (auto& x : iobs_) {
         if ((digits && x.number == std::atoi(ob.c_str())) || up(x.ob->name) == up(ob) || up("\"" + x.ob->name + "\"") == up(ob))
             o = &x;
+        for (const auto& ev : x.events)  // a hardware event by its name: Rising edge0
+            if (up(ev) == up(ob) || up("\"" + ev + "\"") == up(ob)) o = &x;
+    }
     if (!o) {
         error = "no interrupt OB " + ob;
         return false;
@@ -109,6 +113,54 @@ void Simulator::setClock(int64_t ns) {
             const int64_t t = nextTod(o, clock());
             o.next = t == kNever ? kNever : t - clockBase_;
         }
+}
+
+void Simulator::configureTod(IntOb& o, const Json& tod) {
+    // only the executions seen in a project are mapped (DEVELOPMENT.md)
+    static const std::map<std::string, uint16_t> periods = {{"never", 0xFFFF}, {"once", 0x0000}, {"every_minute", 0x0201},
+                                                            {"hourly", 0x0401}, {"daily", 0x1001}, {"weekly", 0x1201},
+                                                            {"monthly", 0x1401}, {"yearly", 0x1801}, {"end_of_month", 0x2001}};
+    const std::string ex = tod["execution"].str();
+    auto it = periods.find(ex);
+    if (it == periods.end()) {
+        warn("OB " + o.ob->name + ": a time-of-day execution S7Forge does not know (stored " +
+             std::to_string(tod["execution_stored"].asInt()) + "): the OB runs only when the program sets it");
+        return;
+    }
+    if (it->second == 0xFFFF) return;  // never
+    // the start: 2026-01-01T08:00:00, system time (there is no time zone)
+    const std::string t = tod["start"].str();
+    int y = 0, mo = 0, d = 0, h = 0, mi = 0, sec = 0;
+    if (std::sscanf(t.c_str(), "%d-%d-%dT%d:%d:%d", &y, &mo, &d, &h, &mi, &sec) < 5 || y < 1970 || y > kLastYear ||
+        mo < 1 || mo > 12 || d < 1 || d > monthDays(y, mo)) {
+        warn("OB " + o.ob->name + ": a time-of-day start S7Forge cannot read (" + t + ")");
+        return;
+    }
+    o.cfgTod = true;
+    o.cfgStart = daysFrom(y, mo, d) * kDay + ((h * 60LL + mi) * 60 + sec) * kSecond;
+    o.cfgPeriod = it->second;
+}
+
+void Simulator::loadHardwareInterrupts() {
+    for (const auto& h : prog_["hardware_interrupts"].items) {
+        IntOb* o = nullptr;
+        for (auto& x : iobs_)
+            if (x.ob->name == h["ob"].str()) o = &x;
+        if (!o) continue;
+        o->events.push_back(h["event"].str());
+        const std::string& edge = h["edge"].str();
+        const Address at = parseAddress(h["input"].str());
+        if (at.area != 'I' || at.size != 'X' || (edge != "rising_edge" && edge != "falling_edge")) {
+            warn("OB " + o->ob->name + ": its hardware interrupt " + h["event"].str() +
+                 " (an input or edge S7Forge does not know): a scenario can raise it");
+            continue;
+        }
+        HwInput in;
+        in.at = at;
+        in.rising = edge == "rising_edge";
+        in.ob = o->number;
+        hwInputs_.push_back(in);
+    }
 }
 
 // A statement takes its time; the maximum cycle time; the interrupts that came

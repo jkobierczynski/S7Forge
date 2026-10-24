@@ -157,8 +157,10 @@ tiaconv: `MOTORPLC.json` (s15_motor: a motor start/stop with a 5 s delay,
 in LAD and in SCL), `ZZPLC.json` (s14_code_rewritten: LAD, FBD, SCL, STL
 and a know-how protected block), `ZZBRAVO.json` (s13_hmi) and
 `S16PLC.json` (s16_stl: STL with absolute and indirect addresses, local
-data by address, S5 timers and counters in STL, LAD and FBD). The scenarios
-in `tests/scenarios` check them; the values expected in s14 and s16 were
+data by address, S5 timers and counters in STL, LAD and FBD) and
+`S17PLC.json` (s17_interrupts: cyclic, time-delay, time-of-day, hardware
+and time error OBs). The scenarios
+in `tests/scenarios` check them; the values expected in s14, s16 and s17 were
 derived by hand from the code.
 
 ## Licence

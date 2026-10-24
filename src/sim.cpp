@@ -128,7 +128,7 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
         if (has("Cyclic") || cls == 30 || (cls == 0 && nr >= 30 && nr <= 38)) o.kind = 'C';
         else if (has("Delay") || cls == 20 || (cls == 0 && nr >= 20 && nr <= 23)) o.kind = 'D';
         else if (has("TimeOfDay") || cls == 10 || (cls == 0 && nr >= 10 && nr <= 17)) o.kind = 'T';
-        else if (has("Hardware") || cls == 40 || (cls == 0 && nr >= 40 && nr <= 47)) o.kind = 'H';
+        else if (has("Hardware") || has("HWProcess") || cls == 40 || (cls == 0 && nr >= 40 && nr <= 47)) o.kind = 'H';
         else if (has("TimeError") || nr == 80) o.kind = 'E';
         else o.kind = 'O';
         if (o.kind == 'C') {
@@ -139,11 +139,14 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
             // at most a day; the CPU allows up to a minute
             o.cycle = std::min<int64_t>((*info)["cycle_us"].asInt(), 86400000000LL) * 1000;
             o.phase = std::min<int64_t>(std::max<int64_t>(0, (*info)["phase_shift_us"].asInt()), 86400000000LL) * 1000;
+        } else if (o.kind == 'T') {
+            if ((*info)["time_of_day"].type == Json::Object) configureTod(o, (*info)["time_of_day"]);
         } else if (o.kind == 'O') {
             warn("OB " + n.str() + " (" + ev + ") handles an event the simulation does not raise; a scenario can raise it");
         }
         iobs_.push_back(o);
     }
+    loadHardwareInterrupts();
     if (cycle_.empty()) warn("no program cycle OB");
 }
 
@@ -197,6 +200,15 @@ void Simulator::warmRestart() {
         o.queued = o.lost = 0;
         o.ran = false;
         o.todSet = o.todActive = false;
+        // a time of day set in the OB's properties is active from the start
+        if (o.cfgTod) {
+            o.todSet = o.todActive = true;
+            o.todStart = o.cfgStart;
+            o.period = o.cfgPeriod;
+            const int64_t t = nextTod(o, clock());
+            o.next = t == kNever ? kNever : t - clockBase_;
+            if (o.next == kNever) o.todActive = false;
+        }
     }
     cycleStart_ = -1;
     // nothing interrupts the startup OBs: the events wait for the first cycle
@@ -1459,7 +1471,17 @@ bool Simulator::write(const std::string& name, const Val& value, std::string& er
         error = name + " is a structure or array";
         return false;
     }
+    // an input with a hardware interrupt: its edge raises the interrupt
+    std::vector<bool> before;
+    for (const auto& h : hwInputs_) before.push_back(truthy(readArea(i_, h.at, *elemType("Bool"))));
     store(p, value);
+    for (size_t k = 0; k < hwInputs_.size(); ++k) {
+        const bool now = truthy(readArea(i_, hwInputs_[k].at, *elemType("Bool")));
+        if (now != before[k] && now == hwInputs_[k].rising) {
+            std::string err;
+            raise(std::to_string(hwInputs_[k].ob), err);
+        }
+    }
     return true;
 }
 

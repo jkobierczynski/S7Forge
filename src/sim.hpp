@@ -206,6 +206,17 @@ private:
         bool todSet = false, todActive = false;
         int64_t todStart = 0;
         uint16_t period = 0;
+        // time of day as the OB's properties set it: active from a restart
+        bool cfgTod = false;
+        int64_t cfgStart = 0;
+        uint16_t cfgPeriod = 0;
+        std::vector<std::string> events;  // the names of its hardware events (Rising edge0)
+    };
+    // An input whose edge raises a hardware interrupt
+    struct HwInput {
+        Address at;
+        bool rising = true;
+        int ob = 0;  // the OB number
     };
 
     Json prog_;
@@ -226,6 +237,7 @@ private:
     std::map<const Var*, TimerState> timers_;
     std::vector<const Block*> startup_, cycle_;
     std::vector<IntOb> iobs_;
+    std::vector<HwInput> hwInputs_;
     int curPriority_ = 0;           // the priority of the OB running; 0: none
     int64_t instrNs_ = 0;           // the time of a statement
     int64_t maxCycleNs_ = 150000000;  // TIA Portal's default maximum cycle time
@@ -250,6 +262,9 @@ private:
     void runInterrupt(IntOb& o);
     IntOb* intOb(int number);
     int64_t nextTod(const IntOb& o, int64_t after) const;
+    // the time of day an OB's properties set, read from the program file
+    void configureTod(IntOb& o, const Json& tod);
+    void loadHardwareInterrupts();
     bool interruptCall(Frame& f, const Json& e, const std::string& name, Val& ret);
     bool readDtl(Frame& f, const Json& e, int64_t& ns);
     void writeDtl(const Place& p, int64_t ns);

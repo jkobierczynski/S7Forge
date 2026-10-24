@@ -131,11 +131,12 @@ it finds kept as regression scenarios (`tests/review`, `tests/scenarios/stl_*`).
 `interrupts.cpp`. Every OB that is not a startup or program cycle OB is an
 interrupt OB with the priority of the export (2 to 26) and the number of
 its events that may wait (`max_buffered_events`, 1 to 12). Its kind comes
-from the event's name (`CyclicInterrupt`, `TimeDelayInterrupt`,
-`TimeOfDay`, `HardwareInterrupt`, `TimeError`), else the event class (30,
-20, 10, 40), else the OB number (30–38, 20–23, 10–17, 40–47, 80). The
-names and classes of the time delay, time of day, hardware and time error
-OBs are not seen in a test project yet (s17 will show them).
+from the event's name as s17_interrupts stores it (`CyclicInterrupt`,
+`TimeDelayInterrupt`, `TimeOfDay`, `HWProcessInterruptExtended`,
+`TimeErrorInterrupt`), else the event class (30, 20, 10, 40, 80), else the
+OB number (30–38, 20–23, 10–17, 40–47, 80). The defaults TIA Portal V21
+gives them: priority 2 for time of day (2 events queued), 3 time delay, 16
+hardware, 22 time error; a cyclic OB 13 or what is set (s17: 10, 3 queued).
 
 - Of the OBs due, the highest priority runs first; of the same priority
   the event that came first.
@@ -166,14 +167,26 @@ OBs are not seen in a test project yet (s17 will show them).
   leap years. A change of the clock (`WR_SYS_T`, the scenario) moves the
   next time; one passed by the change is not run (the CPU would run it once,
   `CaughtUp`). There is no time zone: LOCAL and RD_LOC_T are the system
-  time. The time-of-day interrupts configured in the OB's properties (not
-  by SET_TINTL) are not in the export yet: s17 will show where they are.
-- Hardware (OB 40–47): the program file does not say which input edge
-  raises it (the hardware configuration is not exported yet), so a scenario
-  raises it (`raise`), or the command line (`--raise`). It runs as soon as
-  the priorities let it: before the next statement, or before OB 1.
+  time. A time of day set in the OB's properties (`time_of_day` of the
+  export: execution, start, local or system time) is active from every
+  restart; S7Forge maps the executions s17 shows (Never, Every minute) and
+  the names tiaconv may give later, and warns of one it does not know.
+- Hardware (OB 40–47): `hardware_interrupts` of the export says which edge
+  of which input raises it (s17: the rising edge of channel 0 of a DI 16
+  HF, %I10.0, event `Rising edge0`). Writing that input (a scenario's
+  `set`, `--set`) with the edge raises the interrupt. A scenario can also
+  raise it by the OB's name or number or the event's name (`raise`), or
+  the command line (`--raise`). It runs as soon as the priorities let it:
+  before the next statement, or before OB 1.
 - Time error (OB 80): at the maximum cycle time, above. Lost events of other
-  OBs do not call it yet.
+  OBs do not call it: an OB's "Enable time error" and its "Event threshold
+  for time error" (Attributes, Event queueing; s17 shows them off) are not
+  read yet.
+- SRT_DINT in LAD behind a contact runs in every cycle the contact is on,
+  so under S7Forge's choice (a start while it runs starts it anew) the
+  delay does not end while the contact stays on. If the CPU starts it on
+  an edge of EN instead, as a Siemens page says, this differs: to check on
+  a CPU.
 - Not done: the start information other than `Initial_Call`, `Event_Count`
   and `Sign` (LADDR, IChannel, EventType of a hardware interrupt, CaughtUp);
   DIS_IRT, EN_IRT, DIS_AIRT, EN_AIRT; ATTACH and DETACH; diagnostic and

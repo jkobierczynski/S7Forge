@@ -32,7 +32,7 @@ The CPU is powered on before the first step. Each step does, in this order:
 | `comment` | shown in a message about the step |
 | `set` | operands and their values, written before the step runs |
 | `clock` | the clock set to this date and time |
-| `raise` | the event of an interrupt OB, by its name or number, or a list of them: a hardware interrupt. It runs as soon as its priority lets it |
+| `raise` | the event of an interrupt OB, by the OB's name or number or the event's name (`Rising edge0`), or a list of them: a hardware interrupt. It runs as soon as its priority lets it. Setting an input that has a hardware interrupt raises it on its edge as well |
 | `restart` | `"warm"`: STOP to RUN, retentive values kept; `"power"`: power off and on, everything to its start value. The startup OBs run. |
 | `scans` | a number of cycles to run |
 | `run_ms` | the time to run, in ms: cycles until it has passed |

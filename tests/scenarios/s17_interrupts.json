@@ -1,0 +1,46 @@
+{
+  "comment": "The fixture s17_interrupts of tiaconv (TIA Portal V21, CPU 1511-1 PN): a cyclic interrupt of 100 ms with a phase offset of 20 ms, a time delay started from SCL (2 s, SIGN 7) and from a LAD box (500 ms, SIGN 2), a time-of-day OB set in its properties (every minute from 2026-01-01 08:00), one set by SET_TINTL (daily), a hardware interrupt on the rising edge of %I10.0. The values are worked out by hand from the code and DEVELOPMENT.md.",
+  "program": "../data/S17PLC.json",
+  "scan_ms": 10,
+  "clock": "2026-10-24 07:59:30",
+  "steps": [
+    {"comment": "the cyclic interrupt at 120, 220, ... 920 ms", "run_ms": 1000,
+     "expect": {"\"S17Data\".cycN": 9, "\"S17Data\".delayN": 0, "\"S17Data\".hwN": 0, "\"S17Data\".todPropN": 0,
+                "\"S17Data\".now.YEAR": 2026, "\"S17Data\".now.MONTH": 10, "\"S17Data\".now.DAY": 24,
+                "\"S17Data\".now.WEEKDAY": 7, "\"S17Data\".now.HOUR": 7, "\"S17Data\".now.MINUTE": 59,
+                "\"S17Data\".status": "16#0010"}},
+
+    {"comment": "SRT_DINT from SCL: 2 s, SIGN 7", "set": {"StartDelay": true}, "scans": 1,
+     "expect": {"StartDelay": false, "\"S17Data\".ret": 0, "\"S17Data\".status": "16#0014"}},
+    {"run_ms": 1900, "expect": {"\"S17Data\".delayN": 0}},
+    {"run_ms": 200, "expect": {"\"S17Data\".delayN": 1, "\"S17Data\".delaySign": "16#0007", "\"S17Data\".status": "16#0010"}},
+
+    {"comment": "SRT_DINT from the LAD box, one cycle: 500 ms, SIGN 2", "set": {"StartLad": true}, "scans": 1,
+     "expect": {"RetLad": 0}},
+    {"set": {"StartLad": false}, "run_ms": 400, "expect": {"\"S17Data\".delayN": 1}},
+    {"run_ms": 200, "expect": {"\"S17Data\".delayN": 2, "\"S17Data\".delaySign": "16#0002"}},
+
+    {"comment": "cancelled: it does not come", "set": {"StartDelay": true}, "scans": 1},
+    {"set": {"CancelDelay": true}, "scans": 1, "expect": {"\"S17Data\".ret": 0, "\"S17Data\".status": "16#0010"}},
+    {"run_ms": 3000, "expect": {"\"S17Data\".delayN": 2}},
+
+    {"comment": "the rising edge of %I10.0 calls HwIn; no edge, no call", "set": {"%I10.0": true}, "scans": 1,
+     "expect": {"\"S17Data\".hwN": 1}},
+    {"set": {"%I10.0": true}, "scans": 1, "expect": {"\"S17Data\".hwN": 1}},
+    {"set": {"%I10.0": false}, "scans": 1, "expect": {"\"S17Data\".hwN": 1}},
+    {"set": {"%I10.0": true}, "scans": 1, "expect": {"\"S17Data\".hwN": 2}},
+    {"comment": "raised by its event name", "raise": "Rising edge0", "scans": 1, "expect": {"\"S17Data\".hwN": 3}},
+
+    {"comment": "TodProp, every minute from 08:00: the clock is at 07:59:36.79", "run_ms": 22000,
+     "expect": {"\"S17Data\".todPropN": 0}},
+    {"run_ms": 2000, "expect": {"\"S17Data\".todPropN": 1, "\"S17Data\".now.HOUR": 8, "\"S17Data\".now.MINUTE": 0}},
+    {"run_ms": 60000, "expect": {"\"S17Data\".todPropN": 2}},
+
+    {"comment": "SET_TINTL: TodProg daily from today 08:03",
+     "set": {"\"S17Data\".start.YEAR": 2026, "\"S17Data\".start.MONTH": 10, "\"S17Data\".start.DAY": 24,
+             "\"S17Data\".start.HOUR": 8, "\"S17Data\".start.MINUTE": 3, "SetTod": true}, "scans": 1,
+     "expect": {"\"S17Data\".ret": 0, "\"S17Data\".todStatus": "16#0014", "\"S17Data\".todProgN": 0}},
+    {"clock": "2026-10-24 08:02:59", "run_ms": 2000, "expect": {"\"S17Data\".todProgN": 1}},
+    {"clock": "2026-10-25 08:02:59", "run_ms": 2000, "expect": {"\"S17Data\".todProgN": 2, "\"S17Data\".now.DAY": 25}}
+  ]
+}

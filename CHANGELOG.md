@@ -24,6 +24,10 @@ The first version: the core of the simulator, and STL.
   scenario (`raise`) or `--raise`, the time error OB at the maximum cycle
   time and STOP at twice it; priorities, events that may wait and lost
   events (`Event_Count`), `Sign` of a time delay.
+- The interrupts as s17_interrupts stores them: the event names, a time of
+  day set in an OB's properties, the hardware interrupt of an input edge
+  (writing the input raises it; `raise` also takes the event's name);
+  scenario s17_interrupts.
 - An instruction time (`instruction_us`, `--instruction-us`): the program
   takes time, and an interrupt of a higher priority runs between two
   statements of the OB it interrupts.
