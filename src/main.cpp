@@ -1,12 +1,14 @@
 // S7Forge - a simulator for Siemens S7-1200/S7-1500 programs
 // Copyright (C) 2026 Jurgen Kobierczynski
 // SPDX-License-Identifier: GPL-3.0-or-later
+#include <csignal>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 
 #include "json.hpp"
+#include "modbus.hpp"
 #include "scenario.hpp"
 #include "sim.hpp"
 
@@ -21,6 +23,9 @@ namespace {
 void usage(std::ostream& o) {
     o << "usage: s7forge run PROGRAM.json [--scan-ms N] [--instruction-us N] [--for MS] [--set OPERAND=VALUE]...\n"
          "                   [--raise OB]... [--show OPERAND]...\n"
+         "       s7forge serve PROGRAM.json [--listen ADDRESS] [--port N] [--map MAP.json] [--read-only]\n"
+         "                   [--scan-ms N] [--instruction-us N] [--speed X] [--for MS] [--set OPERAND=VALUE]...\n"
+         "                   [--clock DATETIME] [-v]\n"
          "       s7forge test [-v] SCENARIO.json...\n"
          "       s7forge info PROGRAM.json\n"
          "       s7forge --version | --help\n"
@@ -94,6 +99,88 @@ int cmdRun(const std::vector<std::string>& a) {
     return sim.running() ? 0 : 3;
 }
 
+// The program in real time behind a Modbus/TCP server (docs/MODBUS.md)
+int cmdServe(const std::vector<std::string>& a) {
+    std::string file, mapFile, clockText;
+    double scanMs = -1, instrUs = 0, forMs = 0;
+    bool readOnly = false;
+    ServeOptions opt;
+    std::vector<std::pair<std::string, std::string>> sets;
+    for (size_t k = 0; k < a.size(); ++k) {
+        auto next = [&]() -> std::string {
+            if (k + 1 >= a.size()) throw std::runtime_error(a[k] + " needs a value");
+            return a[++k];
+        };
+        if (a[k] == "--listen") opt.listen = next();
+        else if (a[k] == "--port") opt.port = std::atoi(next().c_str());
+        else if (a[k] == "--map") mapFile = next();
+        else if (a[k] == "--read-only") readOnly = true;
+        else if (a[k] == "--scan-ms") scanMs = std::atof(next().c_str());
+        else if (a[k] == "--instruction-us") instrUs = std::atof(next().c_str());
+        else if (a[k] == "--speed") opt.speed = std::atof(next().c_str());
+        else if (a[k] == "--for") forMs = std::atof(next().c_str());
+        else if (a[k] == "--clock") clockText = next();
+        else if (a[k] == "-v" || a[k] == "--verbose") opt.verbose = true;
+        else if (a[k] == "--set") {
+            const std::string s = next();
+            const size_t eq = s.rfind('=');
+            if (eq == std::string::npos) throw std::runtime_error("--set OPERAND=VALUE");
+            sets.emplace_back(s.substr(0, eq), s.substr(eq + 1));
+        } else if (!a[k].empty() && a[k][0] == '-') throw std::runtime_error("unknown option " + a[k]);
+        else if (file.empty()) file = a[k];
+        else throw std::runtime_error("more than one program given");
+    }
+    if (file.empty()) throw std::runtime_error("no program given");
+    if (opt.port < 0 || opt.port > 65535) throw std::runtime_error("--port: 0 to 65535");
+    if (!(opt.speed >= 0.001 && opt.speed <= 1000)) throw std::runtime_error("--speed: from 0.001 to 1000");
+    if (!(forMs >= 0) || forMs > 1e10) throw std::runtime_error("--for: milliseconds, up to 1e10");
+    if (scanMs != -1 && !(scanMs >= 0.001 && scanMs <= 60000)) throw std::runtime_error("--scan-ms: from 0.001 to 60000");
+    if (!(instrUs >= 0) || instrUs > 1e6) throw std::runtime_error("--instruction-us: from 0 to 1000000");
+    Simulator sim(loadProgram(file));
+    if (scanMs > 0) sim.setScanTime(static_cast<int64_t>(scanMs * 1e6));
+    sim.setInstructionTime(static_cast<int64_t>(instrUs * 1e3 + 0.5));
+    if (!clockText.empty()) {
+        Json j;
+        j.type = Json::String;
+        j.s = clockText;
+        sim.setClock(clockOf(j, "--clock"));
+    }
+    sim.powerOn();
+    for (const auto& s : sets) {
+        Val v;
+        std::string err;
+        if (!parseLiteral(s.second, v)) throw std::runtime_error("not a value: " + s.second);
+        if (!sim.write(s.first, v, err)) throw std::runtime_error(err);
+    }
+    ModbusMap map = ModbusMap::defaults();
+    if (!mapFile.empty()) {
+        try {
+            map = ModbusMap::fromJson(parseJson(readFile(mapFile)), sim);
+        } catch (const JsonError& e) {
+            throw std::runtime_error(mapFile + ": " + e.what());
+        } catch (const std::runtime_error& e) {
+            throw std::runtime_error(mapFile + ": " + e.what());
+        }
+    }
+    ModbusServer server(sim, std::move(map), readOnly);
+#ifdef SIGPIPE
+    std::signal(SIGPIPE, SIG_IGN);  // a client gone while answers wait: an error, not the end of the server
+#endif
+    opt.forNs = static_cast<int64_t>(forMs * 1e6);
+    if (opt.listen != "127.0.0.1")
+        std::cerr << "s7forge: listening on " << opt.listen
+                  << ": any host that reaches it can read and write the simulated PLC\n";
+    std::string err;
+    const int rc = serveModbus(sim, server, opt, nullptr, nullptr, &err);
+    if (rc) throw std::runtime_error(err);
+    const ModbusStats& st = server.stats();
+    std::cerr << "s7forge: " << st.requests << " requests, " << st.exceptions << " exceptions, " << st.writes
+              << " writes" << (readOnly ? ", " + std::to_string(st.refusedWrites) + " writes refused" : std::string())
+              << "\n";
+    for (const auto& w : sim.warnings()) std::cerr << "s7forge: warning: " << w << "\n";
+    return 0;
+}
+
 int cmdTest(const std::vector<std::string>& a) {
     bool verbose = false;
     std::vector<std::string> files;
@@ -161,6 +248,7 @@ int main(int argc, char** argv) {
             return 0;
         }
         if (cmd == "run") return cmdRun(args);
+        if (cmd == "serve") return cmdServe(args);
         if (cmd == "test") return cmdTest(args);
         if (cmd == "info") return cmdInfo(args);
         std::cerr << "s7forge: unknown command " << cmd << "\n";

@@ -1,0 +1,1981 @@
+{
+ "format": "tiaconv-program",
+ "schema_version": 2,
+ "plc": {
+  "name": "LIB"
+ },
+ "tags": [],
+ "data_blocks": [
+  {
+   "name": "L",
+   "number": 1,
+   "kind": "global",
+   "members": [
+    {
+     "name": "a",
+     "data_type": "Array[0..7] of Int",
+     "type": {
+      "kind": "array",
+      "name": "Array",
+      "bits": null,
+      "length": null,
+      "dims": [
+       {
+        "low": 0,
+        "low_text": "0",
+        "high": 7,
+        "high_text": "7"
+       }
+      ],
+      "element": {
+       "kind": "elementary",
+       "name": "Int",
+       "bits": 16,
+       "length": null,
+       "dims": [],
+       "element": null
+      }
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "b",
+     "data_type": "Array[0..7] of Int",
+     "type": {
+      "kind": "array",
+      "name": "Array",
+      "bits": null,
+      "length": null,
+      "dims": [
+       {
+        "low": 0,
+        "low_text": "0",
+        "high": 7,
+        "high_text": "7"
+       }
+      ],
+      "element": {
+       "kind": "elementary",
+       "name": "Int",
+       "bits": 16,
+       "length": null,
+       "dims": [],
+       "element": null
+      }
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "c",
+     "data_type": "Array[1..3] of Int",
+     "type": {
+      "kind": "array",
+      "name": "Array",
+      "bits": null,
+      "length": null,
+      "dims": [
+       {
+        "low": 1,
+        "low_text": "1",
+        "high": 3,
+        "high_text": "3"
+       }
+      ],
+      "element": {
+       "kind": "elementary",
+       "name": "Int",
+       "bits": 16,
+       "length": null,
+       "dims": [],
+       "element": null
+      }
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "r",
+     "data_type": "Real",
+     "type": {
+      "kind": "elementary",
+      "name": "Real",
+      "bits": 32,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "p",
+     "data_type": "UInt",
+     "type": {
+      "kind": "elementary",
+      "name": "UInt",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": {
+      "kind": "int",
+      "text": "1",
+      "int": 1
+     },
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "q",
+     "data_type": "UInt",
+     "type": {
+      "kind": "elementary",
+      "name": "UInt",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": {
+      "kind": "int",
+      "text": "1",
+      "int": 1
+     },
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "ret",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "cnt",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "pos",
+     "data_type": "Int",
+     "type": {
+      "kind": "elementary",
+      "name": "Int",
+      "bits": 16,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": {
+      "kind": "int",
+      "text": "-1",
+      "int": -1
+     },
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "ch",
+     "data_type": "Array[0..5] of Char",
+     "type": {
+      "kind": "array",
+      "name": "Array",
+      "bits": null,
+      "length": null,
+      "dims": [
+       {
+        "low": 0,
+        "low_text": "0",
+        "high": 5,
+        "high_text": "5"
+       }
+      ],
+      "element": {
+       "kind": "elementary",
+       "name": "Char",
+       "bits": 8,
+       "length": null,
+       "dims": [],
+       "element": null
+      }
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "s",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "t",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "u",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "v",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "w",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "x",
+     "data_type": "String[20]",
+     "type": {
+      "kind": "string",
+      "name": "String",
+      "bits": null,
+      "length": 20,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "e1",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "e2",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "e3",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    },
+    {
+     "name": "e4",
+     "data_type": "Bool",
+     "type": {
+      "kind": "elementary",
+      "name": "Bool",
+      "bits": 1,
+      "length": null,
+      "dims": [],
+      "element": null
+     },
+     "section": null,
+     "start": null,
+     "retain": false,
+     "members": []
+    }
+   ]
+  }
+ ],
+ "constants": [],
+ "organization_blocks": [
+  {
+   "name": "Main",
+   "number": 1,
+   "event": "ProgramCycle",
+   "priority": 1,
+   "cycle_us": null
+  }
+ ],
+ "runtime": {
+  "startup": [],
+  "program_cycle": [
+   "Main"
+  ],
+  "interrupts": []
+ },
+ "blocks": [
+  {
+   "type": "OB",
+   "name": "Main",
+   "number": 1,
+   "language": "SCL",
+   "protection": null,
+   "interface": [],
+   "code": {
+    "networks": [
+     {
+      "number": 1,
+      "statements": [
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "MOVE_BLK",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 1,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "0",
+                 "int": 0
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "COUNT",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "4",
+               "int": 4
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 1,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "2",
+                 "int": 2
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "MOVE_BLK",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "MOVE_BLK",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 1,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "0",
+                 "int": 0
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "COUNT",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "9",
+               "int": 9
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 2,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "0",
+                 "int": 0
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "ENO",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 3,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "MOVE_BLK",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "FILL_BLK",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "5",
+               "int": 5
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "COUNT",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "3",
+               "int": 3
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 2,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "5",
+                 "int": 5
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "FILL_BLK",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "FILL_BLK",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "1",
+               "int": 1
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "COUNT",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "4",
+               "int": 4
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "index",
+              "args": [
+               {
+                "op": "ref",
+                "ref_id": 2,
+                "args": []
+               },
+               {
+                "op": "const",
+                "type": "DInt",
+                "value": {
+                 "kind": "int",
+                 "text": "5",
+                 "int": 5
+                },
+                "args": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "ENO",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 4,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "FILL_BLK",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 6,
+          "args": []
+         },
+         {
+          "op": "call",
+          "name": "MOVE_BLK_VARIANT",
+          "type": "Int",
+          "args": [
+           {
+            "op": "in",
+            "name": "SRC",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 1,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "COUNT",
+            "args": [
+             {
+              "op": "const",
+              "type": "UDInt",
+              "value": {
+               "kind": "int",
+               "text": "2",
+               "int": 2
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "SRC_INDEX",
+            "args": [
+             {
+              "op": "const",
+              "type": "DInt",
+              "value": {
+               "kind": "int",
+               "text": "6",
+               "int": 6
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "DEST_INDEX",
+            "args": [
+             {
+              "op": "const",
+              "type": "DInt",
+              "value": {
+               "kind": "int",
+               "text": "0",
+               "int": 0
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "DEST",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 5,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "MOVE_BLK_VARIANT",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 7,
+          "args": []
+         },
+         {
+          "op": "call",
+          "name": "REPLACE",
+          "type": "String",
+          "args": [
+           {
+            "op": "in",
+            "name": "IN1",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "'abc'",
+               "string": "abc"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "IN2",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "'Z'",
+               "string": "Z"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "L",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "5",
+               "int": 5
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "4",
+               "int": 4
+              },
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "REPLACE",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 8,
+          "args": []
+         },
+         {
+          "op": "call",
+          "name": "DELETE",
+          "type": "String",
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "'abcdef'",
+               "string": "abcdef"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "L",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "10",
+               "int": 10
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "3",
+               "int": 3
+              },
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "DELETE",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "STRG_VAL",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "' 1,5E2x'",
+               "string": " 1,5E2x"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "FORMAT",
+            "args": [
+             {
+              "op": "const",
+              "type": "Word",
+              "value": {
+               "kind": "int",
+               "text": "3",
+               "int": 3
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 9,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 10,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "STRG_VAL",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "VAL_STRG",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "Real",
+              "value": {
+               "kind": "real",
+               "text": "-3.14159",
+               "real": -3.14159
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "SIZE",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "8",
+               "int": 8
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "PREC",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "2",
+               "int": 2
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "FORMAT",
+            "args": [
+             {
+              "op": "const",
+              "type": "Word",
+              "value": {
+               "kind": "int",
+               "text": "6",
+               "int": 6
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 11,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 12,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "VAL_STRG",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "VAL_STRG",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "DInt",
+              "value": {
+               "kind": "int",
+               "text": "123456",
+               "int": 123456
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "SIZE",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "4",
+               "int": 4
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "PREC",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "0",
+               "int": 0
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "FORMAT",
+            "args": [
+             {
+              "op": "const",
+              "type": "Word",
+              "value": {
+               "kind": "int",
+               "text": "0",
+               "int": 0
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "1",
+               "int": 1
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 13,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "ENO",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 14,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "VAL_STRG",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "VAL_STRG",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "IN",
+            "args": [
+             {
+              "op": "const",
+              "type": "Int",
+              "value": {
+               "kind": "int",
+               "text": "5",
+               "int": 5
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "SIZE",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "6",
+               "int": 6
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "PREC",
+            "args": [
+             {
+              "op": "const",
+              "type": "USInt",
+              "value": {
+               "kind": "int",
+               "text": "2",
+               "int": 2
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "FORMAT",
+            "args": [
+             {
+              "op": "const",
+              "type": "Word",
+              "value": {
+               "kind": "int",
+               "text": "4",
+               "int": 4
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "P",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "1",
+               "int": 1
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "OUT",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 15,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "VAL_STRG",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "Strg_TO_Chars",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "Strg",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "'hi!'",
+               "string": "hi!"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "pChars",
+            "args": [
+             {
+              "op": "const",
+              "type": "DInt",
+              "value": {
+               "kind": "int",
+               "text": "2",
+               "int": 2
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "Cnt",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 16,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "inout",
+            "name": "Chars",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 17,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "Strg_TO_Chars",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "call",
+        "exprs": [
+         {
+          "op": "call",
+          "name": "Chars_TO_Strg",
+          "type": null,
+          "args": [
+           {
+            "op": "in",
+            "name": "Chars",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 17,
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "pChars",
+            "args": [
+             {
+              "op": "const",
+              "type": "DInt",
+              "value": {
+               "kind": "int",
+               "text": "2",
+               "int": 2
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "Cnt",
+            "args": [
+             {
+              "op": "const",
+              "type": "UInt",
+              "value": {
+               "kind": "int",
+               "text": "0",
+               "int": 0
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "out",
+            "name": "Strg",
+            "args": [
+             {
+              "op": "ref",
+              "ref_id": 18,
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "Chars_TO_Strg",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       },
+       {
+        "op": "assign",
+        "exprs": [
+         {
+          "op": "ref",
+          "ref_id": 19,
+          "args": []
+         },
+         {
+          "op": "call",
+          "name": "FIND",
+          "type": "Int",
+          "args": [
+           {
+            "op": "in",
+            "name": "IN1",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "'abc'",
+               "string": "abc"
+              },
+              "args": []
+             }
+            ]
+           },
+           {
+            "op": "in",
+            "name": "IN2",
+            "args": [
+             {
+              "op": "const",
+              "type": "String",
+              "value": {
+               "kind": "string",
+               "text": "''",
+               "string": ""
+              },
+              "args": []
+             }
+            ]
+           }
+          ],
+          "target": {
+           "kind": "instruction",
+           "name": "FIND",
+           "version": null,
+           "instance": null,
+           "parameters": []
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "ref_id": 1,
+      "kind": "data block member",
+      "text": "\"L\".a",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "a",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 2,
+      "kind": "data block member",
+      "text": "\"L\".b",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "b",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 3,
+      "kind": "data block member",
+      "text": "\"L\".e1",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "e1",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 4,
+      "kind": "data block member",
+      "text": "\"L\".e2",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "e2",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 5,
+      "kind": "data block member",
+      "text": "\"L\".c",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "c",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 6,
+      "kind": "data block member",
+      "text": "\"L\".ret",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "ret",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 7,
+      "kind": "data block member",
+      "text": "\"L\".s",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "s",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 8,
+      "kind": "data block member",
+      "text": "\"L\".t",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "t",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 9,
+      "kind": "data block member",
+      "text": "\"L\".p",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "p",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 10,
+      "kind": "data block member",
+      "text": "\"L\".r",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "r",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 11,
+      "kind": "data block member",
+      "text": "\"L\".q",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "q",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 12,
+      "kind": "data block member",
+      "text": "\"L\".u",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "u",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 13,
+      "kind": "data block member",
+      "text": "\"L\".v",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "v",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 14,
+      "kind": "data block member",
+      "text": "\"L\".e3",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "e3",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 15,
+      "kind": "data block member",
+      "text": "\"L\".w",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "w",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 16,
+      "kind": "data block member",
+      "text": "\"L\".cnt",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "cnt",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 17,
+      "kind": "data block member",
+      "text": "\"L\".ch",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "ch",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 18,
+      "kind": "data block member",
+      "text": "\"L\".x",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "x",
+        "index": []
+       }
+      ],
+      "modifier": null
+     },
+     {
+      "ref_id": 19,
+      "kind": "data block member",
+      "text": "\"L\".pos",
+      "name": null,
+      "path": [
+       {
+        "name": "L",
+        "index": []
+       },
+       {
+        "name": "pos",
+        "index": []
+       }
+      ],
+      "modifier": null
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -28,8 +28,14 @@ add_library(s7forgecore STATIC
     src/absolute.cpp
     src/s5.cpp
     src/scenario.cpp
-    src/interrupts.cpp)
+    src/interrupts.cpp
+    src/library.cpp
+    src/modbus.cpp
+    src/modbus_net.cpp)
 target_include_directories(s7forgecore PUBLIC src)
+if(WIN32)
+    target_link_libraries(s7forgecore PUBLIC ws2_32)
+endif()
 
 add_executable(s7forge src/main.cpp)
 target_link_libraries(s7forge PRIVATE s7forgecore)
@@ -40,8 +46,9 @@ endif()
 
 include(CTest)
 if(BUILD_TESTING)
+    find_package(Threads REQUIRED)
     add_executable(s7forge_tests tests/tests.cpp)
-    target_link_libraries(s7forge_tests PRIVATE s7forgecore)
+    target_link_libraries(s7forge_tests PRIVATE s7forgecore Threads::Threads)
     add_test(NAME unit COMMAND s7forge_tests WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     file(GLOB scenarios ${CMAKE_CURRENT_SOURCE_DIR}/tests/scenarios/*.json)
     foreach(s ${scenarios})
@@ -68,6 +75,13 @@ if(BUILD_TESTING)
     add_test(NAME cli_run COMMAND s7forge run ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/MOTORPLC.json
              --set StopPB=TRUE --set Guard=TRUE --set StartPB=TRUE --for 6000 --show MotorSclOut --show "\"MotorData\".starts")
     set_tests_properties(cli_run PROPERTIES PASS_REGULAR_EXPRESSION "MotorSclOut = TRUE\n\"MotorData\".starts = 2")
+    # the Modbus server: a map that fits the program, and one that does not
+    add_test(NAME cli_serve COMMAND s7forge serve ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/MOTORPLC.json
+             --port 0 --map ${CMAKE_CURRENT_SOURCE_DIR}/tests/modbus/motor.map.json --speed 100 --for 1000)
+    set_tests_properties(cli_serve PROPERTIES PASS_REGULAR_EXPRESSION "0 requests")
+    add_test(NAME cli_serve_bad_map COMMAND s7forge serve ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/MOTORPLC.json
+             --port 0 --map ${CMAKE_CURRENT_SOURCE_DIR}/tests/modbus/bad.map.json --for 100)
+    set_tests_properties(cli_serve_bad_map PROPERTIES WILL_FAIL TRUE)
     add_test(NAME cli_bad_program COMMAND s7forge info ${CMAKE_CURRENT_SOURCE_DIR}/tests/scenarios/s15_motor.json)
     set_tests_properties(cli_bad_program PROPERTIES WILL_FAIL TRUE)
 endif()

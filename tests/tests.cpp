@@ -4,7 +4,16 @@
 //
 // Unit tests: the JSON reader, values, the memory areas, literals, and the
 // interpreter on small programs written here as tiaconv would export them.
+#include <atomic>
+#include <chrono>
 #include <cmath>
+#include <thread>
+#ifndef _WIN32
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#endif
 #include <functional>
 #include <iostream>
 #include <map>
@@ -14,6 +23,7 @@
 
 #include "json.hpp"
 #include "memory.hpp"
+#include "modbus.hpp"
 #include "scenario.hpp"
 #include "sim.hpp"
 #include "value.hpp"
@@ -843,6 +853,91 @@ void testHardwareAndTimeError() {
     CHECK(!sim.running());
 }
 
+// The CPU's settings: retentive ranges, the minimum and maximum cycle time,
+// the startup after power on, the time error on waiting events
+std::string withCpu(std::string prog, const std::string& settings) {
+    prog.pop_back();
+    return prog + R"(,"cpu_settings":)" + settings + "}";
+}
+bool warned(Simulator& sim, const std::string& part) {
+    for (const auto& w : sim.warnings())
+        if (w.find(part) != std::string::npos) return true;
+    return false;
+}
+void testSettings() {
+    const std::string tags = tagDecl("A", "Int", "%MW0") + "," + tagDecl("B", "Int", "%MW2") + "," + tagDecl("Cy", "Int", "%MW4");
+    const std::string refs = tag(1, "A") + "," + tag(2, "B") + "," + tag(3, "Cy");
+    const std::string main = block("Main", "OB", "", refs, inc(1) + "," + inc(2));
+    const std::string cyc = block("Cyc", "OB", "", refs, inc(3));
+    const std::string cycInfo = R"(,{"name":"Cyc","number":30,"event":"CyclicInterrupt","priority":8,"cycle_us":100000,)"
+                                R"("phase_shift_us":0,"max_buffered_events":3,"time_error_threshold":2,"report_event_overflow":true})";
+    const std::string prog = program(tags, "", main + "," + cyc, cycInfo, R"("Cyc")");
+    {
+        // MB0..MB2 retentive (A, not B), counters C0 and C1; 20 ms at least
+        Simulator sim(parseJson(withCpu(prog, R"({"max_cycle_ms":200,"min_cycle_ms":20,"startup":"warm_restart_run",)"
+                                              R"("retentive_memory":{"memory_bytes":3,"s7_timers":0,"s7_counters":2}})")));
+        sim.powerOn();
+        EQ(sim.scanTime(), 20000000);
+        sim.runFor(1000000000);
+        EQ(get(sim, "A").i, 50);
+        EQ(get(sim, "Cy").i, 10);
+        set(sim, "%C1", intVal(7));
+        set(sim, "%C2", intVal(9));
+        EQ(get(sim, "%C1").i, 7);
+        sim.powerCycle();
+        CHECK(sim.running());
+        EQ(get(sim, "A").i, 50);
+        EQ(get(sim, "B").i, 0);
+        EQ(get(sim, "%C1").i, 7);
+        EQ(get(sim, "%C2").i, 0);
+        // Warm restart - RUN: from STOP as well
+        sim.operatorStop();
+        sim.powerCycle();
+        CHECK(sim.running());
+        sim.powerOn();  // a memory reset
+        EQ(get(sim, "A").i, 0);
+        EQ(get(sim, "%C1").i, 0);
+        Val v;
+        std::string err;
+        CHECK(!sim.write("%T1", intVal(1), err));
+        CHECK(!sim.write("%C1", intVal(1000), err));
+        CHECK(sim.read("%T1", v, err));
+        // the time error threshold: two events of Cyc waiting
+        CHECK(sim.raise("Cyc", err));
+        CHECK(!warned(sim, "time error threshold"));
+        CHECK(sim.raise("Cyc", err));
+        CHECK(warned(sim, "2 events waiting (time error threshold 2); without a time error OB"));
+        CHECK(sim.raise("Cyc", err));
+        CHECK(!warned(sim, "diagnostic buffer"));
+        CHECK(sim.raise("Cyc", err));  // a fourth: lost
+        CHECK(warned(sim, "events lost (more than 3 waiting); reported in the diagnostic buffer"));
+        // the maximum cycle time of 200 ms: 3 statements of 80 ms
+        sim.setInstructionTime(80000000);
+        sim.scan();
+        CHECK(warned(sim, "the maximum cycle time (200 ms) was exceeded"));
+    }
+    {
+        // the default: the mode before power off
+        Simulator sim(parseJson(prog));
+        sim.powerOn();
+        EQ(sim.scanTime(), 10000000);
+        sim.operatorStop();
+        sim.powerCycle();
+        CHECK(!sim.running());
+        CHECK(sim.fault().find("STOP before power off") != std::string::npos);
+        sim.warmRestart();
+        sim.powerCycle();
+        CHECK(sim.running());
+    }
+    {
+        Simulator sim(parseJson(withCpu(prog, R"({"startup":"no_restart"})")));
+        sim.powerOn();
+        sim.powerCycle();
+        CHECK(!sim.running());
+        CHECK(sim.fault().find("No restart") != std::string::npos);
+    }
+}
+
 // From the review: an interrupt OB longer than its cycle overloads the CPU
 // (time error, then STOP), not an endless scan; an empty loop takes time,
 // so an interrupt can end it
@@ -872,6 +967,209 @@ void testOverload() {
         EQ(get(sim, "X").i, 1);
     }
 }
+
+// ---- Modbus/TCP ----
+
+std::vector<uint8_t> mb(uint16_t tid, uint8_t unit, const std::vector<uint8_t>& pdu) {
+    std::vector<uint8_t> f{static_cast<uint8_t>(tid >> 8), static_cast<uint8_t>(tid), 0, 0,
+                           static_cast<uint8_t>((pdu.size() + 1) >> 8), static_cast<uint8_t>(pdu.size() + 1), unit};
+    f.insert(f.end(), pdu.begin(), pdu.end());
+    return f;
+}
+std::vector<uint8_t> req(uint8_t fc, uint16_t a, uint16_t b) {
+    return {fc, static_cast<uint8_t>(a >> 8), static_cast<uint8_t>(a), static_cast<uint8_t>(b >> 8), static_cast<uint8_t>(b)};
+}
+std::string hex(const std::vector<uint8_t>& v) {
+    static const char* d = "0123456789abcdef";
+    std::string s;
+    for (uint8_t b : v) {
+        s += d[b >> 4];
+        s += d[b & 15];
+    }
+    return s;
+}
+
+void testModbus() {
+    const std::string tags = tagDecl("In", "Bool", "%I0.0") + "," + tagDecl("Out", "Bool", "%Q0.1") + "," +
+                             tagDecl("N", "Int", "%MW10");
+    // Main: Out := In; N := N + 1
+    const std::string main = block("Main", "OB", "", tag(1, "In") + "," + tag(2, "Out") + "," + tag(3, "N"),
+                                   assign(r(2), r(1)) + "," + inc(3));
+    const std::string dbs = db("D", member("r", "Real", "") + "," + member("d", "DInt", "") + "," + member("arr", "Array", "") +
+                                        "," + member("b", "Bool", ""));
+    Simulator sim(parseJson(program(tags, dbs, main)));
+    sim.powerOn();
+    {
+        // the default map: coils %Q, discrete inputs %I, holding %MW, input registers %IW
+        ModbusServer srv(sim, ModbusMap::defaults());
+        set(sim, "In", boolVal(true));
+        sim.scan();
+        EQ(hex(srv.pdu(req(2, 0, 8))), std::string("020101"));  // %I0.0
+        EQ(hex(srv.pdu(req(1, 0, 8))), std::string("010102"));  // %Q0.1
+        EQ(hex(srv.pdu(req(3, 5, 1))), std::string("03020001"));  // %MW10 after one cycle
+        // FC16 writes %MW20, %MW22; FC3 reads them back
+        EQ(hex(srv.pdu({16, 0, 10, 0, 2, 4, 0x12, 0x34, 0xAB, 0xCD})), std::string("10000a0002"));
+        EQ(hex(srv.pdu(req(3, 10, 2))), std::string("03041234abcd"));
+        EQ(get(sim, "%MW20").i, 0x1234);
+        // FC5: a coil on, a value other than FF00/0000 is refused
+        EQ(hex(srv.pdu(req(5, 17, 0xFF00))), std::string("050011ff00"));
+        CHECK(get(sim, "%Q2.1").b);
+        EQ(hex(srv.pdu(req(5, 17, 0x1234))), std::string("8503"));
+        // FC15: coils 0..9
+        EQ(hex(srv.pdu({15, 0, 32, 0, 10, 2, 0x55, 0x01})), std::string("0f0020000a"));
+        CHECK(get(sim, "%Q4.0").b && !get(sim, "%Q4.1").b && get(sim, "%Q5.0").b);
+        // FC23: write 1 register at 30, read 30..31
+        EQ(hex(srv.pdu({23, 0, 30, 0, 2, 0, 30, 0, 1, 2, 0x00, 0x07})), std::string("170400070000"));
+        // the counts and the functions that are not there
+        EQ(hex(srv.pdu(req(3, 0, 126))), std::string("8303"));
+        EQ(hex(srv.pdu(req(1, 0, 2001))), std::string("8103"));
+        EQ(hex(srv.pdu(req(4, 65535, 2))), std::string("8402"));
+        EQ(hex(srv.pdu({43, 14, 1, 0})), std::string("ab01"));
+        EQ(hex(srv.pdu(req(3, 0, 1))), std::string("03020000"));
+        // the MBAP header: the transaction echoed; protocol 1 or a wrong length closes
+        bool close = false;
+        EQ(hex(srv.handle(mb(0x0102, 9, req(3, 10, 1)), close)), std::string("010200000005090302" "1234"));
+        CHECK(!close);
+        auto bad = mb(1, 1, req(3, 0, 1));
+        bad[3] = 1;
+        CHECK(srv.handle(bad, close).empty() && close);
+        bad = mb(1, 1, req(3, 0, 1));
+        bad[5] = 9;
+        CHECK(srv.handle(bad, close).empty() && close);
+    }
+    {
+        // a map file: unit 1, holding registers onto a Real, a DInt, an array; a coil onto a Bool
+        const Json mapJson = parseJson(R"({"unit_id": 1,
+            "holding_registers": [{"address": 100, "operand": "\"D\".r"}, {"address": 102, "operand": "\"D\".d"},
+                                  {"address": 110, "operand": "\"D\".arr[1]", "count": 3}, {"address": 0, "operand": "%MD0", "count": 4}],
+            "coils": [{"address": 5, "operand": "\"D\".b"}],
+            "input_registers": [{"address": 0, "operand": "N"}]})");
+        ModbusServer srv(sim, ModbusMap::fromJson(mapJson, sim));
+        // 3.14159274 = 16#40490FDB, high word first
+        EQ(hex(srv.pdu({16, 0, 100, 0, 2, 4, 0x40, 0x49, 0x0F, 0xDB})), std::string("1000640002"));
+        CHECK(std::fabs(get(sim, "\"D\".r").r - 3.14159274) < 1e-6);
+        EQ(hex(srv.pdu(req(3, 100, 2))), std::string("030440490fdb"));
+        // a DInt of -2 by halves: FC6 on its low word keeps the high word
+        EQ(hex(srv.pdu({16, 0, 102, 0, 2, 4, 0xFF, 0xFF, 0xFF, 0xFE})), std::string("1000660002"));
+        EQ(get(sim, "\"D\".d").i, -2);
+        EQ(hex(srv.pdu(req(6, 103, 5))), std::string("0600670005"));
+        EQ(get(sim, "\"D\".d").i, -65531);  // 16#FFFF0005
+        // the array, element by element
+        EQ(hex(srv.pdu({16, 0, 110, 0, 3, 6, 0, 1, 0, 2, 0xFF, 0xFF})), std::string("10006e0003"));
+        EQ(get(sim, "\"D\".arr[3]").i, -1);
+        // not mapped: 104 .. 109, 113; a write across them is refused whole
+        EQ(hex(srv.pdu(req(3, 104, 1))), std::string("8302"));
+        EQ(hex(srv.pdu({16, 0, 112, 0, 2, 4, 0, 9, 0, 9})), std::string("9002"));
+        EQ(get(sim, "\"D\".arr[3]").i, -1);
+        EQ(hex(srv.pdu(req(5, 5, 0xFF00))), std::string("050005ff00"));
+        CHECK(get(sim, "\"D\".b").b);
+        EQ(hex(srv.pdu(req(1, 4, 1))), std::string("8102"));
+        EQ(hex(srv.pdu(req(2, 0, 1))), std::string("8202"));  // no discrete inputs in this map
+        // %MD0 count 4: two double words
+        EQ(hex(srv.pdu({16, 0, 0, 0, 4, 8, 0, 0, 0, 1, 0, 0, 0, 2})), std::string("1000000004"));
+        EQ(get(sim, "%MD4").i, 2);
+        // another unit identifier: no answer
+        bool close = false;
+        CHECK(srv.handle(mb(1, 2, req(3, 100, 1)), close).empty() && !close);
+        CHECK(!srv.handle(mb(1, 1, req(3, 100, 1)), close).empty());
+    }
+    {
+        // read-only: every write refused with illegal function, reads answered
+        ModbusServer srv(sim, ModbusMap::defaults(), true);
+        EQ(hex(srv.pdu(req(6, 0, 1))), std::string("8601"));
+        EQ(hex(srv.pdu({16, 0, 0, 0, 1, 2, 0, 1})), std::string("9001"));
+        EQ(hex(srv.pdu(req(5, 0, 0xFF00))), std::string("8501"));
+        EQ(srv.stats().refusedWrites, 3u);
+        EQ(hex(srv.pdu(req(3, 10, 1))), std::string("03021234"));
+    }
+    // map files that are wrong
+    auto refused = [&](const std::string& text) {
+        try {
+            ModbusMap::fromJson(parseJson(text), sim);
+        } catch (const std::runtime_error&) {
+            return true;
+        }
+        return false;
+    };
+    CHECK(refused(R"({"holding": []})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "%MW0", "count": 2}, {"address": 1, "operand": "N"}]})"));
+    CHECK(refused(R"({"coils": [{"address": 0, "operand": "%QW0"}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "Nothing"}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "N", "count": 2}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "%MD0", "count": 3}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 65535, "operand": "%MW0", "count": 2}]})"));
+    CHECK(refused(R"({"unit_id": 300})"));
+    CHECK(refused(R"({"unit_id": "1"})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "%MW0", "count": 2.5}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "%MW0", "count": "8"}]})"));
+    CHECK(refused(R"({"holding_registers": [{"address": 0, "operand": "%MW0", "cuont": 8}]})"));
+    {
+        // an S5TIME as the CPU keeps it (time base and BCD), a Time as its ms
+        Simulator s5(parseJson(program(tagDecl("St", "S5Time", "%MW40") + "," + tagDecl("Tt", "Time", "%MD44"), "",
+                                       block("Main", "OB", "", "", ""))));
+        s5.powerOn();
+        set(s5, "St", timeVal(5000000000LL, elemType("S5Time")));
+        set(s5, "Tt", timeVal(-1500000000LL, elemType("Time")));
+        ModbusServer srv(s5, ModbusMap::fromJson(parseJson(R"({"holding_registers": [{"address": 0, "operand": "St"}, {"address": 1, "operand": "Tt"}]})"), s5));
+        EQ(hex(srv.pdu(req(3, 0, 3))), std::string("03060500fffffa24"));
+        EQ(hex(srv.pdu(req(6, 0, 0x1100))), std::string("0600001100"));  // 10 s at 100 ms
+        EQ(get(s5, "St").i, 10000000000LL);
+        EQ(hex(srv.pdu({16, 0, 1, 0, 2, 4, 0xFF, 0xFF, 0xFF, 0xFE})), std::string("1000010002"));
+        EQ(get(s5, "Tt").i, -2000000LL);  // -2 ms
+    }
+}
+
+#ifndef _WIN32
+// The server on a socket: a client reads the cycle counter while the program runs
+void testModbusTcp() {
+    const std::string tags = tagDecl("N", "Int", "%MW0");
+    const std::string main = block("Main", "OB", "", tag(1, "N"), inc(1));
+    Simulator sim(parseJson(program(tags, "", main)));
+    sim.powerOn();
+    ModbusServer srv(sim, ModbusMap::defaults());
+    ServeOptions opt;
+    opt.port = 0;
+    opt.speed = 10;  // 10 times real time
+    std::atomic<bool> stop{false};
+    std::atomic<int> port{0};
+    std::string err;
+    std::thread t([&] { serveModbus(sim, srv, opt, &stop, &port, &err); });
+    for (int k = 0; k < 500 && port == 0; ++k) std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    CHECK(port > 0);
+    int got = -1;
+    if (port > 0) {
+        const int s = socket(AF_INET, SOCK_STREAM, 0);
+        sockaddr_in a{};
+        a.sin_family = AF_INET;
+        a.sin_port = htons(static_cast<uint16_t>(port.load()));
+        inet_pton(AF_INET, "127.0.0.1", &a.sin_addr);
+        if (connect(s, reinterpret_cast<sockaddr*>(&a), sizeof a) == 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            // two requests in one segment: both answered, in order
+            std::vector<uint8_t> two = mb(7, 1, req(3, 0, 1));
+            const auto second = mb(8, 1, req(3, 0, 1));
+            two.insert(two.end(), second.begin(), second.end());
+            send(s, two.data(), two.size(), 0);
+            std::vector<uint8_t> in;
+            for (int k = 0; k < 200 && in.size() < 22; ++k) {
+                uint8_t buf[64];
+                const auto n = recv(s, buf, sizeof buf, MSG_DONTWAIT);
+                if (n > 0) in.insert(in.end(), buf, buf + n);
+                else std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            }
+            if (in.size() == 22) {
+                CHECK(in[1] == 7 && in[12] == 8);
+                got = (in[9] << 8) | in[10];
+            }
+        }
+        close(s);
+    }
+    stop = true;
+    t.join();
+    CHECK(got > 0);  // the program has run some cycles
+    CHECK(err.empty());
+}
+#endif
 
 // SHL, ROL, SWAP, MUX; R_TRIG; a call with EN FALSE
 void testInstructions() {
@@ -1250,6 +1548,11 @@ int main() {
     testTimeOfDay();
     testHardwareAndTimeError();
     testOverload();
+    testSettings();
+    testModbus();
+#ifndef _WIN32
+    testModbusTcp();
+#endif
     testInstructions();
     testStl();
     testLayout();

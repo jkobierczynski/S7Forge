@@ -38,7 +38,9 @@
     {"comment": "ZZN1 over 100: Main copies ZZN2 to speed before ZZSCL2 counts it up (ZZALPHA on: ZZSTL2 leaves ZZN1)", "set": {"ZZN1": 200, "ZZALPHA": true},
      "scans": 2,
      "expect": {"\"ZZDATA\".speed": 6, "ZZN1": 200, "ZZN2": 7, "ZZN3": 7}},
-    {"comment": "power off and on: everything back to the start values", "restart": "power",
+    {"comment": "power off and on: the retentive counter value and d4 kept, the rest to its start values", "restart": "power",
+     "expect": {"\"ZZLAD2_DB\".IEC_Counter_0_Instance.CV": 3, "\"ZZDB2\".d4": 42, "\"ZZDATA\".speed": 0}},
+    {"comment": "memory reset: everything back to the start values", "restart": "reset",
      "expect": {"\"ZZLAD2_DB\".IEC_Counter_0_Instance.CV": 0, "\"ZZDB2\".d4": 0, "\"ZZLAD2_DB\".count": 5,
                 "\"ZZDATA\".speed": 0}}
   ]

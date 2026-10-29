@@ -42,11 +42,14 @@ State at the time of writing: version 0.1.0, not released.
 | `src/stl.cpp` | the STL machine and MCR |
 | `src/s5.cpp` | S5 timers and counters, for STL and for the boxes and coils of LAD/FBD |
 | `src/absolute.cpp` | absolute and indirect operands, data blocks and local data as bytes |
+| `src/interrupts.cpp` | the interrupt OBs, their instructions, the CPU's clock |
+| `src/modbus.*`, `src/modbus_net.cpp` | the Modbus/TCP server: protocol and map, sockets |
 | `src/scenario.*` | scenario files and S7 literals |
-| `src/main.cpp` | the command line: `run`, `test`, `info` |
+| `src/main.cpp` | the command line: `run`, `serve`, `test`, `info` |
 | `tests/tests.cpp` | unit tests on small programs written in the test |
 | `tests/scenarios/` | scenarios run by ctest; `tests/data`, `tests/stl`, `tests/review` hold their programs |
 | `tests/failing/` | scenarios that must fail (ctest `WILL_FAIL`) |
+| `tests/programs/`, `tests/modbus/` | small program files written for a test; Modbus map files |
 | `tools/stl2json.py` | a small STL program in a compact text form → a program file |
 
 ## Building and checking
@@ -93,7 +96,9 @@ it finds kept as regression scenarios (`tests/review`, `tests/scenarios/stl_*`).
   cycle OBs from the time `t`; then, up to the end of the cycle, the
   interrupt OBs as their events come; then time is the end of the cycle:
   `t + scan time`, or later when the OBs took longer. The scan time is a
-  minimum cycle time; its default is 10 ms.
+  minimum cycle time: the CPU's minimum cycle time of the export
+  (`cpu_settings.min_cycle_ms`, s18: 10 ms), else 10 ms; a scenario's
+  `scan_ms` or `--scan-ms` overrides it.
 - By default a statement takes no time (`instruction_us` 0). Then an
   interrupt cannot come within OB 1: one due at the start of the cycle runs
   before OB 1, the others after it, at their time. This is the old behaviour
@@ -107,8 +112,8 @@ it finds kept as regression scenarios (`tests/review`, `tests/scenarios/stl_*`).
   status of the last call are kept for the interrupted OB, as the CPU keeps
   them. The instruction time is the same for all statements: a mean, not
   the execution times of the CPU's instructions.
-- The maximum cycle time is 150 ms (TIA Portal's default; the export does
-  not have the setting). With an instruction time, a cycle beyond it calls
+- The maximum cycle time is the CPU's (`cpu_settings.max_cycle_ms`, s18:
+  200 ms), else TIA Portal's default of 150 ms. With an instruction time, a cycle beyond it calls
   the time error OB (OB 80) when there is one, and goes on without one (the
   S7-1500 ignores the error without OB 80); beyond twice the maximum the CPU
   goes to STOP. The interrupts that run after OB 1 in the same cycle count
@@ -118,11 +123,24 @@ it finds kept as regression scenarios (`tests/review`, `tests/scenarios/stl_*`).
   WHILE, REPEAT and STL jumps all count.
 - In STOP, time still passes (`runFor`), the program does not run.
   `warmRestart()` (STOP to RUN) resets the non-retentive data and runs the
-  startup OBs; `powerOn()` resets everything first. Inputs (%I) keep their
-  values over a restart: they are what the field gives. Outputs, bit memory,
-  S5 timers and counters are reset: no retentive range of M, T or C is known
-  from the export. No interrupt runs during the startup OBs; its events wait
-  for the first cycle.
+  startup OBs. `powerCycle()` (power off and on) does the same, then RUN
+  or STOP as the CPU's "Startup after POWER ON" says
+  (`cpu_settings.startup`): `warm_restart_run` always RUN,
+  `warm_restart_previous_mode` (V21's default, also when the export has no
+  setting) RUN only when the CPU was in RUN before, `no_restart` STOP.
+  `powerOn()` is a memory reset: everything to its start values, then a
+  warm restart. Inputs (%I) keep their values over all of them: they are
+  what the field gives. Outputs are reset. No interrupt runs during the
+  startup OBs; its events wait for the first cycle.
+- Retentive data (`retentive_memory` of `cpu_settings`, the Retain dialog of
+  the tag table): the first `memory_bytes` bytes of M from MB0, the S5
+  timers from T0 and counters from C0 (`s7_timers`, `s7_counters`) keep
+  their values over a warm restart and a power cycle. A member keeps its
+  value when the export says `retain` (an optimized DB's Retain column, an
+  instance's member, Set in IDB); a DB with standard access with
+  `retain_whole` keeps all of it, with its bytes (the padding included).
+  A retentive S5 timer keeps its state, so one that ran goes on with the
+  virtual time over the restart (the CPU's timer stops in STOP; to check).
 - `Initial_Call` of an OB is TRUE in the first cycle after a restart, and
   for an interrupt OB at its first run after a restart.
 
@@ -178,10 +196,14 @@ hardware, 22 time error; a cyclic OB 13 or what is set (s17: 10, 3 queued).
   raise it by the OB's name or number or the event's name (`raise`), or
   the command line (`--raise`). It runs as soon as the priorities let it:
   before the next statement, or before OB 1.
-- Time error (OB 80): at the maximum cycle time, above. Lost events of other
-  OBs do not call it: an OB's "Enable time error" and its "Event threshold
-  for time error" (Attributes, Event queueing; s17 shows them off) are not
-  read yet.
+- Time error (OB 80): at the maximum cycle time, above; and when an OB has
+  "Enable time error" (`time_error_threshold` of the export, s18: Cyc with
+  2) and that many of its events wait (raised, or cyclic events that came
+  while it could not run): once, until the OB runs again. Without OB 80 a
+  warning says so and the CPU goes on. Events beyond the number that may
+  wait are lost with a warning, which adds "reported in the diagnostic
+  buffer" when "Report event overflow into diagnostic buffer" is on
+  (`report_event_overflow`, the default); there is no diagnostic buffer.
 - SRT_DINT in LAD behind a contact runs in every cycle the contact is on,
   so under S7Forge's choice (a start while it runs starts it anew) the
   delay does not end while the contact stays on. If the CPU starts it on
@@ -280,14 +302,66 @@ which a later compile step can win back.
   even), CEIL, FLOOR, NORM_X, SCALE_X, and the string functions (counting
   bytes, not characters). Anything else gives no value, with a warning, so
   its target keeps its value.
-- The instructions of the Siemens libraries other than these
-  (communication, PID, motion) are not simulated: their outputs keep their
-  values.
+- **Block moves** (`library.cpp`): MOVE_BLK and UMOVE_BLK copy COUNT
+  elements from the element IN to the element OUT, in the order the array
+  keeps them (row by row), also across the rows of a multi-dimensional
+  array; blocks that overlap are copied as they were before. FILL_BLK and
+  UFILL_BLK write IN into COUNT elements from OUT. When COUNT does not fit
+  (from the element to the end of its array) nothing is done and ENO is
+  FALSE. MOVE_BLK_VARIANT(SRC, COUNT, SRC_INDEX, DEST_INDEX, DEST) on
+  whole arrays, the indices counted from 0: RET_VAL 16#80B4 when SRC or
+  DEST is not an array, 16#80B5 / 16#80B6 when the block does not fit the
+  source / destination. UMOVE_BLK is not interrupted on the CPU and
+  MOVE_BLK may be; S7Forge does not interrupt either. An array in an area
+  (%M) is not an array to them.
+- **Strings** (`library.cpp`): FIND(IN1, IN2) the position of IN2 in IN1
+  from 1, 0 when not there or IN2 empty. REPLACE(IN1, IN2, L, P) replaces L
+  characters from P (fewer at the end); INSERT(IN1, IN2, P) inserts after
+  P characters (P 0: in front); DELETE(IN, L, P) deletes L characters from
+  P. P below 1 (INSERT: below 0) or L below 0: the result is '' and ENO
+  FALSE. P beyond the end: REPLACE and INSERT append IN2, DELETE gives IN.
+  A result longer than its target is cut, with ENO FALSE. IN2 may be a
+  Char.
+- **STRG_VAL**(IN, FORMAT, P, OUT): from character P of IN, blanks
+  skipped, a sign, digits; for a Real OUT a decimal point (a comma with
+  FORMAT bit 1) and digits, and with FORMAT bit 0 an exponent (`E+2`); an
+  integer OUT stops at the decimal sign. P becomes the position after the
+  number, so a second call goes on from there, as the CPU does: a program
+  that does not set P back reads past the end the next cycle. No digits,
+  P not in IN, a number too big for OUT, a FORMAT above 3: OUT and P stay,
+  ENO FALSE.
+- **VAL_STRG**(IN, SIZE, PREC, FORMAT, P, OUT): IN right-aligned in SIZE
+  characters, written into OUT from P (OUT filled with blanks up to P when
+  shorter); P becomes P + SIZE. PREC is the number of decimals of a Real,
+  and for an integer the places the decimal sign is put in from the right
+  (1234 with PREC 2: `12.34`). FORMAT bit 0 exponential (`-3.14E+00`, the
+  form the C library writes; the CPU's exact form is to check), bit 1 a
+  comma, bit 2 a sign also before a positive number. A number longer than
+  SIZE gives SIZE `*` and ENO FALSE (to check on a CPU); P + SIZE beyond
+  the length OUT can hold, SIZE below 1, PREC above 31 or FORMAT above 7:
+  nothing is written, ENO FALSE.
+- **Chars_TO_Strg**(Chars, pChars, Cnt, Strg): Cnt characters of an array
+  of Char or Byte from pChars (counted from the array's first element, 0)
+  into Strg; Cnt 0: up to the end of the array or the first `$00`.
+  **Strg_TO_Chars**(Strg, pChars, Cnt, Chars): the reverse; Cnt the number
+  written. Not enough room: nothing is done, ENO FALSE.
+- The behaviour of these at the edges (P beyond the end, a block that does
+  not fit) follows the manual where it says, and is S7Forge's choice where
+  it does not; `tests/scenarios/library.json` shows each case. A CPU may
+  differ in these: to check.
+- Not done: Serialize, Deserialize (s19 calls them; they need the byte
+  layout of the variables), the WString instructions, S_MOVE, the other
+  string functions (UPPER_CASE, ...), and the instructions of the Siemens
+  libraries (communication: MB_SERVER, MB_CLIENT, TSEND_C, ...; PID,
+  motion): their outputs keep their values.
 
 ### Operands by name (scenarios, the command line)
 
 `"DB".member.sub[3]`, a tag, `%MW20`, `"DB".word.%X3`. Indices must be
 whole numbers; a bit or part beyond the width of the variable is refused.
+`%C5` is the value of S5 counter C5 (read and write, 0 to 999), `%T5` the
+status of S5 timer T5 (read only). A Char equals a string of that one
+character (`"'W'"`).
 
 ## STL
 
@@ -497,6 +571,39 @@ and T write 0, S and R (also on timers and counters) do nothing; CU and CD
 are not MCR-dependent. The stack is passed on to called blocks (with MCRA
 off in them until they switch it on); each OB starts with an empty one.
 
+## Modbus/TCP
+
+`modbus.cpp` (the protocol on bytes, the map) and `modbus_net.cpp` (sockets).
+
+- The protocol has no sockets: `ModbusServer::handle` takes a frame and
+  gives the answer, so the unit tests check it byte for byte; the network
+  part only cuts the stream into frames by the MBAP length.
+- One thread: the simulation runs paced to real time and the requests are
+  answered between two cycles. No locks, and the program never sees a
+  half-written value; a client sees the values of the end of a cycle. A
+  CPU with MB_SERVER behaves much the same (the program serves Modbus at
+  its own point in the cycle); a CPU that answers Modbus from its operating
+  system between instructions is not modelled.
+- The map reads and writes through the same operands as scenarios
+  (`Simulator::read`, `write`), so tags, data block members, arrays and
+  addresses all work, writing an input raises its hardware interrupt, and
+  nothing new reaches into the memory model.
+- A 32- or 64-bit value is high word first (the Siemens order, MB_SERVER's
+  too); one register of it written alone changes that half.
+- Writes of several addresses are checked whole before anything is
+  written: a client never gets an exception for a write that was half done.
+- Limits: 16 clients, 60 s without a whole request, 10 s for a frame to
+  complete (so half frames cannot hold the slots), frames up to 260 bytes,
+  64 KiB of answers waiting per client; a frame that is not Modbus/TCP
+  closes the connection. SIGPIPE is ignored (MSG_NOSIGNAL, SO_NOSIGPIPE);
+  on Windows the port is taken with SO_EXCLUSIVEADDRUSE.
+- At most 20 ms of simulation between two looks at the network; a
+  simulation more than 1 s behind real time drops the backlog with a
+  warning, so the answers stay quick.
+  It listens on 127.0.0.1 unless told otherwise, and says so when not.
+- Not done: Modbus RTU, function codes 7, 8, 11, 17, 20–22, 24, 43 (device
+  identification); MB_SERVER and MB_CLIENT in the program itself.
+
 ## Scenarios
 
 - The CPU is powered on before the first step. A step sets, restarts, runs
@@ -513,7 +620,7 @@ off in them until they switch it on); each OB starts with an empty one.
 - ENO FALSE on an overflow; IEC timers that update when read (S7-1500).
 - ULInt/LWord beyond 2^63.
 - The instructions of the libraries (communication, PID, motion), the
-  hardware (high-speed counters, analog I/O).
+  hardware (high-speed counters, analog I/O); Serialize and Deserialize.
 - The S7-1500 compiler wants a data block opened in the network that uses
   DBX ... DBD, also after a fully qualified access; S7Forge does not check
   that and uses whatever the DB register holds.

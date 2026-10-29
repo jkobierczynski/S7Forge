@@ -97,9 +97,9 @@ bool Simulator::raise(const std::string& ob, std::string& error) {
     }
     if (o->queued < o->maxQueued) {
         ++o->queued;
+        eventsWaiting(*o, o->queued);
     } else {
-        ++o->lost;
-        warn("OB " + o->ob->name + ": an event lost (more than " + std::to_string(o->maxQueued) + " waiting)");
+        eventsLost(*o, 1);
     }
     return true;
 }
@@ -163,6 +163,33 @@ void Simulator::loadHardwareInterrupts() {
     }
 }
 
+// A time error: OB 80 when the program has one; without it the CPU goes on
+// (an S7-1500 goes to STOP only at twice the maximum cycle time)
+void Simulator::timeError(const std::string& why) {
+    for (auto& e : iobs_)
+        if (e.kind == 'E') {
+            if (e.queued < e.maxQueued) ++e.queued;
+            return;
+        }
+    warn(why + "; without a time error OB (OB 80) the CPU goes on");
+}
+
+// Events of an OB waiting to run: with Enable time error, a time error when
+// they reach the threshold (once until the OB runs again)
+void Simulator::eventsWaiting(IntOb& o, int64_t waiting) {
+    if (o.threshold <= 0 || o.timeErrorRaised || waiting < o.threshold) return;
+    o.timeErrorRaised = true;
+    timeError("OB " + o.ob->name + ": " + std::to_string(waiting) + " events waiting (time error threshold " +
+              std::to_string(o.threshold) + ")");
+}
+
+// Events of an OB lost because too many were waiting
+void Simulator::eventsLost(IntOb& o, int64_t n) {
+    o.lost += static_cast<int>(std::min<int64_t>(n, 1000000));
+    warn("OB " + o.ob->name + ": events lost (more than " + std::to_string(o.maxQueued) + " waiting)" +
+         (o.reportOverflow ? "; reported in the diagnostic buffer" : ""));
+}
+
 // A statement takes its time; the maximum cycle time; the interrupts that came
 void Simulator::tick() {
     // without an instruction time nothing happens between two statements:
@@ -173,15 +200,7 @@ void Simulator::tick() {
         const int64_t used = now_ - cycleStart_;
         if (overruns_ == 0 && used > maxCycleNs_) {
             overruns_ = 1;
-            IntOb* e = nullptr;
-            for (auto& o : iobs_)
-                if (o.kind == 'E') e = &o;
-            if (e) {
-                if (e->queued < e->maxQueued) ++e->queued;
-            } else {
-                warn("the maximum cycle time (" + std::to_string(maxCycleNs_ / 1000000) +
-                     " ms) was exceeded; without a time error OB (OB 80) the CPU goes on");
-            }
+            timeError("the maximum cycle time (" + std::to_string(maxCycleNs_ / 1000000) + " ms) was exceeded");
         } else if (overruns_ == 1 && used > 2 * maxCycleNs_) {
             stop("the maximum cycle time (" + std::to_string(maxCycleNs_ / 1000000) + " ms) was exceeded twice in one cycle");
             return;
@@ -226,10 +245,11 @@ void Simulator::runInterrupt(IntOb& o) {
         int64_t overdue = 0;
         if (o.next <= now_) overdue = (now_ - o.next) / o.cycle + 1;
         const int64_t keep = std::min<int64_t>(overdue, o.maxQueued - 1);
+        // the events still waiting, this one taken (for the threshold)
+        if (overdue > 0) eventsWaiting(o, overdue + 1);
         if (overdue > keep) {
-            o.lost += static_cast<int>(std::min<int64_t>(overdue - keep, 1000000));
+            eventsLost(o, overdue - keep);
             o.next += (overdue - keep) * o.cycle;
-            warn("OB " + o.ob->name + ": cyclic interrupts lost (the CPU was busy with OBs of the same or a higher priority)");
         }
     } else if (o.kind == 'T') {
         const int64_t following = nextTod(o, clockBase_ + o.next + 1);
@@ -249,6 +269,7 @@ void Simulator::runInterrupt(IntOb& o) {
     const IntOb info = o;
     o.lost = 0;
     o.ran = true;
+    o.timeErrorRaised = false;
     runOb(*o.ob, !info.ran, &info);
     curPriority_ = savedPriority;
     steps_ = savedSteps;

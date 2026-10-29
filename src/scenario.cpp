@@ -143,6 +143,9 @@ int64_t msToNs(const Json& j, const std::string& what) {
     return static_cast<int64_t>(j.number * 1e6 + 0.5);
 }
 
+
+}  // namespace
+
 // A date and time for the clock: 2026-10-24 08:00:00, 2026-10-24T08:00:00,
 // DTL#2026-10-24-08:00:00 (DT#, LDT# too), seconds with a fraction allowed
 int64_t clockOf(const Json& j, const std::string& what) {
@@ -177,8 +180,6 @@ int64_t clockOf(const Json& j, const std::string& what) {
     const long long days = era * 146097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719468;
     return days * 86400000000000LL + (h * 3600 + mi * 60) * 1000000000LL + static_cast<long long>(sec * 1e9 + 0.5);
 }
-
-}  // namespace
 
 ScenarioResult runScenario(const std::string& file, std::ostream& out, bool verbose) {
     Json sc;
@@ -239,10 +240,20 @@ ScenarioResult runScenario(const std::string& file, std::ostream& out, bool verb
                 if (!sim.raise(o, err)) throw std::runtime_error(file + ", " + label + ": " + err);
             }
         }
+        // to STOP as an operator would (before a power cycle in that mode)
+        if (step["stop"].type != Json::Null) {
+            if (step["stop"].type != Json::Bool) throw std::runtime_error(file + ", " + label + ": stop is true or false");
+            if (step["stop"].b) sim.operatorStop();
+        }
+        // warm: a warm restart (STOP to RUN); power: power off and on, the
+        // retentive data kept, the startup as the CPU is set; reset: a
+        // memory reset, then a warm restart (everything to its start values)
         const std::string& restart = step["restart"].str();
         if (restart == "warm") sim.warmRestart();
-        else if (restart == "power") sim.powerOn();
-        else if (!restart.empty()) throw std::runtime_error(file + ", " + label + ": restart is \"warm\" or \"power\"");
+        else if (restart == "power") sim.powerCycle();
+        else if (restart == "reset") sim.powerOn();
+        else if (!restart.empty())
+            throw std::runtime_error(file + ", " + label + ": restart is \"warm\", \"power\" or \"reset\"");
         if (step["scans"].type != Json::Null) {
             const int64_t cycles = step["scans"].asInt(-1);
             if (step["scans"].type != Json::Number || cycles < 0 || cycles > kMaxCycles)

@@ -35,6 +35,12 @@ public:
     // the startup OBs. warmRestart: STOP to RUN, retained data kept.
     void powerOn();
     void warmRestart();
+    // Power off and on: retentive data kept, the rest to its start values;
+    // then RUN or STOP as the CPU's startup setting says (Warm restart -
+    // RUN; Operating mode before POWER OFF, V21's default; No restart).
+    void powerCycle();
+    // The operator's STOP (the mode switch, the online tools)
+    void operatorStop() { stop("STOP by the operator"); }
     // One cycle: the program cycle OBs, then virtual time advances by the
     // scan time and the cyclic interrupts that came due run.
     void scan();
@@ -195,6 +201,10 @@ private:
     struct IntOb {
         const Block* ob = nullptr;
         int number = 0, priority = 0, maxQueued = 1;
+        // Enable time error: a time error (OB 80) when this many events
+        // wait (0: off); Report event overflow into diagnostic buffer
+        int threshold = 0;
+        bool reportOverflow = true, timeErrorRaised = false;
         char kind = 0;          // C cyclic, D time delay, T time of day, H hardware, E time error, O other
         int64_t cycle = 0, phase = 0;
         int64_t next = kNever;  // when its event comes (virtual ns)
@@ -241,12 +251,18 @@ private:
     int curPriority_ = 0;           // the priority of the OB running; 0: none
     int64_t instrNs_ = 0;           // the time of a statement
     int64_t maxCycleNs_ = 150000000;  // TIA Portal's default maximum cycle time
+    void timeError(const std::string& why);
+    void eventsWaiting(IntOb& o, int64_t waiting);
+    void eventsLost(IntOb& o, int64_t n);
     int64_t cycleStart_ = -1;       // the start of the program cycle running; -1: none
     int overruns_ = 0;              // how often this cycle went beyond the maximum
     int64_t clockBase_ = 0;         // the clock at virtual time 0
     std::vector<std::string> warnings_;
     std::set<std::string> warned_;
     int64_t now_ = 0, scanNs_ = 10000000;
+    // the CPU's settings (cpu_settings of the program file)
+    size_t retainBytes_ = 0, retainTimers_ = 0, retainCounters_ = 0;
+    std::string startupMode_ = "warm_restart_previous_mode";
     bool running_ = true, firstScan_ = true;
     bool lastEno_ = true;  // ENO of the last call: BR after a CALL in STL
     std::string fault_;
@@ -266,6 +282,9 @@ private:
     void configureTod(IntOb& o, const Json& tod);
     void loadHardwareInterrupts();
     bool interruptCall(Frame& f, const Json& e, const std::string& name, Val& ret);
+    // block moves and strings (library.cpp)
+    bool libraryCall(Frame& f, const Json& e, const std::string& name, Val& ret);
+    bool arraySlot(Frame& f, const Json& e, Var*& array, size_t& pos);
     bool readDtl(Frame& f, const Json& e, int64_t& ns);
     void writeDtl(const Place& p, int64_t ns);
     void runBlock(Frame& f);

@@ -359,7 +359,9 @@ bool sameValue(const Val& a, const Val& b) {
         const double x = asReal(a), y = asReal(b);
         return std::fabs(x - y) <= 1e-6 * std::max(1.0, std::max(std::fabs(x), std::fabs(y)));
     }
-    if (a.kind == Kind::String || b.kind == Kind::String) return a.s == b.s;
+    // a Char against a String: its one character
+    auto str = [](const Val& v) { return v.kind == Kind::Char ? std::string(1, static_cast<char>(v.i)) : v.s; };
+    if (a.kind == Kind::String || b.kind == Kind::String) return str(a) == str(b);
     if (a.kind == Kind::Bool || b.kind == Kind::Bool) return truthy(a) == truthy(b);
     return a.i == b.i;
 }

@@ -1,0 +1,20 @@
+{
+  "comment": "The block moves and string instructions on a program written for the test (tests/programs/library.program.json): an overlapping MOVE_BLK, a COUNT that does not fit (nothing moved, ENO FALSE), FILL_BLK, MOVE_BLK_VARIANT, REPLACE past the end, DELETE of more than there is, STRG_VAL with an exponent and a decimal comma, VAL_STRG with a comma and a sign, a number too long for SIZE, PREC on an integer, Strg_TO_Chars and Chars_TO_Strg, FIND of an empty string.",
+  "program": "../programs/library.program.json",
+  "steps": [
+    {"set": {"\"L\".a[0]": 1, "\"L\".a[1]": 2, "\"L\".a[2]": 3, "\"L\".a[3]": 4, "\"L\".a[4]": 5, "\"L\".a[5]": 6, "\"L\".a[6]": 7, "\"L\".a[7]": 8,
+             "\"L\".e1": true, "\"L\".e2": true, "\"L\".e3": true},
+     "scans": 1,
+     "expect": {"\"L\".a[0]": 1, "\"L\".a[1]": 2, "\"L\".a[2]": 1, "\"L\".a[3]": 2, "\"L\".a[4]": 3, "\"L\".a[5]": 4, "\"L\".a[6]": 7,
+                "\"L\".e1": false, "\"L\".b[0]": 0,
+                "\"L\".b[4]": 0, "\"L\".b[5]": 5, "\"L\".b[7]": 5, "\"L\".e2": false,
+                "\"L\".ret": 0, "\"L\".c[1]": 7, "\"L\".c[2]": 8, "\"L\".c[3]": 0,
+                "\"L\".s": "'abcZ'", "\"L\".t": "'ab'",
+                "\"L\".r": 150.0, "\"L\".p": 7,
+                "\"L\".u": "'   -3,14'", "\"L\".q": 9,
+                "\"L\".v": "'****'", "\"L\".e3": false,
+                "\"L\".w": "' +0.05'",
+                "\"L\".cnt": 3, "\"L\".ch[2]": "'h'", "\"L\".ch[4]": "'!'", "\"L\".x": "'hi!'",
+                "\"L\".pos": 0}}
+  ]
+}

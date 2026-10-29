@@ -75,6 +75,8 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
             constants_[c["name"].str()] = fromExport(c["parsed"], elemType(c["data_type"].str()));
     for (const auto& d : prog_["data_blocks"].items) {
         dbs_[d["name"].str()] = buildStruct(d["members"], budget);
+        // a data block with standard access set retentive keeps all of it
+        if (d["retain_whole"].type == Json::Bool && d["retain_whole"].b) dbs_[d["name"].str()]->retain = true;
         DbInfo info;
         info.name = d["name"].str();
         info.number = static_cast<int>(d["number"].asInt());
@@ -131,6 +133,9 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
         else if (has("Hardware") || has("HWProcess") || cls == 40 || (cls == 0 && nr >= 40 && nr <= 47)) o.kind = 'H';
         else if (has("TimeError") || nr == 80) o.kind = 'E';
         else o.kind = 'O';
+        if ((*info)["time_error_threshold"].type == Json::Number)
+            o.threshold = static_cast<int>(std::max<int64_t>(0, std::min<int64_t>(12, (*info)["time_error_threshold"].asInt())));
+        if ((*info)["report_event_overflow"].type == Json::Bool) o.reportOverflow = (*info)["report_event_overflow"].b;
         if (o.kind == 'C') {
             if ((*info)["cycle_us"].type != Json::Number || (*info)["cycle_us"].asInt() <= 0) {
                 warn("OB " + n.str() + ": a cyclic interrupt without a cycle: it does not run");
@@ -147,6 +152,26 @@ Simulator::Simulator(Json program) : prog_(std::move(program)) {
         iobs_.push_back(o);
     }
     loadHardwareInterrupts();
+    // the CPU's settings; a program file without them keeps TIA Portal's
+    // defaults (150 ms, no minimum, mode before power off, nothing retentive)
+    const Json& cpu = prog_["cpu_settings"];
+    if (cpu.type == Json::Object) {
+        if (cpu["max_cycle_ms"].type == Json::Number && cpu["max_cycle_ms"].asInt() > 0)
+            maxCycleNs_ = std::min<int64_t>(cpu["max_cycle_ms"].asInt(), 6000) * 1000000;
+        if (cpu["min_cycle_ms"].type == Json::Number && cpu["min_cycle_ms"].asInt() > 0)
+            scanNs_ = std::min<int64_t>(cpu["min_cycle_ms"].asInt(), 6000) * 1000000;
+        if (cpu["startup"].type == Json::String) {
+            const std::string s = cpu["startup"].str();
+            if (s == "warm_restart_run" || s == "warm_restart_previous_mode" || s == "no_restart") startupMode_ = s;
+            else warn("CPU startup " + s + " not known: Warm restart - mode before POWER OFF taken");
+        }
+        const Json& r = cpu["retentive_memory"];
+        if (r.type == Json::Object) {
+            retainBytes_ = static_cast<size_t>(std::max<int64_t>(0, r["memory_bytes"].asInt()));
+            retainTimers_ = static_cast<size_t>(std::max<int64_t>(0, r["s7_timers"].asInt()));
+            retainCounters_ = static_cast<size_t>(std::max<int64_t>(0, r["s7_counters"].asInt()));
+        }
+    }
     if (cycle_.empty()) warn("no program cycle OB");
 }
 
@@ -168,22 +193,43 @@ void Simulator::resetMemory(bool retainedToo) {
     for (auto& d : dbs_) d.second->reset(retainedToo);
     for (auto& t : tags_)
         if (t.second.var) t.second.var->reset(retainedToo);
-    // the outputs and the bit memory (no retentive range is known); the
-    // inputs are what the field gives, they stay
+    // the outputs; the bit memory, S5 timers and counters but for their
+    // retentive ranges (the Retain dialog of the tag table: MB0 on, T0 on,
+    // C0 on); the inputs are what the field gives, they stay
+    const size_t keepM = retainedToo ? 0 : std::min<size_t>(retainBytes_, m_.bytes.size());
+    const size_t keepT = retainedToo ? 0 : std::min<size_t>(retainTimers_, t5_.size());
+    const size_t keepC = retainedToo ? 0 : std::min<size_t>(retainCounters_, c5_.size());
     std::fill(q_.bytes.begin(), q_.bytes.end(), 0);
-    std::fill(m_.bytes.begin(), m_.bytes.end(), 0);
+    std::fill(m_.bytes.begin() + static_cast<std::ptrdiff_t>(keepM), m_.bytes.end(), 0);
     timers_.clear();
-    // S5 timers and counters: no retentive range is known
-    std::fill(t5_.begin(), t5_.end(), S5Timer{});
-    std::fill(c5_.begin(), c5_.end(), S5Counter{});
+    std::fill(t5_.begin() + static_cast<std::ptrdiff_t>(keepT), t5_.end(), S5Timer{});
+    std::fill(c5_.begin() + static_cast<std::ptrdiff_t>(keepC), c5_.end(), S5Counter{});
     curDb_ = curDi_ = 0;
     ar1_ = ar2_ = 0;
-    for (auto& d : dbInfo_) d.second.image.clear();
+    // the bytes of a data block with standard access (its padding): kept
+    // for one retentive as a whole
+    for (auto& d : dbInfo_) {
+        auto v = dbs_.find(d.second.name);
+        if (retainedToo || v == dbs_.end() || !v->second->retain) d.second.image.clear();
+    }
     mcrStack_.clear();
 }
 
 void Simulator::powerOn() {
     resetMemory(true);
+    warmRestart();
+}
+
+void Simulator::powerCycle() {
+    // what was in RUN before the power went off
+    const bool wasRunning = running_;
+    resetMemory(false);
+    if (startupMode_ == "no_restart" || (startupMode_ == "warm_restart_previous_mode" && !wasRunning)) {
+        running_ = false;
+        fault_ = startupMode_ == "no_restart" ? "STOP after power on: the startup setting is No restart"
+                                          : "STOP after power on: the CPU was in STOP before power off";
+        return;
+    }
     warmRestart();
 }
 
@@ -198,7 +244,7 @@ void Simulator::warmRestart() {
     for (auto& o : iobs_) {
         o.next = o.kind == 'C' ? now_ + o.phase + o.cycle : kNever;
         o.queued = o.lost = 0;
-        o.ran = false;
+        o.ran = o.timeErrorRaised = false;
         o.todSet = o.todActive = false;
         // a time of day set in the OB's properties is active from the start
         if (o.cfgTod) {
@@ -866,7 +912,9 @@ Val Simulator::call(Frame& f, const Json& e) {
     }
     if (kind != "block") {
         Val ret;
-        if (interruptCall(f, e, upper(t["name"].str().empty() ? e["name"].str() : t["name"].str()), ret)) return ret;
+        const std::string iname = upper(t["name"].str().empty() ? e["name"].str() : t["name"].str());
+        if (interruptCall(f, e, iname, ret)) return ret;
+        if (libraryCall(f, e, iname, ret)) return ret;
     }
     if (kind == "block") return callBlock(f, e, t);
     if (kind == "instruction") return callInstruction(f, e, t);
@@ -1453,7 +1501,34 @@ Simulator::Place Simulator::operand(const std::string& text, std::string& error)
     return pl;
 }
 
+// %C5: an S5 counter's value; %T5: an S5 timer's status (read only)
+static bool s5Address(const std::string& name, char& kind, int& n) {
+    if (name.size() < 3 || name[0] != '%' || (name[1] != 'C' && name[1] != 'T' && name[1] != 'Z')) return false;
+    for (size_t k = 2; k < name.size(); ++k)
+        if (!std::isdigit(static_cast<unsigned char>(name[k]))) return false;
+    if (name.size() > 6) return false;
+    kind = name[1] == 'T' ? 'T' : 'C';
+    n = std::atoi(name.c_str() + 2);
+    return true;
+}
+
 bool Simulator::read(const std::string& name, Val& out, std::string& error) {
+    char kind = 0;
+    int n = 0;
+    if (s5Address(name, kind, n)) {
+        if (n >= 2048) {
+            error = name + " does not exist (0 to 2047)";
+            return false;
+        }
+        if (kind == 'C') {
+            out = intVal(c5_[static_cast<size_t>(n)].value);
+        } else {
+            S5Timer& t = t5_[static_cast<size_t>(n)];
+            s5Update(t);
+            out = boolVal(t.q);
+        }
+        return true;
+    }
     Place p = operand(name, error);
     if (!p.valid()) return false;
     if (p.var && p.var->shape != Var::Leaf && !p.sliceBits) {
@@ -1465,6 +1540,17 @@ bool Simulator::read(const std::string& name, Val& out, std::string& error) {
 }
 
 bool Simulator::write(const std::string& name, const Val& value, std::string& error) {
+    char kind = 0;
+    int n = 0;
+    if (s5Address(name, kind, n)) {
+        const Val v = convertTo(value, *elemType("Int"));
+        if (kind == 'T' || n >= 2048 || v.i < 0 || v.i > 999) {
+            error = kind == 'T' ? name + ": an S5 timer cannot be written" : name + ": a counter 0 to 2047, a value 0 to 999";
+            return false;
+        }
+        c5_[static_cast<size_t>(n)].value = static_cast<int>(v.i);
+        return true;
+    }
     Place p = operand(name, error);
     if (!p.valid()) return false;
     if (p.var && p.var->shape != Var::Leaf && !p.sliceBits) {

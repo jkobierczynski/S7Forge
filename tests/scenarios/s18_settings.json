@@ -1,0 +1,31 @@
+{
+  "comment": "The fixture s18_settings of tiaconv (TIA Portal V21, CPU 1511-1 PN): 16 retentive memory bytes from MB0, 4 S7 timers, 2 S7 counters; DataOpt with a and c retentive, DataStd (standard access) retentive as a whole, Keep_DB with n retentive (Set in IDB in Keep); maximum cycle time 200 ms, minimum 10 ms; startup Warm restart - RUN; Tod yearly from 2026-11-01 06:30; Cyc every 100 ms with a time error at 2 waiting events; HwFall on the falling edge of %I10.1. No scan_ms: the cycle is the minimum cycle time. The values are worked out by hand from the code.",
+  "program": "../data/S18PLC.json",
+  "clock": "2026-11-01 06:29:00",
+  "steps": [
+    {"comment": "1 s in cycles of 10 ms (the minimum cycle time): Keep 100 times, Cyc at 100, 200, ... 1000 ms", "run_ms": 1000,
+     "expect": {"\"Keep_DB\".n": 100, "\"Keep_DB\".m": 100, "CycN": 10, "TodN": 0, "FallN": 0}},
+
+    {"comment": "the falling edge of %I10.1 calls HwFall; the rising edge does not", "set": {"%I10.1": true}, "scans": 1,
+     "expect": {"FallN": 0}},
+    {"set": {"%I10.1": false}, "scans": 1, "expect": {"FallN": 1, "\"Keep_DB\".n": 102}},
+
+    {"comment": "the time-of-day interrupt at 06:30 (then a year later)", "run_ms": 60000, "expect": {"TodN": 1}},
+
+    {"comment": "values in and outside the retentive ranges (the tag KeepFlag lies at %I0.0 in the project, an input: %M0.0 instead)",
+     "set": {"%M0.0": true, "%M15.7": true, "%M16.0": true, "KeepWord": 5, "LoseWord": 7, "\"DataOpt\".a": 1, "\"DataOpt\".b": 2, "\"DataOpt\".c": 3.5,
+             "\"DataStd\".x": 4, "\"DataStd\".y": 5}},
+    {"comment": "power off and on: MB0..MB15, DataOpt a and c, all of DataStd and Keep_DB n kept; CycN (MW30), TodN, FallN, LoseWord lost; Warm restart - RUN",
+     "restart": "power",
+     "expect": {"%M0.0": true, "%M15.7": true, "%M16.0": false, "KeepWord": 5, "LoseWord": 0, "CycN": 0, "TodN": 0, "FallN": 0,
+                "\"DataOpt\".a": 1, "\"DataOpt\".b": 0, "\"DataOpt\".c": 3.5, "\"DataStd\".x": 4, "\"DataStd\".y": 5,
+                "\"Keep_DB\".n": 6102, "\"Keep_DB\".m": 0}},
+    {"scans": 1, "expect": {"\"Keep_DB\".n": 6103, "\"Keep_DB\".m": 1}},
+
+    {"comment": "Warm restart - RUN: from STOP too the CPU starts after a power cycle", "stop": true, "expect_fault": true},
+    {"restart": "power", "expect": {"KeepWord": 5, "\"Keep_DB\".n": 6103, "\"Keep_DB\".m": 0}},
+
+    {"comment": "a memory reset: everything to its start values", "restart": "reset",
+     "expect": {"%M0.0": false, "KeepWord": 0, "\"DataOpt\".a": 0, "\"DataOpt\".c": 0.0, "\"DataStd\".x": 0, "\"Keep_DB\".n": 0}}
+  ]
+}

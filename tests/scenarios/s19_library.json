@@ -1,0 +1,23 @@
+{
+  "comment": "The fixture s19_library of tiaconv (TIA Portal V21, CPU 1511-1 PN): the FB Lib, called by Main, runs MOVE_BLK, FILL_BLK, FIND, REPLACE, INSERT, DELETE, STRG_VAL, VAL_STRG and Chars_TO_Strg on the members of LibData every cycle (Serialize, Deserialize, MB_SERVER, MB_CLIENT and TSEND_C are not simulated). P of STRG_VAL and VAL_STRG is LibData.p, which the program never sets back: each cycle goes on where the last left off. The values are worked out by hand from the code and DEVELOPMENT.md.",
+  "program": "../data/S19PLC.json",
+  "steps": [
+    {"comment": "src[0..3] and chars[2..5] given",
+     "set": {"\"LibData\".src[0]": 1, "\"LibData\".src[1]": 2, "\"LibData\".src[2]": 3, "\"LibData\".src[3]": 4,
+             "\"LibData\".chars[0]": "'W'", "\"LibData\".chars[1]": "'x'", "\"LibData\".chars[2]": "'y'", "\"LibData\".chars[3]": "'z'"},
+     "scans": 1,
+     "expect": {"\"LibData\".dst[0]": 1, "\"LibData\".dst[3]": 4, "\"LibData\".dst[4]": 7, "\"LibData\".dst[7]": 7,
+                "\"LibData\".pos": 2, "\"LibData\".s2": "'aXYcabc'",
+                "\"LibData\".num": 1234,
+                "\"LibData\".s3": "'abc-    1234'", "\"LibData\".p": 13,
+                "\"LibData\".s4": "'Wxyz'"}},
+    {"comment": "P 13 is past '1234': STRG_VAL leaves num; VAL_STRG writes from 13 into s3 ('abc--abc' again from INSERT), blanks between",
+     "set": {"\"LibData\".num": -5}, "scans": 1,
+     "expect": {"\"LibData\".num": -5, "\"LibData\".s3": "'abc--abc          -5'", "\"LibData\".p": 21}},
+    {"comment": "P 21: 8 characters from 21 do not fit String[20]: s3 stays as INSERT left it",
+     "scans": 1, "expect": {"\"LibData\".s3": "'abc--abc'", "\"LibData\".p": 21}},
+    {"comment": "from the start again: a number with a sign and blanks before it; a decimal point ends an integer: P 6 after STRG_VAL, VAL_STRG from 6",
+     "set": {"\"LibData\".p": 1, "\"LibData\".numText": "'  -42.7x'"}, "scans": 1,
+     "expect": {"\"LibData\".num": -42, "\"LibData\".s3": "'abc--     -42'", "\"LibData\".p": 14}}
+  ]
+}

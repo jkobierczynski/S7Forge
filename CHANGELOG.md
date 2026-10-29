@@ -24,6 +24,10 @@ The first version: the core of the simulator, and STL.
   scenario (`raise`) or `--raise`, the time error OB at the maximum cycle
   time and STOP at twice it; priorities, events that may wait and lost
   events (`Event_Count`), `Sign` of a time delay.
+- `s7forge serve`: the program in real time behind a Modbus/TCP server;
+  function codes 1–6, 15, 16, 23; a default map onto %Q, %I, %MW, %IW or a
+  map file onto tags and data block members; `--read-only`, `--speed`,
+  `--listen`; docs/MODBUS.md.
 - The interrupts as s17_interrupts stores them: the event names, a time of
   day set in an OB's properties, the hardware interrupt of an input edge
   (writing the input raises it; `raise` also takes the event's name);
@@ -34,6 +38,22 @@ The first version: the core of the simulator, and STL.
 - The CPU's clock (`clock` in a scenario), RD_SYS_T, RD_LOC_T, WR_SYS_T.
 - The system constants of the export (OB numbers, hardware identifiers)
   are known to the code that names them.
+- The CPU's settings as s18_settings stores them (tiaconv's `cpu_settings`):
+  the retentive bytes of M and the retentive S5 timers and counters, the
+  maximum cycle time (the time error) and the minimum cycle time (the
+  default scan time), the startup after power on. A data block with
+  standard access set retentive keeps all of it. Scenario s18_settings.
+- `restart: "power"` is now a power cycle (retentive values kept, RUN or
+  STOP by the startup setting); `restart: "reset"` is the memory reset that
+  `"power"` was. `stop: true` puts the CPU in STOP. `%C5` and `%T5` read S5
+  counters and timers.
+- "Enable time error" of an interrupt OB: a time error when its waiting
+  events reach the threshold; lost events say whether they are reported in
+  the diagnostic buffer.
+- Block moves and strings: MOVE_BLK, UMOVE_BLK, MOVE_BLK_VARIANT,
+  FILL_BLK, UFILL_BLK, FIND, REPLACE, INSERT, DELETE, STRG_VAL, VAL_STRG,
+  Chars_TO_Strg, Strg_TO_Chars, with ENO FALSE where they fail. Scenarios
+  s19_library and library.
 - S5 counters: S clears the edge memories of CU and CD, so a counter set
   while CU is on counts in the next cycle, as Siemens documents it. The S5
   rules of the manuals are each a step of the scenario stl_s5rules.

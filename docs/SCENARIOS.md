@@ -33,7 +33,8 @@ The CPU is powered on before the first step. Each step does, in this order:
 | `set` | operands and their values, written before the step runs |
 | `clock` | the clock set to this date and time |
 | `raise` | the event of an interrupt OB, by the OB's name or number or the event's name (`Rising edge0`), or a list of them: a hardware interrupt. It runs as soon as its priority lets it. Setting an input that has a hardware interrupt raises it on its edge as well |
-| `restart` | `"warm"`: STOP to RUN, retentive values kept; `"power"`: power off and on, everything to its start value. The startup OBs run. |
+| `stop` | `true`: the CPU to STOP, as an operator would (with `expect_fault` in the same step) |
+| `restart` | `"warm"`: STOP to RUN, retentive values kept; `"power"`: power off and on, retentive values kept, then RUN or STOP as the CPU's startup setting says (by default the mode it was in); `"reset"`: a memory reset, everything to its start value, then RUN. The startup OBs run. |
 | `scans` | a number of cycles to run |
 | `run_ms` | the time to run, in ms: cycles until it has passed |
 | `expect` | operands and the values they must have after the step |
@@ -49,7 +50,9 @@ A Real is equal to the expected value within a relative 1e-6; a Bool is equal
 to a number when both are 0 or both are not.
 
 Values set on inputs (`%I`) stay until set again, also over a restart: they are
-what the field gives. Outputs and bit memory are cleared on a restart.
+what the field gives. Outputs are cleared on a restart, and bit memory but for
+its retentive bytes (the CPU's settings of the export: s18 keeps MB0 to MB15).
+`%C5` is the value of S5 counter C5, `%T5` the status of timer T5.
 
 How time passes: a cycle runs the program cycle OBs from the time `t`, then
 the interrupt OBs due up to the end of the cycle, `t + scan_ms` (or later when

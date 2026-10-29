@@ -15,11 +15,19 @@ PLCSIM are needed. It runs the program the way the CPU does:
   (P, N, P_TRIG, N_TRIG, R_TRIG, F_TRIG), the conversions (`INT_TO_REAL`, ...)
   and the common functions (ABS, MIN, MAX, LIMIT, SEL, MUX, SHL, SHR, ROL,
   ROR, SWAP, SQRT, ..., NORM_X, SCALE_X, LEN, CONCAT, LEFT, RIGHT, MID);
+- block moves and strings: MOVE_BLK, UMOVE_BLK, MOVE_BLK_VARIANT,
+  FILL_BLK, UFILL_BLK, FIND, REPLACE, INSERT, DELETE, STRG_VAL, VAL_STRG,
+  Chars_TO_Strg, Strg_TO_Chars;
 - EN and ENO of calls;
 - the areas I, Q and M with the PLC tags at their addresses, big-endian as in
   the CPU;
-- start values and retentive data: a warm restart (STOP to RUN) keeps the
-  retentive values, a power-on resets everything;
+- start values and retentive data: a warm restart (STOP to RUN) and a power
+  cycle keep the retentive values (members set to Retain, a whole DB with
+  standard access, the retentive bytes of M and the S5 timers and counters
+  of the CPU's settings), a memory reset resets everything; after a power
+  cycle the CPU starts as its startup setting says;
+- the CPU's maximum and minimum cycle time; the time error of an OB whose
+  events wait beyond its threshold;
 - a cycle that does not end (an endless loop) and an array index out of
   bounds put the CPU in STOP, as in the CPU;
 - the interrupt OBs: cyclic, time delay (SRT_DINT, CAN_DINT, QRY_DINT),
@@ -36,9 +44,9 @@ interrupts, as on the CPU.
 
 What it does not do (yet), and says so once in its warnings: blocks that
 are know-how protected (their code is not in the export), the instructions
-of the Siemens libraries other than the timers and counters (communication,
-PID, motion), the hardware (I/O modules, high-speed counters, the input
-that raises a hardware interrupt), the diagnostic and error OBs.
+of the Siemens libraries other than those named above (communication,
+PID, motion, Serialize), the hardware (I/O modules, high-speed counters),
+the diagnostic and error OBs.
 
 Where it differs from the CPU, as far as known:
 
@@ -52,6 +60,16 @@ Where it differs from the CPU, as far as known:
 - LEN and the length of a String count bytes (UTF-8), not characters;
 - a function or instruction that is not simulated leaves its outputs as
   they are.
+
+## Modbus/TCP
+
+`s7forge serve PROGRAM.json` runs the program in real time and answers
+Modbus/TCP (port 5020 on this computer unless told otherwise): coils,
+discrete inputs, holding and input registers mapped onto %Q, %I, %MW and
+%IW, or onto tags and data block members with a map file. A Modbus client,
+a proxy or a scanner then talks to a PLC that behaves as the program does.
+`--read-only` refuses writes. docs/MODBUS.md has the map, the function
+codes and an example with the motor of s15_motor.
 
 ## STL
 
@@ -159,9 +177,13 @@ and a know-how protected block), `ZZBRAVO.json` (s13_hmi) and
 `S16PLC.json` (s16_stl: STL with absolute and indirect addresses, local
 data by address, S5 timers and counters in STL, LAD and FBD) and
 `S17PLC.json` (s17_interrupts: cyclic, time-delay, time-of-day, hardware
-and time error OBs). The scenarios
-in `tests/scenarios` check them; the values expected in s14, s16 and s17 were
-derived by hand from the code.
+and time error OBs), `S18PLC.json` (s18_settings: retentive memory, cycle
+and startup settings, a time error threshold, a falling edge) and
+`S19PLC.json` (s19_library: block moves, strings, communication and PID
+instructions). `tests/programs` holds programs written for the tests
+(`library.program.json` is made by `library_program.py`). The scenarios
+in `tests/scenarios` check them; the values expected in s14 and s16 to s19
+were derived by hand from the code.
 
 ## Licence
 

@@ -1,9 +1,14 @@
 {
-  "comment": "warm restart and power on of s14_code_rewritten: M is not retentive; after a power on the program runs as from the start",
+  "comment": "warm restart, power cycle and memory reset of s14_code_rewritten: M is not retentive; after each the program runs as from the start",
   "program": "../data/ZZPLC.json",
   "steps": [
     {"set": {"ZZALPHA": true}, "scans": 1, "expect": {"ZZN1": 10}},
     {"restart": "warm", "expect": {"ZZN1": 0}},
-    {"restart": "power", "scans": 3, "expect": {"ZZN2": 8}}
+    {"restart": "power", "scans": 3, "expect": {"ZZN2": 8}},
+    {"restart": "reset", "scans": 3, "expect": {"ZZN2": 8}},
+    {"comment": "in STOP before the power went off: the CPU stays in STOP (Warm restart - mode before POWER OFF, the default)",
+     "stop": true, "restart": "power", "expect_fault": true},
+    {"restart": "warm"},
+    {"set": {"ZZALPHA": true}, "scans": 1, "expect": {"ZZN1": 10}}
   ]
 }

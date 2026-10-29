@@ -33,4 +33,9 @@ ScenarioResult runScenario(const std::string& file, std::ostream& out, bool verb
 
 std::string readFile(const std::string& path);
 
+// A date and time for the clock of the CPU, in ns since 1970-01-01 00:00:
+// "2026-10-24 08:00:00", "2026-10-24T08:00:00", "DTL#2026-10-24-08:00:00".
+// Throws std::runtime_error naming `what` when it is not one.
+int64_t clockOf(const Json& j, const std::string& what);
+
 }  // namespace s7forge

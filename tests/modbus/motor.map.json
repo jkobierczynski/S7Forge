@@ -1,0 +1,16 @@
+{
+  "comment": "The motor of s15_motor (tests/data/MOTORPLC.json) as a Modbus device: the push buttons as coils a client can switch (they are inputs of the PLC: what a client writes there is what the field would give), the motor outputs as discrete inputs, the start counter (register 0) and the elapsed start delays (Time in ms, two registers each: 1-2 and 3-4) as holding registers",
+  "unit_id": 1,
+  "coils": [
+    {"address": 0, "operand": "%I0.0", "count": 3}
+  ],
+  "discrete_inputs": [
+    {"address": 0, "operand": "MotorLadOut"},
+    {"address": 1, "operand": "MotorSclOut"}
+  ],
+  "holding_registers": [
+    {"address": 0, "operand": "\"MotorData\".starts"},
+    {"address": 1, "operand": "\"MotorLAD_DB\".delay.ET"},
+    {"address": 3, "operand": "\"MotorSCL_DB\".delay.ET"}
+  ]
+}
